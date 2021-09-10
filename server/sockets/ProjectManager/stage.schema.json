@@ -1,0 +1,34 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "color": {
+      "type": "string"
+    },
+    "default": {
+      "type": "boolean"
+    },
+    "order": {
+      "type": "number"
+    }
+  },
+  "type": "object",
+  "required": [
+    "name",
+    "state",
+    "color",
+    "default",
+    "order"
+  ],
+  "description": "Stage on board",
+  "title": "Stage",
+  "$id": "5e9064c275ad3600121e3655"
+}

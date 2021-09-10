@@ -1,0 +1,49 @@
+<div class="card infrastructure hover"
+     [class.infrastructure--active]="isInfraSelectedFromMAp"
+     *ngIf="!loading"
+     (click)="openInfrastructure()"
+     #infraItem>
+  <div *ngIf="!hasAnyLogo()" class="infrastructure__cover-container">
+    <div class="infrastructure__empty-cover">
+      <i class="infrastructure__empty-icon"></i>
+      <span class="infrastructure__empty-text">Infrastructure Cover</span>
+    </div>
+    <div class="infrastructure__cover"></div>
+  </div>
+
+  <div *ngIf="hasAnyLogo()"
+       class="infrastructure__cover-container"
+       [ngStyle]="{  'background-size': 'cover','background-repeat': 'no-repeat'}">
+    <img [src]="getLogoUrl()" class="cover-image">
+  </div>
+  <div class="infrastructure__info-container">
+    <div class="infrastructure__info">
+      <div class="infrastructure__name">{{ infrastructure.name }}</div>
+      <div class="infrastructure__address">{{infrastructure?.location?.address?.addressLine1 || 'Address not available'}}
+      </div>
+    </div>
+    <div class="infrastructure__bottom">
+      <div class="infrastructure__status">
+        <label class="infrastructure__label infrastructure__label--gray ml-0">{{ infrastructure.type | titlecase }}</label>
+        <label class="infrastructure__label infrastructure__label--red" *ngIf="infrastructure.status === 'ARCHIVED'">Archived</label>
+        <!-- <label class="infrastructure__label infrastructure__label--green" *ngIf="infrastructure.status === 'ACTIVE'">In work</label> -->
+        <label class="infrastructure__label infrastructure__label--red mr-auto" *ngIf="infrastructure.status === 'DELETED'">Doesn’t work</label>
+      </div>
+    </div>
+    <!-- <span class="infrastructure__settings-icon" (click)="onActionClick($event)">
+      <div class="project-open-select" *ngIf="actionDropdown">
+        <span class="project-open-select-item d-flex justify-content-start"
+          (click)="editInfrastructure($event, infrastructure._id)">
+          Edit</span>
+        <span class="project-open-select-item d-flex justify-content-start"
+          [swal]="{ title: 'Delete the selected document?', text: 'This cannot be undone.', type: 'warning', showCancelButton: true, confirmButtonText: 'Yes, delete it'}"
+          (confirm)="deleteInfrastructure($event)">
+          Delete</span>
+      </div>
+    </span> -->
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-container">
+  <ai-loading></ai-loading>
+</div>

@@ -1,0 +1,190 @@
+<div class="menu" *ngIf="infrastructures">
+	<div class="menu__left">
+		<form  class="menu__search search-container search-container--contained"
+					 [formGroup]="infrastructuresSearchForm"
+					 [class.search-container--filled]="infrastructuresSearchForm.get('search').value.length">
+      <input  class="search-container__input"
+              type="search"
+							placeholder="Search"
+							formControlName="search">
+      <div class="search-container__button icon icon--search icon--size-16px"></div>
+      <div  class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+            (click)="infrastructuresSearchForm.get('search').setValue('')"></div>
+		</form>
+		<div class="menu__list">
+			<div class="menu__item" *ngFor="let infrastructure of filteredInfrastructures"
+					 [class.menu__item--empty]="!infrastructure?.floors?.length"
+					 (mouseover)="chooseInfrastructure(infrastructure)">
+				{{ infrastructure?.name }}
+				<span [class.menu__include-icon]="isSomeChecked(infrastructure) || isSomeAreasCheckedInFloors(infrastructure)"></span>
+				<span class="icon icon icon--arrow-drop-right ml-auto"></span>
+			</div>
+		</div>
+	</div>
+	<div class="menu__divider"></div>
+	<div class="menu__right" *ngIf="activeInfrastructure?.floors?.length">
+		<div class="menu__right-content" *ngIf="activeInfrastructure">
+			<div class="menu__right-list floors">
+				<div 	class="floors__item"
+							(click)="selectAllFloors()">
+					<div class="floors__item-container floors__item-container--all">
+						<div 	class="floors__item-checkbox"
+									[class.floors__item-checkbox--selected]="activeInfrastructure.allFloorsSelected"></div>
+						<div class="floors__item-number">-</div>
+						All floors
+					</div>
+				</div>
+				<div 	class="floors__item"
+							*ngFor="let floor of activeInfrastructure?.floors; let floorIndex = index">
+					<div class="floors__item-container"
+							 (click)="selectFloor(floor)"
+							 [class.opacity-60]="!tasksAttributes.floors.includes(floor._id)">
+						<span class="floors__toggle-areas-button icon mr--4"
+									[class.icon--arrow-drop-right]="floor?.areas?.length && !floor?.isAreasOpen"
+									[class.icon--arrow-drop-down]="floor?.areas?.length && floor?.isAreasOpen"
+									(click)="openAreasList($event, floor)"></span>
+						<div 	class="floors__item-checkbox"
+									[class.floors__item-checkbox--selected]="floor?.isChecked"
+									[class.floors__item-checkbox--indeterminate]="!floor.isChecked && isSomeAreasChecked(floor)"></div>
+						<div class="floors__item-number">
+							{{ floor?.number }}	
+						</div>
+						{{ floor?.name }}
+					</div>
+					<div class="floors__areas-list" *ngIf="floor?.areas?.length && floor?.isAreasOpen">
+						<div class="floors__area-item">
+							<div 	class="floors__item-checkbox"
+										[class.floors__item-checkbox--selected]="floor.isChecked"
+										(click)="selectTasksWithoutAreas(floor)"></div>
+							<div class="floors__item-number">-</div>
+							All tasks without Areas
+						</div>
+						<div 	class="floors__area-item"
+									*ngFor="let area of floor?.areas; let areaIndex = index"
+									(click)="selectArea(area, areaIndex)"
+									[class.opacity-60]="!tasksAttributes.areas.includes(area._id)">
+							<div 	class="floors__item-checkbox"
+										[class.floors__item-checkbox--selected]="area?.isChecked"></div>
+							{{ area?.name }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- !!!!!!!!!!!!!!!!!!! DEVICES !!!!!!!!!!!!!!!!!!!  -->
+
+<div class="menu" *ngIf="subjects">
+	<div class="menu__left">
+		<div class="menu__list mt--0">
+			<div 	class="menu__item" *ngFor="let subject of subjects"
+						[class.menu__item--empty]="subject?.name === 'Users'"
+						(mouseover)="subject?._id !== 'USERS' ? chooseSubjectItem(subject) : ''">
+				{{ subject?.name }}
+				<span [class.menu__include-icon]="isSomeItemsSelected(subject)"></span>
+				<span class="icon icon icon--arrow-drop-right ml-auto"></span>
+			</div>
+		</div>
+	</div>
+	<div class="menu__divider"></div>
+	<div class="menu__right">
+		<div class="menu__right-content" *ngIf="activeSubjectItem">
+			<div class="p-3">
+				<form  class="menu__search mb-0 search-container search-container--contained"
+							[class.search-container--filled]="subjectsSearchForm.get('search').value.length"
+							[formGroup]="subjectsSearchForm">
+					<input  class="search-container__input"
+									type="search"
+									placeholder="Search"
+									formControlName="search">
+					<div class="search-container__button icon icon--search icon--size-16px"></div>
+					<div  class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+								(click)="subjectsSearchForm.get('search').setValue('')"></div>
+				</form>
+			</div>
+			<div class="menu__right-list devices">
+				<div 	class="devices__item"
+							*ngIf="!subjectsSearchForm.get('search').value.length"
+							(click)="selectAllSubjects()">
+					<div 	class="devices__item-checkbox"
+								[class.devices__item-checkbox--selected]="activeSubjectItem.allItemsSelected"></div>
+					All items
+				</div>
+				<div 	class="devices__item"
+							(click)="selectSubject(subject)"
+							*ngFor="let subject of filteredSubjects"
+							[class.opacity-60]="!tasksAttributes.devices.includes(subject._id) && activeSubjectItem._id === 'ROBOTS'">
+					<div 	class="devices__item-checkbox"
+								[class.devices__item-checkbox--selected]="subject?.isChecked"></div>
+					{{ subject?.name }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- !!!!!!!!!!!!!!!!!!! EVENTS !!!!!!!!!!!!!!!!!!!  -->
+
+
+<div class="menu" *ngIf="events">
+	<div class="menu__left">
+		<label class="menu__label">
+			Robots
+		</label>
+		<div class="menu__list">
+			<div 	class="menu__item" *ngFor="let event of events"
+						(mouseover)="selectEventItem(event)">
+				{{ event?.name }}
+				<span [class.menu__include-icon]="isSomeEventItemsSelected(event)"></span>
+				<span class="icon icon icon--arrow-drop-right ml-auto"></span>
+			</div>
+		</div>
+		<label class="menu__label">
+			Users
+		</label>
+		<div class="menu__list">
+			<div 	class="menu__item menu__item--empty">
+				Movement area (Coming soon)
+				<!-- <span class="icon icon icon--arrow-drop-right ml-auto"></span> -->
+			</div>
+		</div>
+	</div>
+	<div class="menu__divider"></div>
+	<div class="menu__right">
+		<div class="menu__right-content" *ngIf="activeEventItem">
+			<div class="p-3">
+				<form  class="menu__search mb-0 search-container search-container--contained"
+							[class.search-container--filled]="eventsSearchForm.get('search').value.length"
+							[formGroup]="eventsSearchForm">
+					<input  class="search-container__input"
+									type="search"
+									placeholder="Search"
+									formControlName="search">
+					<div class="search-container__button icon icon--search icon--size-16px"></div>
+					<div  class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+								(click)="eventsSearchForm.get('search').setValue('')"></div>
+			</form>
+			</div>
+			<div class="menu__right-list events">
+				<div 	class="events__item"
+							*ngIf="activeEventItem.name === 'Areas' && !eventsSearchForm.get('search').value.length"
+							(click)="selectAllEvents()">
+					<div 	class="events__item-checkbox"
+								[class.events__item-checkbox--selected]="activeEventItem.allItemsSelected"></div>
+					Select all areas
+				</div>
+				<div 	class="events__item"
+							(click)="selectEvent(item)"
+							*ngFor="let item of filteredEvents"
+							[class.opacity-60]="!tasksAttributes.types.includes(item._id) && activeEventItem._id === 'TASK_TYPES'">
+					<div 	class="events__item-checkbox"
+								[class.devices__item-checkbox--selected]="item?.isChecked"></div>
+					{{ item?.name | titlecase }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

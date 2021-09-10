@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "organization": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "orchestratorTask": {
+      "type": "object"
+    },
+    "infrastructure": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "floor": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "area": {
+      "type": [
+        "string",
+        "object"
+      ]
+    },
+    "station": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "priority": {
+      "type": "number"
+    },
+    "recurringType": {
+      "type": "string"
+    },
+    "waitInfo": {
+      "type": "object"
+    },
+    "scheduledDateTime": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "endDateTime": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "parent": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "assignedToDevice": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "required": [
+    "name",
+    "organization",
+    "type",
+    "infrastructure",
+    "floor"
+  ],
+  "description": "Create task for robot",
+  "title": "CreateRobotTask",
+  "$id": "5f6f4ddaf2e52c00123c355c"
+}

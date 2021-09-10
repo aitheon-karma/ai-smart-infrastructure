@@ -1,0 +1,108 @@
+<ng-template #addApplicationModal>
+  <div class="modal-header reject__header">
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="modal-title pull-left position-relative">
+          {{ mode === 'DEVICE_DRIVER' ? 'Choose Device Node' : mode === 'AUTOMATION' ? 'Choose Automations' : 'Choose Application' }}
+        </h4>
+        <div class="icon icon--close icon--dynamic"
+             (click)="closeModal()"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-body add-application">
+    <div class="add-application__search"></div>
+
+    <div class="add-application__list" *ngIf="!(mode === 'DEVICE_DRIVER' || mode === 'DASHBOARD')">
+      <div class="add-application__list-empty" *ngIf="!applications?.length">
+        No applications to add
+      </div>
+      <div *ngFor="let application of applications"
+           class="add-application__item"
+           [class.add-application__item--active]="isItemSelected(application)"
+           (click)="updateSelectedApplications(application)">
+        <div class="add-application__item-view">
+          <div class="item-checkbox" [class.item-checkbox--selected]="isItemSelected(application)"></div>
+
+          <div class="item-image">
+            <div class="item-image__file-icon"></div>
+            <div class="item-image__extension">{{ application?.type }}</div>
+          </div>
+        </div>
+
+        <div class="add-application__item-info item-info">
+          <span class="item-info__title ellipsis">
+            {{ application?.name }}
+          </span>
+          <span class="item-info__last-updated">
+            Last edited: {{ application?.updatedAt | date }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="add-application__list" *ngIf="mode === 'DEVICE_DRIVER' || mode === 'DASHBOARD'">
+      <div class="add-application__list-empty" *ngIf="!applications?.length">
+        No applications to add
+      </div>
+      <div *ngFor="let application of applications"
+           class="add-application__item"
+           [class.add-application__item--active]="application._id === activeProject"
+           (click)="chooseSingleProject(application)">
+        <div class="add-application__item-view">
+          <div class="radio">
+            <input name="radio-1" type="radio" tabindex="1" class="radio__input" [checked]="application._id === activeProject">
+          </div>
+          <div class="item-image">
+            <div class="item-image__file-icon"></div>
+            <div class="item-image__extension">{{ application?.language | titlecase }}</div>
+          </div>
+        </div>
+
+        <div class="add-application__item-info item-info">
+          <span class="item-info__title ellipsis"
+                tooltip="{{ application?.name }}"
+                container="body"
+                placement="auto">
+            {{ application?.name }}
+          </span>
+          <span class="item-info__last-updated">
+            Last edited: {{ application?.updatedAt | date:'mediumDate' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-footer reject__footer">
+    <div class="modal-footer__buttons-container">
+      <!-- <button class="button button--medium button--ghost mr-2"
+              (click)="closeModal($event)"
+              *ngIf="!(mode === 'BRIDGE' && mode === 'AUTOMATION' || mode === 'DASHBOARD')">
+        <span class="icon icon--new-file icon--active"></span>
+        <span>Create new application</span>
+      </button> -->
+    </div>
+    <div class="modal-footer__buttons-container">
+      <button class="button button--medium button--ghost mr-2"
+              (click)="closeModal($event)">
+        Cancel
+      </button>
+      <button class="button button--medium button--contained" type="button"
+              [class.button--disabled]="!applications?.length"
+              [disabled]="!applications?.length"
+              (click)="onAdd()"
+              *ngIf="mode !== 'BRIDGE'">
+        Add
+      </button>
+      <button class="button button--medium button--contained" type="button"
+              (click)="onChoose()"
+              *ngIf="mode === 'BRIDGE'">
+        Choose
+      </button>
+    </div>
+  </div>
+  <div class="loading-container" *ngIf="loading"></div>
+</ng-template>

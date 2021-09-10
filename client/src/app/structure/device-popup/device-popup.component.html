@@ -1,0 +1,133 @@
+<div class="device-popup__wrap"
+     [class.device-popup__wrap--not-animated]="isFirstMove"
+     aiClickOutside
+     (clickedOutside)="onClose()"
+     [ngStyle]="styles">
+    <div class="device-popup"
+         [class.device-popup--padding-0]="deviceType === deviceTypes.ROBOT"
+         [class.device-popup--turned-to-top]="isTurnedToTop"
+         [class.device-popup--turned-to-left]="isTurnedToLeft">
+        <div class="device-popup__header"
+             *ngIf="deviceType !== deviceTypes.ROBOT; else robotHeader">
+            <div class="device-popup__header-left-side">
+                <div class="device-popup__user-avatar"></div>
+                <div class="device-popup__user-info">
+                    <div class="device-popup__user-name">Tanzim Ahmed</div>
+                    <div class="device-popup__user-id">#130892</div>
+                </div>
+            </div>
+            <div class="device-popup__header-right-side">
+                <button class="button button--ghost button--small device-popup__show-more"
+                        (click)="toggleActivity()">
+                    {{ isActivityOpened ? 'hide' : 'show' }} activity
+                </button>
+                <div class="icon icon--close icon--dynamic device-popup__close-button"
+                     (click)="onClose()"></div>
+            </div>
+        </div>
+
+        <div class="device-popup__content">
+            <div class="device-popup__details"
+                 [class.device-popup__details--robot]="deviceType === deviceTypes.ROBOT">
+
+                <ng-container *ngIf="deviceType === deviceTypes.ROBOT; else tagDetails">
+                    <div class="device-popup__device-name">
+                        {{ device?.name }}
+                    </div>
+
+                    <div class="device-popup__details-item device-popup__details-item--robot">
+                        <div class="device-popup__detail-label">Device Type:</div>
+                        <div class="device-popup__detail-value">
+                            {{ deviceType | titlecase }}
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-template #tagDetails>
+                    <div class="device-popup__details-item">
+                        <div class="device-popup__detail-label">Temperature:</div>
+                        <div class="device-popup__detail-value device-popup__detail-value--temperature"
+                             [class.device-popup__detail-value--temperature-danger]="userData.temperature >= 37 || userData.temperature < 36">
+                            {{ userData.temperature }}&deg;C
+                        </div>
+                    </div>
+                    <div class="device-popup__details-item">
+                        <div class="device-popup__detail-label">Current area:</div>
+                        <div class="device-popup__detail-value">
+                            {{ userData.area }}
+                        </div>
+                    </div>
+                    <div class="device-popup__details-item">
+                        <div class="device-popup__detail-label">Last position update:</div>
+                        <div class="device-popup__detail-value">
+                            {{ userData.lastPositionUpdate }}
+                        </div>
+                    </div>
+                    <div class="device-popup__details-item"
+                         *ngIf="config?.device?.name">
+                        <div class="device-popup__detail-label">Detected by:</div>
+                        <div class="device-popup__detail-value">
+                            {{ config?.device?.name }}
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+            <ng-container *ngIf="isActivityOpened">
+                <div class="device-popup__separator"></div>
+                <div class="device-popup__activity">
+                    <div class="device-popup__activity-header">
+                        Activity
+                    </div>
+                    <div class="device-popup__activity-content">
+                        <div class="device-popup__activity-timeline">
+                            <div class="device-popup__activity-timeline-icon device-popup__activity-timeline-icon--detected"></div>
+                            <div class="device-popup__activity-timeline-icon device-popup__activity-timeline-icon--entry"></div>
+                        </div>
+                        <div class="device-popup__activity-list">
+                            <div class="device-popup__activity-item">
+                                <div>
+                                    <div class="device-popup__activity-item-title">Detection</div>
+                                    <div class="device-popup__activity-item-subtitle">&bull; 06:31 PM</div>
+                                </div>
+                                <div class="device-popup__activity-period-wrap">
+                                    <div class="device-popup__activity-period">
+                                        Period:
+                                    </div>
+                                    <div class="device-popup__activity-period-time">00h 04m 39s</div>
+                                </div>
+                            </div>
+                            <div class="device-popup__activity-item">
+                                <div>
+                                    <div class="device-popup__activity-item-title">Entry to the building</div>
+                                    <div class="device-popup__activity-item-subtitle">&bull; 06:29 PM</div>
+                                </div>
+                                <div class="device-popup__activity-period-wrap">
+                                    <div class="device-popup__activity-period">
+                                        Period:
+                                    </div>
+                                    <div class="device-popup__activity-period-time">00h 01m 24s</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-template #robotHeader>
+    <div class="device-popup__robot-header">
+        <div class="device-popup__robot-status-section">
+            <div class="device-popup__robot-status device-popup__robot-status--in_progress">
+                In Work
+            </div>
+            <ai-battery-health [health]="device?.batteryHealth"
+                               [reverseView]="true"></ai-battery-health>
+        </div>
+
+        <img class="device-popup__robot-image"
+             [src]="device?.image?.signedUrl"
+             *ngIf="device?.image">
+    </div>
+</ng-template>

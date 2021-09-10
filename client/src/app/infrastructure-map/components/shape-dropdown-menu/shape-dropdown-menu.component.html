@@ -1,0 +1,30 @@
+<ng-template [ngIf]="show">
+  <ng-container *ngTemplateOutlet="list"></ng-container>
+</ng-template>
+
+<ng-template #list>
+  <div class="shape-dropdown__menu"
+       [ngStyle]="position"
+       aiClickOutside
+       (clickedOutside)="onClose($event)"
+       [class.areas__area-menu--small]="shape?.type === 'RESTRICTED'"
+       [class.shape-dropdown__menu--dynamic]="mode === 'DYNAMIC'">
+    <div class="shape-dropdown__item"
+         *ngIf="shape?.type !== 'RESTRICTED' && shape?.type !== 'CHARGING' && 
+                shape?.subType !== 'CAMERA' && shape?.subType !== 'ANCHOR' && 
+                shape?.subType !== 'TAG' && shape?.type !== 'WORK'"
+         (click)="triggerAction(actions.ADD_TASK, $event)">Add Task
+    </div>
+    <div class="shape-dropdown__item"
+         (click)="triggerAction(actions.EDIT, $event)">
+      Edit
+      <!--
+      {{ (shape?.type === 'CHARGING' || shape?.type === 'WORK') ? 'Station' : 'Area' }}
+      -->
+    </div>
+    <div class="shape-dropdown__item"
+         (click)="triggerAction(actions.REMOVE, $event)">
+      Remove
+    </div>
+  </div>
+</ng-template>

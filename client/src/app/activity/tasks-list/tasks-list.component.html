@@ -1,0 +1,23 @@
+<div class="tasks-list">
+    <div class="tasks-list__header">
+        {{ filteredTasks?.length }} records found
+    </div>
+
+    <div class="search-container search-container--outlined tasks-list__search"
+         [class.search-container--filled]="searchControl?.value">
+        <input type="search"
+               [formControl]="searchControl"
+               placeholder="Search"
+               class="search-container__input">
+        <div class="search-container__button icon icon--search icon--size-16px"></div>
+        <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+             (click)="searchControl?.reset()"></div>
+    </div>
+
+    <div class="tasks-list__list">
+        <ai-task-item *ngFor="let task of filteredTasks"
+                      (taskSelected)="taskSelected.emit($event)"
+                      [selectedTask]="selectedTask"
+                      [task]="task"></ai-task-item>
+    </div>
+</div>

@@ -1,0 +1,186 @@
+<div class="container p-0">
+    <div *ngIf="!isLoading; else loadingView">
+        <div class="card mt-2" *ngFor="let inbound of list; let i = index;">
+            <div class="card-body hover" (click)="openDetailModal(inbound,detailModal);">
+                <div class="row mt-3">
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="listview__photo">
+                                <img class="listview__photo-image"
+                                    *ngIf="inbound?.action?.data?.article?.images?.length == 0"
+                                    src="assets/no-image-icon-23485.png" />
+                                <img class="listview__photo-image"
+                                    *ngIf="inbound?.action?.data?.article?.images?.length > 0"
+                                    src="{{inbound?.action?.data?.article?.images[0]?.url}}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">{{inbound?.action?.data.article.name}}</div>
+                        <div class="row mt-1 label-heading">#{{inbound?.action?.data.article.artCode}}</div>
+                    </div>
+                    <div class="col-1">
+                        <div class="row label-heading">Box Qty</div>
+                        <div class="row mt-1">{{inbound?.action?.data.article.totalBoxQty}}</div>
+                    </div>
+                    <div class="col-1">
+                        <div class="row label-heading">Item Qty</div>
+                        <div class="row mt-1">{{inbound?.action?.data.article.perBoxArticleQty}}</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="progress-status p-0">
+                                <div class="row progress-text"> <span
+                                        [ngClass]="{'hide' : inbound?.action?.data?.currentProgress != 1 }">Decanting</span>
+                                </div>
+                                <div *ngIf="inbound?.action?.data?.currentProgress"
+                                    [ngClass]="{'completed__first' : inbound?.action?.data?.currentProgress > 1, 'in-progress__first' : inbound?.action?.data?.currentProgress == 1 , 'pending__first' : inbound?.action?.data?.currentProgress < 1 }">
+                                </div>
+                                <!-- Show pending if currentProgress field is not found in task -->
+                                <div *ngIf="!inbound?.action?.data?.currentProgress" class="pending__first"> </div>
+                            </div>
+                            <!-- <div class="progress-status p-0">
+                            <div class="row progress-text">Decanting</div>
+                            <div class="completed"></div>
+                        </div> -->
+
+                            <div class="progress-status p-0">
+                                <div class="row progress-text"><span
+                                        [ngClass]="{'hide' : inbound?.action?.data?.currentProgress != 2 }">Robo</span>
+                                </div>
+                                <div *ngIf="inbound?.action?.data?.currentProgress"
+                                    [ngClass]="{'completed__middle' : inbound?.action?.data?.currentProgress > 2, 'in-progress__middle' : inbound?.action?.data?.currentProgress == 2 , 'pending__middle' : inbound?.action?.data?.currentProgress < 2 }">
+                                </div>
+                                <!-- Show pending if currentProgress field is not found in task -->
+                                <div *ngIf="!inbound?.action?.data?.currentProgress" class="pending__middle"> </div>
+                            </div>
+
+                            <div class="progress-status p-0">
+                                <div class="row progress-text"><span
+                                        [ngClass]="{'hide' : inbound?.action?.data?.currentProgress != 0 }">Shuttle</span>
+                                </div>
+                                <div *ngIf="inbound?.action?.data?.currentProgress"
+                                    [ngClass]="{'completed__middle' : inbound?.action?.data?.currentProgress >= 3, 'pending__middle' : inbound?.action?.data?.currentProgress < 3 }">
+                                </div>
+                                <!-- Show pending if currentProgress field is not found in task -->
+                                <div *ngIf="!inbound?.action?.data?.currentProgress" class="pending__middle"> </div>
+                            </div>
+
+                            <div class="progress-status p-0">
+                                <div class="row progress-text"><span
+                                        [ngClass]="{'hide' : inbound?.action?.data?.currentProgress != 3 }">Put
+                                        away</span></div>
+                                <div *ngIf="inbound?.action?.data?.currentProgress"
+                                    [ngClass]="{'completed__end' : inbound?.action?.data?.currentProgress >= 4, 'in-progress__end' : inbound?.action?.data?.currentProgress == 3 , 'pending__end' : inbound?.action?.data?.currentProgress < 3 }">
+                                </div>
+                                <!-- Show pending if currentProgress field is not found in task -->
+                                <div *ngIf="!inbound?.action?.data?.currentProgress" class="pending__end"> </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-container mt-2 mb-4" *ngIf="list.length">
+        <div class="table-actions table-footer flex-center align-items-center justify-content-end">
+            <ul #pagination class="pagination pagination-ul" *ngIf="optionFlag">
+                <div *ngIf="pageNumberList[0] == 1"> </div>
+                <li class="page-item" *ngIf="currentPage > 1">
+                    <a class="page-link previous" href="javascript:void(0)"
+                        (click)="setPage(currentPage-1)">Previous</a>
+                </li>
+                <li class="page-item" *ngFor="let page of pageNumberList">
+                    <a *ngIf="page > 0; else dots" class="page-link" [ngClass]="{active:currentPage === page}"
+                        href="javascript:void(0)" (click)="setPage(page)">{{page}}</a>
+                    <ng-template #dots>
+                        <span class="dots">...</span>
+                    </ng-template>
+                </li>
+                <li class="page-item" *ngIf="totalPages != currentPage">
+                    <a class="page-link next" href="javascript:void(0)" (click)="setPage(currentPage+1)">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<ng-template #loadingView>
+    <ai-loading class="p-3 text-center"></ai-loading>
+</ng-template>
+
+<ng-template #detailModal>
+    <!-- Modal Header -->
+    <div class="modal-header">
+        <h4 class="modal-title pull-left"> // Inbound task details</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <!-- Modal body -->
+    <div class="modal-body p-0">
+        <div class="row">
+            <div class="col-12 p-4 mt-3 mb-3">
+                <div class="row">
+                    <div class="listview__photo">
+                        <img class="listview__photo-image"
+                            *ngIf="selectedInboundTask?.action?.data?.article?.images?.length == 0"
+                            src="assets/no-image-icon-23485.png" />
+                        <img class="listview__photo-image"
+                            *ngIf="selectedInboundTask?.action?.data?.article?.images?.length > 0"
+                            src="{{selectedInboundTask?.action?.data?.article?.images[0]?.url}}" />
+                    </div>
+                    <div class="col-6">
+                        <div class="row mt-2">{{selectedInboundTask?.action?.data.article.name}}</div>
+                        <div class="row mt-1 label-heading">#{{selectedInboundTask?.action?.data.article.artCode}}</div>
+                    </div>
+                    <div class="col-1 ml-1">
+                        <div class="row label-heading">Box Qty</div>
+                        <div class="row mt-1">{{selectedInboundTask?.action?.data.article.totalBoxQty}}</div>
+                    </div>
+                    <div class="col-1 ml-2">
+                        <div class="row label-heading">Item Qty</div>
+                        <div class="row mt-1">{{selectedInboundTask?.action?.data.article.perBoxArticleQty}}</div>
+                    </div>
+                </div>
+                <div class="row ml-3 mr-3 mt-2" *ngFor="let subTask of selectedInboundTask?.subSystemTask; let i = index;">
+                    <div class="card w-100 ">
+                        <div class="card-body card-bg ">
+                            <div class="row pl-3 pr-3">
+                                <div class="col-3">
+                                    <div class="row label-heading">BinId</div>
+                                    <div class="row mt-1">{{subTask?.binId}}</div>
+                                </div>
+                                <div class="col-2 col-w ">
+                                    <div class="row label-heading">Quantity</div>
+                                    <div class="row mt-1">{{subTask?.qty}}</div>
+                                </div>
+                                <div class="col-4 col-4-w">
+                                    <div class="row label-heading">Location</div>
+                                    <div class="row mt-1" *ngIf="subTask.location == ''">--</div>
+                                    <div class="row mt-1" *ngIf="subTask.location != ''">#Aisle :{{ subTask.location?.aisle}}, Z: {{subTask?.location?.z}}, Y: {{subTask?.location?.y}}, X: {{subTask?.location?.x}}</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="row label-heading">Task</div>
+                                    <div class="row mt-1 status-txt" *ngIf="subTask.task === 'PUT_TO_SHUTTLE_LOCATION'">Put Away</div>
+                                    <div class="row mt-1 status-txt" *ngIf="subTask.task === 'TRANSFER_TO_DECANTING_EXIT'">Decanting</div>
+                                    <div class="row mt-1 status-txt" *ngIf="subTask.task === 'ROBO_DECANTING_TO_SHUTTLE_ENTRY'">On Robo</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="row label-heading">Status</div>
+                                    <div class="row mt-1 " [ngClass]="{'status-txt__pending':subTask.status === 'IN_PROGRESS', 'status-txt__done':subTask.status === 'DONE'}">{{subTask?.status}}</div>                                                                      
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+        <div class="row m-1">
+            <button class="btn cancel btn-link pull-right mr-2" (click)="modalRef.hide()">Close</button>
+        </div>
+    </div>
+</ng-template>

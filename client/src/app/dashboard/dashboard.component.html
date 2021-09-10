@@ -1,0 +1,54 @@
+<ai-nav-menu [isInfrastructureMode]="false" [hasArchivedInfrastructures]="hasArchivedInfrastructures"></ai-nav-menu>
+
+<div class="dashboard" *ngIf="!emptyList; else emptyListTemplate">
+    <div class="dashboard__infrastructures">
+        <form [formGroup]="searchForm"
+              *ngIf="searchForm">
+            <div class="search-container search-container--outlined"
+                 [class.search-container--filled]="searchControl ?.value ?.length">
+                <input type="search"
+                       placeholder="Search"
+                       class="search-container__input"
+                       formControlName="searchText">
+                <div class="search-container__button icon icon--search icon--size-16px"></div>
+                <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+                     (click)="clearValue($event)"></div>
+            </div>
+        </form>
+        <div class="dashboard__add-button-section">
+            <button class="dashboard__button button button--ghost button--medium"
+                    (click)="addInfrastructure()"
+                    *ngIf="infrastructuresType === 'ACTIVE'">
+                Add infrastructure
+            </button>
+        </div>
+        <div class="dashboard__list">
+            <ai-infrastructures-list [searchText]='searchText'
+                                 [infrastructuresType]="infrastructuresType"
+                                 (emptyList)="applyEmptyListSettings($event)">
+            </ai-infrastructures-list>
+        </div>
+    </div>
+    <div class="dashboard__map">
+        <ai-dashboard-map [googleMapMarkers]="googleMapMarkers" [infrastructuresType]="infrastructuresType"></ai-dashboard-map>
+    </div>
+</div>
+
+<ng-template #emptyListTemplate>
+    <div class="empty-dashboard">
+        <div class="empty-dashboard__image"></div>
+        <div class="empty-dashboard__text">
+            This organization has no infrastructure yet.<br> You can add a new infrastructure right now!
+        </div>
+        <div class="empty-dashboard__button">
+            <button class="button button--ghost button--medium" [routerLink]="['/infrastructure/new']">
+                Add infrastructure
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ai-no-permission-to-pay-modal [status]="ptpStatus"
+                               [ptpType]="'INFRASTRUCTURE'"
+                               (ptpModalClose)="ptpStatus = 'DISABLED'">
+</ai-no-permission-to-pay-modal>

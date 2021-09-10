@@ -1,0 +1,25 @@
+<main class="upload-container">
+
+  <div *ngIf="!uploading; else uploadingView" class="uploader">
+    <div class="uploader__file-input">
+      <input ng2FileSelect [uploader]="driveFileUploader?.uploader" #uploader type="file" name="review-file" id="review-file-edit"  class="review-file" />
+        <label for="review-file" *ngIf="!uploader?.files[0]?.name">Choose a file</label>
+        <label for="review-file" *ngIf="uploader?.files[0]?.name">{{ uploader?.files[0]?.name }}</label>
+    </div>
+    <div class="uploader__buttons">
+        <button class="btn-medium btn btn-link pl-0" (click)="canceled.emit()">Cancel</button>
+      <button class="btn-medium btn btn-primary" [disabled]="!fileAdded" (click)="upload()">Upload</button>
+    </div>
+  </div>
+
+</main>
+
+<ai-drive-uploader  #driveFileUploader (success)="onSuccessFileUpload($event)" [oganizationId]="currentOrg?._id"
+                    [service]="currentServiceKey" (afterAddingFile)="onAfterAddingFile($event)" [autoUpload]="false">
+</ai-drive-uploader>
+
+<ng-template #uploadingView>
+  <div class=" w-100 uploading-view d-flex justify-content-center align-items-center">
+      <h2>uploading...</h2>
+  </div>
+</ng-template>

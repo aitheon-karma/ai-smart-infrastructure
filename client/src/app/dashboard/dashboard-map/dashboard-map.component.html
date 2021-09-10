@@ -1,0 +1,71 @@
+<div class="map-container">
+  <div class="map-container__title">All {{ infrastructuresType === 'ARCHIVED' ? 'archived' : '' }} infrastructure</div>
+  <!-- View switcher -->
+
+  <div class="map-container__view-switcher">
+    <span>Satellite view</span>
+    <label class="switch ml--24"
+           >
+      <input class="switch__input"
+             id="switch-view"
+             name="switchView"
+             (click)="switchView()"
+             type="checkbox">
+      <span class="switch__toggle"></span>
+    </label>
+  </div>
+
+  <!-- /View switcher -->
+  <div class="map" id="map" [hidden]="loading">
+    <google-map height="100%"
+                width="100%"
+                [zoom]="zoom"
+                [center]="center"
+                [options]="options"
+                (mapClick)="click($event)">
+      <map-marker #markerElem
+                  *ngFor="let marker of receivedGoogleMapMarkers"
+                  [position]="marker.position"
+                  (mapClick)="openInfo(markerElem, marker)"
+                  (mapMouseover)="openHoverInfo(markerElem, marker)"
+                  (mapMouseout)="hoverOut()"
+                  [options]="marker.options">
+        <map-info-window #infoMarker>
+          <div class="infrastructure-marker-info">
+            <h3 class="infrastructure-marker-info__name ellipsis">
+              {{ markerContent?.name }}
+            </h3>
+            <div class="infrastructure-marker-info__address ellipsis">
+              <span>{{ markerContent?.address }}</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-between w-100">
+              <span class="infrastructure-marker-info__type" *ngIf="markerContent?.type">
+                {{ markerContent?.type | titlecase}}
+              </span>
+              <button class="button button--ghost button--small" (click)="openInfrastructure(markerContent)">
+                View
+              </button>
+            </div>
+          </div>
+        </map-info-window>
+      </map-marker>
+    </google-map>
+  </div>
+  <div class="zoom-navigation">
+    <button (click)="zoomIn()" class="zoom-navigation__button">
+      <span class="icon icon--plus icon--size-16px"></span>
+    </button>
+    <hr>
+    <button (click)="zoomOut()" class="zoom-navigation__button">
+      <span class="icon icon--minus icon--size-16px"></span>
+    </button>
+  </div>
+
+  <div class="mt--32 map-loader" *ngIf="!loading && !googleMapMarkers?.length && !receivedGoogleMapMarkers?.length">
+    <h2>No active Infrastructure found</h2>
+  </div>
+
+  <div class="mt--32 map-loader" [hidden]="!loading">
+    <ai-loading></ai-loading>
+  </div>
+</div>

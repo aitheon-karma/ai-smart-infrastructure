@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon / 64-cont services / Creators studio</title>
+    <defs>
+        <linearGradient x1="100%" y1="0%" x2="8.23242188%" y2="96.3476562%" id="linearGradient-1">
+            <stop stop-color="#EF33F2" offset="0%"></stop>
+            <stop stop-color="#3544DC" offset="100%"></stop>
+        </linearGradient>
+        <path d="M10,0 L54,0 C59.5228475,-1.01453063e-15 64,4.4771525 64,10 L64,54 C64,59.5228475 59.5228475,64 54,64 L10,64 C4.4771525,64 6.76353751e-16,59.5228475 0,54 L0,10 C-6.76353751e-16,4.4771525 4.4771525,1.01453063e-15 10,0 Z" id="path-2"></path>
+        <rect id="path-4" x="3" y="0" width="36" height="16" rx="2"></rect>
+        <filter x="-19.4%" y="-31.2%" width="138.9%" height="187.5%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.3 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M5,0 L37,0 C38.1045695,-2.02906125e-16 39,0.8954305 39,2 L39,5.0078125 L39,5.0078125 C38.1737284,5.19786773 37.5604471,5.44786773 37.1601562,5.7578125 C36.2472809,6.46465082 36,7.54837144 36,8 C36,8.44175963 36.1786153,9.5031943 37.1601562,10.220459 C37.5639648,10.5155436 38.1772461,10.7884928 39,11.0393066 L39,14 C39,15.1045695 38.1045695,16 37,16 L5,16 C3.8954305,16 3,15.1045695 3,14 L3,11.0454102 L3,11.0454102 C3.9620325,10.7642182 4.59818159,10.4892345 4.90844727,10.220459 C5.70611333,9.52946054 6,8.45137838 6,8 C6,7.53084975 5.77016196,6.47053553 4.90844727,5.7578125 C4.6077274,5.50908751 3.97157831,5.25908751 3,5.0078125 L3,2 C3,0.8954305 3.8954305,2.02906125e-16 5,0 Z" id="path-6"></path>
+        <filter x="-19.4%" y="-31.2%" width="138.9%" height="187.5%" filterUnits="objectBoundingBox" id="filter-7">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.4 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M5,0 L37,0 C38.1045695,-2.02906125e-16 39,0.8954305 39,2 L39,5.0078125 L39,5.0078125 C38.1737284,5.19786773 37.5604471,5.44786773 37.1601562,5.7578125 C36.2472809,6.46465082 36,7.54837144 36,8 C36,8.44175963 36.1786153,9.5031943 37.1601562,10.220459 C37.5639648,10.5155436 38.1772461,10.7884928 39,11.0393066 L39,14 C39,15.1045695 38.1045695,16 37,16 L5,16 C3.8954305,16 3,15.1045695 3,14 L3,11.0454102 L3,11.0454102 C3.9620325,10.7642182 4.59818159,10.4892345 4.90844727,10.220459 C5.70611333,9.52946054 6,8.45137838 6,8 C6,7.53084975 5.77016196,6.47053553 4.90844727,5.7578125 C4.6077274,5.50908751 3.97157831,5.25908751 3,5.0078125 L3,2 C3,0.8954305 3.8954305,2.02906125e-16 5,0 Z" id="path-8"></path>
+        <filter x="-19.4%" y="-31.2%" width="138.9%" height="187.5%" filterUnits="objectBoundingBox" id="filter-9">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.4 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-08-Automation-/-08_02_New-Automatino-node" transform="translate(-569.000000, -374.000000)">
+            <g id="Group-6" transform="translate(208.000000, 243.000000)">
+                <g id="Group-2" transform="translate(287.000000, 99.000000)">
+                    <g id="icon-/-64-cont-services-/-Creators-studio" transform="translate(74.000000, 32.000000)">
+                        <mask id="mask-3" fill="white">
+                            <use xlink:href="#path-2"></use>
+                        </mask>
+                        <use id="Rectangle-6-Copy-22" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                        <g id="Group-9" mask="url(#mask-3)">
+                            <g transform="translate(11.000000, 14.000000)">
+                                <g id="Rectangle" stroke="none" fill="none">
+                                    <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-4"></use>
+                                </g>
+                                <circle id="Oval" stroke="#FFFFFF" stroke-width="1" fill="url(#linearGradient-1)" fill-rule="evenodd" cx="39" cy="8" r="3"></circle>
+                                <circle id="Oval" stroke="#FFFFFF" stroke-width="1" fill="url(#linearGradient-1)" fill-rule="evenodd" cx="3" cy="8" r="3"></circle>
+                            </g>
+                        </g>
+                        <g id="Group-8" mask="url(#mask-3)" opacity="0.5">
+                            <g transform="translate(11.000000, 35.000000)">
+                                <g id="Rectangle" stroke="none" fill="none">
+                                    <use fill="black" fill-opacity="1" filter="url(#filter-7)" xlink:href="#path-6"></use>
+                                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-6"></use>
+                                </g>
+                                <circle id="Oval" stroke="#FFFFFF" stroke-width="1" fill="url(#linearGradient-1)" fill-rule="evenodd" cx="39" cy="8" r="3"></circle>
+                                <circle id="Oval" stroke="#FFFFFF" stroke-width="1" fill="url(#linearGradient-1)" fill-rule="evenodd" cx="3" cy="8" r="3"></circle>
+                            </g>
+                        </g>
+                        <g id="Group-7" mask="url(#mask-3)" opacity="0.200000003">
+                            <g transform="translate(11.000000, 56.000000)">
+                                <g id="Rectangle" stroke="none" fill="none">
+                                    <use fill="black" fill-opacity="1" filter="url(#filter-9)" xlink:href="#path-8"></use>
+                                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-8"></use>
+                                </g>
+                                <circle id="Oval" stroke="#FFFFFF" stroke-width="1" fill="url(#linearGradient-1)" fill-rule="evenodd" cx="39" cy="8" r="3"></circle>
+                                <circle id="Oval" stroke="#FFFFFF" stroke-width="1" fill="url(#linearGradient-1)" fill-rule="evenodd" cx="3" cy="8" r="3"></circle>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

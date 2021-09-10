@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>anchor-toolbox-ic</title>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-03-Sctructure-/-03_02_Active-View-Settings" transform="translate(-72.000000, -391.000000)">
+            <g id="Group-17" transform="translate(16.000000, 217.000000)">
+                <g id="anchor-toolbox-ic" transform="translate(56.000000, 174.000000)">
+                    <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
+                    <g id="Group-36" transform="translate(4.000000, 3.952881)">
+                        <path d="M13,3.04711914 C13.5522847,3.04711914 14,3.49483439 14,4.04711914 L14,9.04711914 C15.1045695,9.04711914 16,9.94254964 16,11.0471191 L16,14.0471191 C16,15.1516886 15.1045695,16.0471191 14,16.0471191 L2,16.0471191 C0.8954305,16.0471191 1.3527075e-16,15.1516886 0,14.0471191 L0,11.0471191 C-1.3527075e-16,9.94254964 0.8954305,9.04711914 2,9.04711914 L12,9.04611914 L12,4.04711914 C12,3.49483439 12.4477153,3.04711914 13,3.04711914 Z M3.5,11.0471191 C2.67157288,11.0471191 2,11.718692 2,12.5471191 C2,13.3755463 2.67157288,14.0471191 3.5,14.0471191 C4.32842712,14.0471191 5,13.3755463 5,12.5471191 C5,11.718692 4.32842712,11.0471191 3.5,11.0471191 Z" id="Combined-Shape" fill="#7E7E7E"></path>
+                        <path d="M4,6 C4,2 6,0 10,0" id="Path-4" stroke="#7E7E7E" stroke-width="1.5" stroke-linecap="round"></path>
+                        <path d="M7,5 C7,3.66666667 7.66666667,3 9,3" id="Path-4" stroke="#7E7E7E" stroke-width="1.5" stroke-linecap="round"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

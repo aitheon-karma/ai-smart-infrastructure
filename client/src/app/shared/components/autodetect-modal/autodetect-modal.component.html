@@ -1,0 +1,128 @@
+<ng-template #autoDetectModal>
+	<div class="modal-header store-settings__header">
+			<div class="d-flex flex-column w-100">
+					<div class="d-flex justify-content-between align-items-center">
+							<h4 class="modal-title pull-left position-relative">
+									Adding Device
+							</h4>
+							<div class="icon icon--close icon--dynamic"
+									 (click)="closeModal($event)"></div>
+					</div>
+			</div>
+	</div>
+	<div class="modal-body autoDetect__body">
+		<div class="autoDetect__steps">
+			<label class="autoDetect__step" [class.autoDetect__step--active]="firstStep">
+				1. Preparing for connection
+			</label>
+			<label class="autoDetect__step" [class.autoDetect__step--active]="secondStep">
+				2. Searching for device
+			</label>
+			<label class="autoDetect__step" [class.autoDetect__step--active]="thirdStep">
+				3. Received information
+			</label>
+		</div>
+		<div class="autoDetect__data-container">
+			<div class="autoDetect__first-step-data" *ngIf="firstStep">
+				<div class="icon icon--attention-gray mr--16"></div>
+				<div class="autoDetect__data-title">Please make sure your device is disconnected!</div>
+			</div>
+			<div class="autoDetect__second-step-data" *ngIf="secondStep">
+				<ai-loading class="mb--8"></ai-loading>
+				<div class="autoDetect__data-title">Please connect your new device</div>
+			</div>
+			<div class="autoDetect__third-step-data" *ngIf="thirdStep">
+				<div class="autoDetect__data-title d-flex align-items-center mt--16 mb--16">
+					<span class="icon icon--done-success icon--green mr--16"></span>
+					Device successfully detected
+				</div>
+				<div class="autoDetect__data-table">
+					<div class="autoDetect__data-table-section">
+						<label class="autoDetect__data-table-label">Product</label>
+						<div class="autoDetect__data-table-info">{{detectedDevice.deviceName}}</div>
+					</div>
+					<div class="autoDetect__data-table-section">
+						<label class="autoDetect__data-table-label">Manufacturer</label>
+						<div class="autoDetect__data-table-info">{{detectedDevice.manufacturer}}</div>
+					</div>
+					<div class="autoDetect__data-table-section">
+						<label class="autoDetect__data-table-label">Serial number</label>
+						<div class="autoDetect__data-table-info">{{detectedDevice.serialNumber}}</div>
+					</div>
+					<div class="autoDetect__data-table-section">
+						<label class="autoDetect__data-table-label">Product ID</label>
+						<div class="autoDetect__data-table-info">{{detectedDevice.productId}}</div>
+					</div>
+					<!-- <div class="autoDetect__data-table-section">
+						<label class="autoDetect__data-table-label">%Data</label>
+						<div class="autoDetect__data-table-info">%Data</div>
+					</div>
+					 -->
+				</div>
+			</div>
+			<div class="autoDetect__third-step-data autoDetect__third-step-data--error" *ngIf="errorStep">
+				<div class="autoDetect__data-title d-flex align-items-center mt--16 mb--16">
+					<span class="icon icon icon--attention icon--orange mr--16"></span>
+					Device already in use
+				</div>
+				<div class="autoDetect__data-device device">
+					<div class="device__image">
+						<span class="icon icon--image icon--size-16px"></span>
+					</div>
+					<div class="device__center">
+						<div class="device__info">
+							<div class="device__name">%Device.Name%</div>
+							<div class="device__version mb--8">%Device.ID%</div>
+							<div class="device__type">Printer</div>
+						</div>
+					</div>
+					<div class="device__right ml-auto">
+						<div class="device__status device__status--base-red ml-auto">
+							Offline
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+			<!-- <button class="button button--medium button--ghost"
+							(click)="goToThirdStep()"
+							*ngIf="secondStep">
+					next (temporary)
+			</button> -->
+			<!-- <button class="button button--medium button--ghost"
+							(click)="goToErrorStep()"
+							*ngIf="thirdStep">
+					show error step (temporary)
+			</button> -->
+			<button class="button button--medium button--contained mr-2"
+							(click)="closeModal($event)"
+							*ngIf="secondStep">
+					cancel
+			</button>
+			<button class="button button--medium button--contained"
+							(click)="goToSecondStep()"
+							*ngIf="firstStep">
+					next
+			</button>
+			<button class="button button--medium button--contained"
+							(click)="onAddNewDevice($event)"
+							*ngIf="thirdStep">
+					Accept
+			</button>
+			<button class="button button--medium button--ghost mr--8"
+							*ngIf="errorStep">
+					go to device
+			</button>
+			<button class="button button--medium button--ghost"
+							(click)="onAddNewDevice()"
+							*ngIf="errorStep">
+					Add new Device
+			</button>
+	</div>
+
+	<!-- <div class="loading-container">
+			<ai-loading></ai-loading>
+	</div> -->
+</ng-template>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="96px" height="96px" viewBox="0 0 96 96" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>178BE780-0F9F-4EEA-B7A4-84B13B4129D4@1.00x</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.494118 0 0 0 0 0.494118 0 0 0 0 0.494118 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+        <filter id="filter-2">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.270588 0 0 0 0 0.270588 0 0 0 0 0.270588 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+        <circle id="path-3" cx="48" cy="48" r="48"></circle>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="96" height="96" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+    </defs>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="24-Smart-Infrastructure-/-09-Station-/-09_06_Changes-in-app" transform="translate(-154.000000, -300.000000)">
+            <g id="Group-19" transform="translate(154.000000, 300.000000)">
+                <g id="Group-35" transform="translate(24.000000, 24.000000)">
+                    <rect id="Rectangle" x="0" y="0" width="48" height="48"></rect>
+                    <g filter="url(#filter-1)" id="icon-/-24-cont-/-nav-/-plug-24">
+                        <g transform="translate(10.000000, 4.000000)" filter="url(#filter-2)" id="Group">
+                            <g>
+                                <polygon id="Path" fill="#000000" fill-rule="nonzero" points="18.8427826 31.1633913 9.1553913 31.1633913 9.1553913 35.2806087 12.0393913 35.2806087 12.0393913 37.5869565 15.96 37.5869565 15.96 35.2806087 18.8427826 35.2806087"></polygon>
+                                <path d="M27.7486087,11.648 L22.2338261,11.648 L22.2338261,1.96852174 C22.2338261,0.965391304 21.4206087,0.152173913 20.4174783,0.152173913 C19.4143478,0.152173913 18.6011304,0.965391304 18.6011304,1.96852174 L18.6011304,11.648 L9.39765217,11.648 L9.39765217,1.96852174 C9.39765217,0.965391304 8.58443478,0.152173913 7.58130435,0.152173913 C6.57756522,0.152173913 5.76495652,0.965391304 5.76495652,1.96852174 L5.76495652,11.648 L0.251391304,11.648 L0.251391304,15.7682609 L2.26008696,15.7682609 L2.26008696,23.1973913 C2.26008696,26.929913 5.28591304,29.9557391 9.01782609,29.9557391 L18.9803478,29.9557391 C22.7128696,29.9557391 25.738087,26.929913 25.738087,23.1973913 L25.738087,15.7688696 L27.748,15.7688696 L27.748,11.648 L27.7486087,11.648 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+                <use id="Oval" stroke="#454545" mask="url(#mask-4)" stroke-width="2" stroke-dasharray="3" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>

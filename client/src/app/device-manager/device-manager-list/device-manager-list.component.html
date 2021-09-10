@@ -1,0 +1,19 @@
+<div class="device-manager-list" *ngIf="devices?.length !== 0 else noDeviceCards">
+  <ai-device-manager-card *ngFor="let deviceCard of devices" [device]="deviceCard" [infrastructure]="infrastructure"></ai-device-manager-card>
+</div>
+<ng-template #noDeviceCards>
+  <div class="no-devices">
+    <div class="no-devices__icon">
+      <img src="assets/img/icons/no-devices.svg" style="width: 100%">
+    </div>
+    <span class="pb--16">
+      There are no devices added to this building yet.
+    </span>
+    <button class="button button--ghost button--outlined button--medium mt--8"
+            [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+            (click)="addDevice()">
+      <span class="icon icon--plus icon--size-16px button__icon"></span>
+      Add Device
+    </button>
+  </div>
+</ng-template>

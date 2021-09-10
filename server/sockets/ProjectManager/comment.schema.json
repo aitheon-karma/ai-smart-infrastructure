@@ -1,0 +1,44 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "createdBy": {
+      "type": "object"
+    },
+    "parent": {
+      "type": "object"
+    },
+    "task": {
+      "type": "object"
+    },
+    "attachments": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "createdAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "updatedAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "required": [
+    "text",
+    "createdBy",
+    "parent",
+    "task"
+  ],
+  "description": "Task comment",
+  "title": "Comment",
+  "$id": "5e90639675ad3600121e3652"
+}

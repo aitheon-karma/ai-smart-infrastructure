@@ -1,0 +1,25 @@
+<ai-nav-menu [isInfrastructureMode]="true"></ai-nav-menu>
+<div class="container application-dashboard">
+    <div class="application-dashboard__header">
+        <div class="header__title">
+            {{ application?.project?.name }}
+        </div>
+
+        <button class="button button--ghost button--small button--core-container button--core-container--small ml-auto"
+                (click)="openCore()"
+                *ngIf="graphURL">
+        <span class="button--core">
+            <span class="icon icon--size-16px service-icon system_graph"></span>
+            open core
+        </span>
+        </button>
+    </div>
+
+    <ai-application-dashboard [application]="application"
+                              [allowCollapse]="false"
+                              *ngIf="!isLoading"
+                              [isReadonly]="true"
+                              [graphURL]="graphURL"></ai-application-dashboard>
+</div>
+
+<ai-loading *ngIf="isLoading" class="loading-container"></ai-loading>

@@ -1,0 +1,29 @@
+<div class="infrastructures" *ngIf="!loading else loadingView">
+  <nav>
+    <ul class="nav nav-pills flex-column">
+      <li class="nav-item" *ngFor="let item of infraItems" #{item.name}>
+        <a class="nav-link nav-link-arrow dropDown"
+           [class.rotate]="item.isOpen"
+           (click)="toggleSubNav(item.itemType)">
+          {{ item.name }}
+          <span class="nav-link--small">({{ getNumberOfCurrentTypeInfrastructures(item, infrastructuresType) }})</span>
+        </a>
+        <ul class="nav nav-sub flex-column pt--4" [class.show]="item.isOpen">
+          <li class="nav-item" *ngFor="let infrastructure of item.infrastructures; let index = i">
+            <ai-infrastructures-item  *ngIf="infrastructure.status === infrastructuresType"
+                                      [infrastructure]="infrastructure"
+                                      (getInfraItem)="navigateToSelectedItem($event)"
+                                      (onDelete)="onAfterDelete($event)">
+            </ai-infrastructures-item>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<ng-template #loadingView>
+  <div class="mt--32">
+    <ai-loading></ai-loading>
+  </div>
+</ng-template>

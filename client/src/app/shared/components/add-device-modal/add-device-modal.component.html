@@ -1,0 +1,112 @@
+<ng-template #addDeviceModal>
+  <div class="modal-header reject__header">
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="modal-title pull-left position-relative">
+          List of devices
+        </h4>
+        <div class="icon icon--close icon--dynamic"
+             (click)="closeModal()"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-body add-device">
+    <div *ngIf="!loading; else loadingView"
+         class="add-device__list-wrapper"
+         [class.add-device__list-wrapper--empty]="!devices?.length">
+      <div class="add-device__search"></div>
+      <div class="add-device__list-empty" *ngIf="!devices?.length">
+        <p>No available devices found. Try adding a new device or remove an existing device from another system.</p>
+        <button class="button button--medium button--ghost"
+                (click)="data?.mode && data?.mode === 'FROM_DEVICE_TAB' ? openAddNewDeviceFromDevicePage() : onAddNewDevice()">
+          <span class="icon icon--plus icon--gold icon--size-16px mr--8"></span>
+          Add New Device
+        </button>
+      </div>
+
+      <div class="add-device__list">
+        <div class="add-device__item"
+            *ngFor="let device of devices"
+            [class.add-device__item--active]="isDeviceActive(device)"
+            (click)="selectDevice(device)">
+          <div class="add-device__item-image-container">
+            <div *ngIf="!device?.image?.signedUrl" class="add-device__item-default-image"></div>
+            <img *ngIf="device?.image?.signedUrl" [src]="device?.image?.signedUrl" class="add-device__item-image" alt="device-image">
+          </div>
+          <div class="add-device__item-info">
+            <div class="item-info__name">
+              {{ device.name | titlecase }}
+            </div>
+            <!-- <div class="item-info__id">
+              {{ device.type._id }}
+            </div> -->
+            <div class="item-info__type">
+              {{ device.type.name | titlecase }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="noEmptySeats && !loading" class="no-empty-seats">
+      <div class="no-empty-seats__total" *ngIf="userCanPay">
+        <div class="d-flex align-items-center justify-content-between mb--4">
+          <span class="title">
+            Total monthly fee from {{ currentMonth }}, 1 for this device
+          </span>
+          <span class="price">
+            {{ totalPrice | currency: 'USD':'symbol':'1.0' }}
+          </span>
+        </div>
+        <span class="sub-title text-gray"
+              *ngIf="billingClientService.userAccountsData$ | async">
+          Your month payment {{ totalPrice | currency: 'USD' }} will be charged from {{ (billingClientService.userAccountsData$ | async)?.defaultUserAccount?.name }}
+        </span>
+      </div>
+      <div class="no-empty-seats__additional">
+        <div class="d-flex align-items-center justify-content-between mb--24" *ngIf="userCanPay">
+          <span>
+            Payment for current month till {{ currentMonth }}, {{ daysInMonth }}
+          </span>
+          <span class="text-green">
+            Paid in Device Manager
+          </span>
+        </div>
+        <span class="d-flex align-items-start justify-content-start text-gray">
+          <span class="icon icon--info icon--size-24px mr--16"></span>
+          {{ userCanPay ? 'Adding this device will take 1 seat in Smart Infrastructure service. 1 seat in Device Manager will open up.' : 'Adding the device from Device Manager service implies an increase in the number of seats in Smart Infrastructure service. You don\'t have permission to complete the action. Contact your organization admin to solve the issue' }}
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-footer reject__footer">
+    <div class="modal-footer__buttons-container">
+      <button class="button button--medium button--ghost mr-2"
+              *ngIf="devices?.length"
+              (click)="data?.mode && data?.mode === 'FROM_DEVICE_TAB' ? openAddNewDeviceFromDevicePage() : onAddNewDevice()">
+        <span class="icon icon--plus icon--size-16px button__icon"></span>
+        <span>Add new Device</span>
+      </button>
+    </div>
+    <div class="modal-footer__buttons-container">
+      <button class="button button--medium button--ghost mr-2"
+              (click)="closeModal()">
+        Cancel
+      </button>
+      <button class="button button--medium button--contained" type="button"
+              [class.button--disabled]="(noEmptySeats && !userCanPay) || addBtnDisable || !selectedDevice"
+              [disabled]="(noEmptySeats && !userCanPay) || addBtnDisable || !selectedDevice"
+              (click)="onAdd()">
+        Add
+      </button>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #loadingView>
+  <ai-loading class="p-3 text-center"></ai-loading>
+</ng-template>

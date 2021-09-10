@@ -1,0 +1,257 @@
+<div *ngIf="listChangeStat === 2 || listChangeStat === undefined">
+  <div class="items-sec">
+    <div class="item-img" (click)="openModal(itemTemplate)">
+      <!-- <div class="img-id-top">
+        <label>{{item?.assetId}}</label>
+      </div> -->
+      <img *ngIf="item?.images?.length == 0" src="assets/no-image-icon-23485.png" />
+      <img *ngIf="item?.images?.length > 0" src="{{item.images[0].url}}" />
+    </div>
+    <div class="item-info card p-3">
+      <div class="flex">
+        <h2 class="item-name cursor" (click)="openModal(itemTemplate)">{{ item?.name }} </h2>
+        <!-- class="settings-icon" -->
+        <span (click)="OpenSettingModal()" style="z-index: auto"> <img class="hover"
+            src="assets/icons/parameters-24.svg" alt="Config">
+        </span>
+      </div>
+
+      <div class="row boxrow">
+        <div class="col-md-4">
+          <p>Available</p>
+        </div>
+        <div class="col-md-8"> <i class="fa fa-square" [ngStyle]="{'color': getAvailable(item)?'#06a903':'#ff9200' }"
+            aria-hidden="true"></i>
+          <span>{{ getAvailable(item) }}</span></div>
+      </div>
+      <div class="row boxrow">
+        <div class="col-md-4">
+          <p>Category</p>
+        </div>
+        <div class="col-md-8">
+          <span>{{ item?.category?.name }}</span></div>
+      </div>
+      <div class="row boxrow">
+        <div class="col-md-4">
+          <p>Supplier</p>
+        </div>
+        <div class="col-md-8"> <span>{{ item?.organization?.name }}</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-0 card mb-2 item-row  listview" *ngIf="listChangeStat === 1 && listChangeStat !== undefined">
+  <div class="col-md-4 d-flex align-items-center hover" (click)="openModal(itemTemplate)">
+    <div class="row align-items-center listview-left">
+      <div class="listview__photo">
+        <img class="listview__photo-image" *ngIf="item.images.length == 0" src="assets/no-image-icon-23485.png" />
+        <img class="listview__photo-image" *ngIf="item.images.length > 0" src="{{item?.images[0]?.url}}" />
+      </div>
+      <div class="listview__name">
+        <h2 class="listview__name-title">{{ item?.name }}</h2>
+        <span>{{item?.assetId}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 d-flex align-items-center">
+    <p><i class="fa fa-square mr-2" aria-hidden="true"></i>{{ getAvailable(item)}} pcs</p>
+  </div>
+  <div class="col-md-3 d-flex align-items-center">
+    <p>{{ item?.category?.name }}</p>
+  </div>
+  <div class="col-md-2 d-flex align-items-center">
+    {{ item?.organization?.name }}
+  </div>
+  <div class="col-md-1 d-flex align-items-center setting-mt">
+    <span (click)="OpenSettingModal()"> <img class="hover" src="assets/icons/parameters-24.svg" alt="Config"> </span>
+  </div>
+
+</div>
+
+<ng-template #settingModal>
+  <!-- Modal Header -->
+  <div class="modal-header d-flex align-items-center">
+    <h4 class="modal-title pull-left">//Config</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onCloseDialog()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- Modal Body -->
+  <div class="modal-body p-0">
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="row">
+          <div class="col-12">
+            <div class="p-1">
+              <div class="row m-0">
+                <div class="col-12 address-block shadow-sm p-3 mb-2 rounded">
+                  <div class="col-12">
+                    <form [formGroup]="settingForm">
+                      <div class="row">
+                        <div class="col-md-3 padding">
+                          <div class="config-img">
+                            <img *ngIf="item?.images?.length == 0" src="assets/no-image-icon-23485.png" />
+                            <img *ngIf="item?.images?.length > 0" src="{{item.images[0].url}}" />
+                          </div>
+                        </div>
+                        <div class="col-md-9 padding">
+                          <div class="config-img">
+                            <!-- <div class="img-id-top">
+                                  <label>{{item?.assetId}}</label>
+                                </div> -->
+                            <div class="row" style="float: left;">
+                              <div class="col-12">
+                                <label>{{item?.name}}</label>
+                              </div>
+                              <div class="col-12" *ngIf='item.productCode != " " || item.productCode !== null'>
+                                <small *ngIf='item.productCode != ""'>ID:{{item?.productCode}} </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row m-0">
+                        <div class="input">
+                          <input type="number" autocomplete="off" max="5" formControlName="tie">
+                          <label class="input-text">Tie Value </label>
+                          <small *ngIf="submitted && settingForm.get('tie').hasError('required')" class="text-danger">
+                            Tie value is required
+                          </small>
+                        </div>
+                        <div class="input">
+                          <input type="number" autocomplete="off" formControlName="high">
+                          <label class="input-text">High Value</label>
+                          <small *ngIf="submitted && settingForm.get('high').hasError('required')" class="text-danger">
+                            High is required
+                          </small>
+                        </div>
+                        <div class="input">
+                          <input type="number" autocomplete="off" formControlName="min">
+                          <label class="input-text"> Min Stock</label>
+                          <small *ngIf="submitted && settingForm.get('min').hasError('required')" class="text-danger">
+                            Minimum value is required
+                          </small>
+                        </div>
+                        <div class="input">
+                          <input type="number" autocomplete="off" maxlength="5" formControlName="max">
+                          <label class="input-text"> Max Stock</label>
+                          <small *ngIf="submitted && settingForm.get('max').hasError('required')" class="text-danger">
+                            Maximum Value is required
+                          </small>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row m-1">
+      <button class="btn cancel btn-link pull-right mr-2" (click)="onCloseDialog()">Cancel</button>
+      <button class="btn btn-primary pull-right" (click)="saveSettings()">Save</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingView>
+  <ai-loading class="p-3 text-center"></ai-loading>
+</ng-template>
+
+
+<!-- Item modal -->
+<ng-template #itemTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Item Details</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body p-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-md-4 mt-2 custom">
+            <div class="row">
+              <div class="col-md-12 image">
+                <img [src]="item.images[index].url" alt="">
+              </div>
+              <div class="col-md-12">
+                <div class="preview">
+                  <div class="imagePreview" *ngFor="let image of item.images; let i = index;" (click)="index= i">
+                    <img [src]="image.url">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="col-md-8 custom">
+            <div class="item-details postion-relative">
+              <div class="row">
+                <div class="col-md-10 mt-2">
+                  <h2>{{item.name}}</h2>
+                </div>
+              </div>
+              <!-- <div class="row mt-1">
+                      <div class="col-md-12 id">ID: 5cd3056247fc6d001091809f <span class="ai-outline-labels friends ml-2">
+                          APPROVED </span></div>
+                    </div> -->
+              <div class="row" *ngIf="item.category?.name">
+                <div class="col-md-5"><label>Category</label></div>
+                <div class="col-md-7">
+                  <p>{{item.category?.name}}</p>
+                </div>
+              </div>
+              <div class="row" *ngIf="item?.partNumber">
+                <div class="col-md-5"><label>Part number</label></div>
+                <div class="col-md-7">
+                  <p>{{item.partNumber}}</p>
+                </div>
+              </div>
+              <div class="row" *ngIf="item?.salePrice">
+                <div class="col-md-5"><label>Price</label></div>
+                <div class="col-md-7">
+                  <p>{{item.salePrice}}</p>
+                </div>
+              </div>
+              <div class="row" *ngFor="let property of item?.properties;">
+                <ng-container *ngIf="property?.name && property.propValue !=null && property.propValue !=''">
+                  <div class="col-md-5"><label>{{property?.name}}</label></div>
+                  <div class="col-md-7">
+                    <p>{{property?.propValue}}</p>
+                  </div>
+                </ng-container>
+              </div>
+
+              <div class="row" *ngIf="item?.description && item.description!=''">
+                <div class="col-md-12 description-label"><label>Description</label></div>
+                <div class="col-md-12">
+                  <p>
+                    <span>
+                      <span> {{item.description}}</span>
+                      <a class="description_section__link" href="javascript:;">See more </a>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" aria-label="Excel" [disabled]="inventoryReport"
+      (click)="getInventoryLogs(item._id)">
+      InventoryReport
+    </button>
+    <button class="btn btn-default pull-right" href="javascript:void(0)" (click)="modalRef.hide()">Close</button>
+  </div>
+</ng-template>

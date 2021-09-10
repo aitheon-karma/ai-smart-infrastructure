@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>market</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="1.44424438%" y1="0%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#17EAD9" offset="0%"></stop>
+            <stop stop-color="#1D39BD" offset="100%"></stop>
+        </linearGradient>
+        <path d="M14.0353267,11.9999892 C19.3505622,11.9999892 24.6657978,11.9999892 29.9810333,11.9999892 C35.3099979,11.9999892 40.6489514,11.9999892 45.9978938,11.9999892 C47.1024634,11.999989 47.997894,12.8954196 47.997894,13.9999892 C47.997894,14.0006909 47.9978936,14.0013925 47.9978929,14.0020941 L47.9642187,45.9983963 C47.963057,47.1021433 47.0679673,47.9962915 45.9642198,47.9962915 L29.7298513,47.9962915 L14.0020793,47.9962915 C12.8975098,47.9962915 12.0020793,47.100861 12.0020793,45.9962915 C12.0020793,45.9955987 12.0020796,45.994906 12.0020804,45.9942133 L12.0353278,13.997911 C12.0364747,12.8941536 12.9315687,11.9999892 14.0353267,11.9999892 Z" id="path-2"></path>
+        <filter x="-19.4%" y="-13.9%" width="138.9%" height="138.9%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.188592657 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M22.0793091,9 C22.8635132,15 25.506905,18 30.0094844,18 C34.9544961,18 37.5968596,15 37.936575,9" id="path-4"></path>
+        <filter x="-29.1%" y="-40.2%" width="157.9%" height="201.3%" filterUnits="objectBoundingBox" id="filter-5">
+            <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="1" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feMorphology radius="1" operator="erode" in="SourceAlpha" result="shadowInner"></feMorphology>
+            <feOffset dx="0" dy="1" in="shadowInner" result="shadowInner"></feOffset>
+            <feComposite in="shadowOffsetOuter1" in2="shadowInner" operator="out" result="shadowOffsetOuter1"></feComposite>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="App-icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Categories" transform="translate(-340.000000, -412.000000)" fill="">
+            <g id="Market-2" transform="translate(340.000000, 412.000000)">
+                <g id="Group-13" fill="none">
+                    <path d="M10,0 L50,0 C55.5228475,-1.01453063e-15 60,4.4771525 60,10 L60,50 C60,55.5228475 55.5228475,60 50,60 L10,60 C4.4771525,60 7.78178111e-15,55.5228475 1.0658141e-14,50 L1.0658141e-14,10 C9.98178729e-15,4.4771525 4.4771525,-2.53818305e-15 10,0 Z" id="Rectangle-6-Copy" fill="url(#linearGradient-1)"></path>
+                    <g id="Rectangle">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    </g>
+                    <circle id="Oval-Copy-2" fill="url(#linearGradient-1)" cx="22" cy="18" r="3"></circle>
+                    <circle id="Oval-Copy-2" fill="url(#linearGradient-1)" cx="38" cy="18" r="3"></circle>
+                    <g id="Path-6" stroke-linecap="round" transform="translate(30.007942, 13.500000) scale(1, -1) translate(-30.007942, -13.500000) ">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                        <use stroke="#18D3D5" stroke-width="2" xlink:href="#path-4"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

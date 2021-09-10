@@ -1,0 +1,575 @@
+<div class="container mb--48 p-0">
+  <form [formGroup]="deviceForm"
+        class="device-form"
+        [class.mt--56]="userNeedToPay && !editMode"
+        *ngIf="!loading; else loadingView">
+    <button type="button"
+            style="margin-left: -32px"
+            class="button button--ghost button--medium mb--16 mt--16"
+            *ngIf="!editMode && !stationId"
+            (click)="closeNewDeviceForm()">
+      <span class="icon icon--chevron-left icon--size-16px button__icon"></span>
+      Back to Device Manager
+    </button>
+
+    <button type="button"
+            style="margin-left: -32px"
+            class="button button--ghost button--medium mb--16 mt--16"
+            *ngIf="!editMode && stationId"
+            (click)="backToStation()">
+      <span class="icon icon--chevron-left icon--size-16px button__icon"></span>
+      Back to Station
+    </button>
+
+    <div class="form-group">
+
+      <div class="device-image">
+        <div class="device-image__upload">
+          <img [src]="deviceImage?.signedUrl || device?.image?.signedUrl"
+               *ngIf="deviceImage?.signedUrl || device?.image?.signedUrl; else defImage">
+          <ng-template #defImage>
+            <span class="icon icon--image"></span>
+          </ng-template>
+          <div #uploaderBlock>
+            <input #uploaderInput
+                   ng2FileSelect
+                   id="upload-files"
+                   name="upload-files"
+                   class="upload-input form-control"
+                   type="file"
+                   [uploader]="driveUploader?.uploader"
+                   accept=".jpg, .png"/>
+
+            <ai-drive-uploader (failedUploadFile)="failedUpload($event)"
+                               [autoUpload]="true"
+                               #driveUploader
+                               (success)="onSuccessUpload($event)"
+                               [oganizationId]="serviceKey?.key"
+                               [service]="serviceKey"
+                               (afterAddingFile)="onAfterAdd($event)">
+            </ai-drive-uploader>
+          </div>
+        </div>
+        <div class="device-image__info">
+          <span>Max image size: 3MB | Formats: JPG, PNG</span>
+          <button type="button"
+                  (click)="openUploadWindow()"
+                  class="button button--ghost button--medium mt--8">
+            Upload image
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        Device name
+      </label>
+      <div class="input-wrap input-wrap--outlined input-wrap--small">
+        <input type="text"
+               class="input-wrap__input"
+               formControlName="name"
+               placeholder="Enter name"
+               maxlength="30"
+               autocomplete="off" />
+        <span class="input-wrap__counter">
+          {{ formControls.name.value.length || 0 }}/30
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group" [hidden]='isController'>
+      <label class="form-label">
+        Device Type
+      </label>
+      <ng-select class="dropdown dropdown--outlined"
+                 [class.dropdown--disabled]="editMode"
+                 [multiple]="false"
+                 placeholder="Type"
+                 [items]="typesList"
+                 bindLabel="name"
+                 bindValue="value"
+                 [searchable]="false"
+                 [closeOnSelect]="true"
+                 [clearable]="false"
+                 formControlName="type">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items">
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <div class="form-group" [hidden]="deviceForm.get('type')?.value === 'AOS_DEVICE' || deviceForm.get('type')?.value === 'ROBOT'">
+      <label class="form-label">
+        Connection Type
+      </label>
+      <ng-select class="dropdown dropdown--outlined"
+                 [class.dropdown--disabled]="editMode"
+                 [multiple]="false"
+                 [items]="communicationTypeList"
+                 placeholder="Choose Connection Type"
+                 bindLabel="name"
+                 bindValue="value"
+                 [searchable]="false"
+                 [closeOnSelect]="true"
+                 [clearable]="false"
+                 formControlName="communicationType">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items">
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <div [hidden]="deviceForm.get('type')?.value !== 'AOS_DEVICE' && deviceForm.get('type')?.value !== 'ROBOT'">
+      <div class="form-group">
+        <label class="form-label">
+          Serial Number
+        </label>
+        <div class="input-wrap input-wrap--outlined input-wrap--small">
+          <input type="text"
+                 [class.input-wrap--disabled]="editMode"
+                 class="input-wrap__input"
+                 formControlName="serialNumber"
+                 placeholder="Enter Serial Number"
+                 autocomplete="off" />
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="!(deviceForm.get('type')?.value !== 'AOS_DEVICE' &&
+     (deviceForm.get('communicationType')?.value === 'ETHERNET' ||
+     deviceForm.get('communicationType')?.value === 'WIFI' ))">
+      <div class="form-group">
+        <label class="form-label">
+          Serial Number
+        </label>
+        <div class="input-wrap input-wrap--outlined input-wrap--small">
+          <input type="text"
+                 [class.input-wrap--disabled]="editMode"
+                 class="input-wrap__input"
+                 formControlName="serialNumber"
+                 placeholder="Enter Serial Number"
+                 autocomplete="off" />
+        </div>
+      </div>
+      <div class="form-group d-flex align-items-end justify-content-between">
+        <div class="flex-grow-1">
+          <label class="form-label">
+            IP Address
+          </label>
+          <div class="input-wrap input-wrap--outlined input-wrap--small">
+            <input type="text"
+                   [class.input-wrap--disabled]="editMode"
+                   mask="IP"
+                   placeholder="000.000.000.000"
+                   class="input-wrap__input"
+                   formControlName="address"
+                   autocomplete="off" />
+          </div>
+        </div>
+        <span class="semidot-divider">:</span>
+        <div class="flex-grow-1">
+          <label class="form-label">
+            Address Port
+          </label>
+          <div class="input-wrap input-wrap--outlined input-wrap--small">
+            <input type="text"
+                   [class.input-wrap--disabled]="editMode"
+                   mask="99999"
+                   placeholder="00000"
+                   class="input-wrap__input"
+                   formControlName="port"
+                   autocomplete="off" />
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb--24">
+        <button class="button button--outlined button--medium"
+                #testConnectionButton
+                (click)="runTestConnection()"
+                [class.button--disabled]="testConnectionButton.disabled ||
+                (!deviceForm.get('port').value ||
+                !deviceForm.get('address').value)">
+          {{ textConnection.title }}
+        </button>
+        <span class="ml--16 test-connection-status" [style.color]="textConnection.colorStatus">{{ textConnection.text }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="( deviceForm.get('type')?.value !== 'AOS_DEVICE' && deviceForm.get('type')?.value !== 'ROBOT') &&
+                  deviceForm.get('communicationType')?.value &&
+                  (deviceForm.get('communicationType')?.value !== 'ETHERNET' &&
+                  deviceForm.get('communicationType')?.value !== 'WIFI')">
+      <div class="form-group">
+        <label class="form-label">
+          Select Controller
+        </label>
+        <ng-select class="dropdown dropdown--outlined"
+                   [multiple]="false"
+                   [class.input-wrap--disabled]="editMode"
+                   placeholder="Choose the Controller"
+                   (open)="getControllers()"
+                   [items]="controllersList"
+                   bindLabel="name"
+                   bindValue="_id"
+                   [searchable]="false"
+                   [closeOnSelect]="true"
+                   [clearable]="false"
+                   [disableControl]='controllerId'
+                   [class.dropdown-wrap--disabled]='controllerId'
+                   formControlName="controller">
+          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            <div class="ng-value d-flex align-content-center justify-content-start" *ngFor="let item of items">
+              {{item?.name}}
+              <span class="controller-status"
+                    [ngClass]="item?.runnerConnected === true ? 'controller-status--online' : 'controller-status--offline'">
+                {{item?.runnerConnected ? 'Online' : 'Offline'}}
+              </span>
+            </div>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+            <div class="d-fex">
+              {{item?.name}}
+              <span class="controller-status"
+                    [ngClass]="item?.runnerConnected === true ? 'controller-status--online' : 'controller-status--offline'">
+                {{item?.runnerConnected ? 'Online' : 'Offline'}}
+              </span>
+            </div>
+          </ng-template>
+        </ng-select>
+        <span class="controller--offline"
+              *ngIf="!controllerId && selectedController.length > 0 && selectedController[0].runnerConnected === false">
+          Your controller is offline, please check device connection.
+        </span>
+      </div>
+      <div class="d-flex align-items-center mb--16" *ngIf="!payloadWithNotAosDevice">
+        <button class="button button--outlined button--medium"
+                [class.button--disabled]="!deviceForm.get('controller')?.value ||
+                (selectedController.length > 0 && selectedController[0]?.runnerConnected === false)"
+                [disabled]="!deviceForm.get('controller')?.value ||
+                (selectedController.length > 0 && selectedController[0]?.runnerConnected === false)"
+                (click)="openAutoDetectModal($event)">
+          Auto-detect
+        </button>
+        <span class="building-info ml--16" *ngIf="!deviceForm.get('controller')?.value && !editMode">
+          <span class="icon icon--info icon--size-24px mr--4"></span>
+          Please choose a controller which is online
+        </span>
+        <span class="building-info ml--16"
+              *ngIf="deviceForm.get('controller')?.value &&
+              !editMode &&
+              !notAosDeviceAdded &&
+              (selectedController?.length && selectedController[0].runnerConnected === true)">
+          <span class="icon icon--info icon--size-24px mr--4"></span>
+          To register device complete Auto-detect flow
+        </span>
+        <span class="building-info ml--16"
+              *ngIf="deviceForm.get('controller')?.value &&
+               !editMode &&
+               (selectedController?.length && selectedController[0].runnerConnected === false)">
+          <span class="icon icon--info icon--size-24px mr--4"></span>
+          You cannot start auto-detect if the controller is offline
+        </span>
+      </div>
+      <div class="mb--16" *ngIf="notAosDeviceAdded">
+        <div class="device-info">
+          <div class="device-info__header">
+            <span class="icon icon--done-success icon--green mr--8"></span>
+            Device <span *ngIf="payloadWithNotAosDevice?.product" class="pl--4 pr--4">{{ payloadWithNotAosDevice?.product }}</span> successfully added
+          </div>
+          <div class="device-info__list">
+            <div class="device-info__list__row">
+              <span class="row-name">Serial Number</span>
+              <span class="row-data">{{ payloadWithNotAosDevice.serialNumber }}</span>
+            </div>
+            <div class="device-info__list__row">
+              <span class="row-name">Manufacturer</span>
+              <span class="row-data">{{ payloadWithNotAosDevice.manufacturer }}</span>
+            </div>
+            <div class="device-info__list__row">
+              <span class="row-name">Connection Type</span>
+              <span class="row-data">{{ payloadWithNotAosDevice.communicationType }}</span>
+            </div>
+            <div class="device-info__list__row">
+              <span class="row-name">Protocol</span>
+              <span class="row-data">{{ payloadWithNotAosDevice.protocol }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--
+      <div class="form-group">
+        <label class="form-label">
+          Protocol
+        </label>
+        <ng-select class="dropdown dropdown--outlined"
+                   [class.dropdown--disabled]="selectedController?.length === 0 || (selectedController?.length > 0 && selectedController[0]?.runnerConnected === false)"
+                   [multiple]="false"
+                   placeholder="Choose the Protocol"
+                   [items]="protocolTypeList"
+                   bindLabel="name"
+                   bindValue="value"
+                   [searchable]="false"
+                   [closeOnSelect]="true"
+                   [clearable]="false"
+                   formControlName="protocol">
+          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            <div class="ng-value d-flex align-content-center justify-content-start" *ngFor="let item of items">
+              {{item?.name}}
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      -->
+    </div>
+
+    <div class="sub-title" *ngIf="deviceForm.get('type').value === 'ROBOT'">
+      <span class="sub-title__name">Home charging station</span>
+    </div>
+    <div class="form-group" *ngIf="deviceForm.get('type').value === 'ROBOT'">
+      <label class="form-label">
+        Charge Station Floor (optional)
+      </label>
+      <ng-select class="dropdown dropdown--outlined"
+                 [class.dropdown--disabled]="editMode"
+                 [multiple]="false"
+                 placeholder="Choose the floor"
+                 [items]="chargingStationsFloors"
+                 bindLabel="name"
+                 bindValue="_id"
+                 [searchable]="false"
+                 [closeOnSelect]="true"
+                 [clearable]="false"
+                 formControlName="chargeStationsFloor">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value align-items-center" *ngFor="let item of items">
+            <span class="floor-number">{{ item?.number >= 10 ? item?.number : '0' + item?.number }}</span>
+            {{item?.name}}
+          </div>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+          <div class="d-flex align-items-center">
+            <span class="floor-number">{{ item?.number >= 10 ? item?.number : '0' + item?.number }}</span>
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="form-group" *ngIf="deviceForm.get('type').value === 'ROBOT'">
+      <label class="form-label">
+        Charge station
+      </label>
+      <ng-select class="dropdown dropdown--outlined"
+                 [class.dropdown--disabled]="editMode"
+                 [class.dropdown-wrap--disabled]="!isChargingStationFloorSelected"
+                 [disableControl]="!isChargingStationFloorSelected"
+                 [multiple]="false"
+                 placeholder="Choose the charge station"
+                 [items]="chargingStations"
+                 bindLabel="name"
+                 bindValue="_id"
+                 [searchable]="false"
+                 [closeOnSelect]="true"
+                 [clearable]="false"
+                 formControlName="chargingStation">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items">
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="form-group" *ngIf="deviceForm.get('type').value === 'ROBOT'">
+      <label class="form-label">
+        Default Task
+      </label>
+      <ng-select class="dropdown dropdown--outlined"
+                 [class.dropdown--disabled]="editMode"
+                 [multiple]="false"
+                 [items]="defaultTaskList"
+                 bindLabel="name"
+                 bindValue="value"
+                 [searchable]="false"
+                 [closeOnSelect]="true"
+                 [clearable]="false"
+                 formControlName="defaultTaskType">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items">
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+      <span *ngIf="emptyStation" class="text-danger mt-3"> Need to select charging station </span>
+    </div>
+
+    <div class="form-group d-flex align-items-end justify-content-between"
+         *ngIf="deviceForm.get('defaultTaskType').value === 'GO_TO'">
+      <div class="flex-grow-1 mr--8">
+        <ng-select class="dropdown dropdown--outlined"
+                   [class.dropdown--disabled]="editMode"
+                   [multiple]="false"
+                   [items]="deviceFloors"
+                   placeholder="Choose the floor"
+                   bindLabel="name"
+                   bindValue="_id"
+                   [searchable]="false"
+                   [closeOnSelect]="true"
+                   [clearable]="false"
+                   formControlName="defaultTaskFloor">
+          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            <div class="ng-value align-items-center" *ngFor="let item of items">
+              <span class="floor-number">{{ item?.number >= 10 ? item?.number : '0' + item?.number }}</span>
+              {{item?.name}}
+            </div>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+            <div class="d-flex align-items-center">
+              <span class="floor-number">{{ item?.number >= 10 ? item?.number : '0' + item?.number }}</span>
+              {{item?.name}}
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="flex-grow-1 ml--8">
+        <ng-select class="dropdown dropdown--outlined"
+                   [multiple]="false"
+                   [items]="areaList"
+                   placeholder="Choose area"
+                   bindLabel="name"
+                   bindValue="_id"
+                   [searchable]="false"
+                   [closeOnSelect]="true"
+                   [clearable]="false"
+                   formControlName="defaultTaskArea">
+          <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            <div class="ng-value" *ngFor="let item of items">
+              {{item?.name}}
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+
+    <div class="form-group mb--0">
+      <label class="form-label">
+        Current Infrastructure
+      </label>
+      <span class="building-name">
+        {{ infrastructure?.name }}
+      </span>
+      <!--
+      <span class="building-info">
+        <span class="icon icon--info icon--size-24px mr--4"></span> For changing the building, remove robot and add it again with another building
+      </span>
+      -->
+    </div>
+
+    <div class="form-group mt--16" *ngIf="deviceForm.get('type').value === 'ROBOT'">
+      <label class="form-label">
+        Device Floor
+      </label>
+      <ng-select class="dropdown dropdown--outlined"
+                 [class.dropdown--disabled]="editMode"
+                 [multiple]="false"
+                 placeholder="Choose the floor"
+                 [items]="deviceFloors"
+                 bindLabel="name"
+                 bindValue="_id"
+                 [searchable]="false"
+                 [closeOnSelect]="true"
+                 [clearable]="false"
+                 formControlName="floor">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value align-items-center" *ngFor="let item of items">
+            <span class="floor-number">{{ item?.number >= 10 ? item?.number : '0' + item?.number }}</span>
+            {{item?.name}}
+          </div>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+          <div class="d-flex align-items-center">
+            <span class="floor-number">{{ item?.number >= 10 ? item?.number : '0' + item?.number }}</span>
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+
+    </div>
+
+
+    <!--
+    <div class="form-group">
+      <label class="form-label">
+        Driver Software
+      </label>
+      <ng-select class="dropdown dropdown--outlined"
+                 [multiple]="false"
+                 [items]="driverSoftwareList"
+                 bindLabel="name"
+                 bindValue="value"
+                 [searchable]="false"
+                 [closeOnSelect]="true"
+                 [clearable]="false"
+                 formControlName="driver">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items">
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    -->
+
+
+    <!-- TO_DO: Add location for charging station -->
+    <!-- <div class="form-group">
+      <img class="plan-img" src="assets/img/dummy/plan-building.png" >
+    </div> -->
+
+    <div class="sub-title"></div>
+
+    <!-- billing-payment-section -->
+    <ai-billing-payment-section *ngIf="userNeedToPay && !editMode"
+                                (paymentFormData)="validatePaymentFormData($event)"
+                                [type]="'DEVICE'">
+    </ai-billing-payment-section>
+    <!-- /billing-payment-section -->
+
+    <div class="sub-title" *ngIf="userNeedToPay && !editMode"></div>
+
+    <div class="d-flex align-items-center justify-content-end mb--24" *ngIf="!loading; else loadingView">
+      <button class="button button--ghost mr--8 ml-auto button--medium"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button class="button button--contained button--medium"
+              [disabled]="(
+              formControls.type.value !== 'AOS_DEVICE' && this.formControls.type.value !== 'ROBOT') ?
+                (userNeedToPay && !editMode) ?
+                  (deviceForm.invalid || billingForm.invalid || notAosDeviceAdded) :
+                  (!notAosDeviceAdded || (!deviceForm.invalid && !notAosDeviceAdded)) :
+                (userNeedToPay && !editMode) ?
+                  (deviceForm.invalid || billingForm.invalid) :
+                  deviceForm.invalid"
+              (click)="saveForm()">
+        {{ editMode ? 'Save Changes' : 'Register Device' }}<span *ngIf="userNeedToPay && !editMode">&nbsp;& Pay</span>
+      </button>
+    </div>
+  </form>
+</div>
+<ng-template #loadingView>
+  <div class="mt--48">
+    <ai-loading class="text-center"></ai-loading>
+  </div>
+</ng-template>
+
+
+<ai-autodetect-modal
+  (addNewDevice)="onDetect($event)"
+  (modalClose)="onModalClose($event)">
+</ai-autodetect-modal>

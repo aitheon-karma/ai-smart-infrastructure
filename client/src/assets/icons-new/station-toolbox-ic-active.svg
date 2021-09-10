@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>station-toolbox-ic</title>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-03-Sctructure-/-03_02_Active-View-Settings" transform="translate(-32.000000, -431.000000)">
+            <g id="station-toolbox-ic" transform="translate(32.000000, 431.000000)">
+                <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
+                <g id="Group-33" transform="translate(4.000000, 4.000000)">
+                    <path d="M12.8516014,6.04885537 C13.4913108,5.8498864 14.4823115,6.30217296 14.8143559,6.62309493 C15.1985807,6.99438879 15.4048788,7.25711797 15.6875941,7.7785996 C15.8294508,8.04013576 16.1252825,8.80273968 15.941653,9.1306872 C15.7095498,9.54585763 15.1446894,9.71765229 13.5918223,9.89421903 C12.6614136,10 11.5000424,10 11.5000424,10 C11.5000424,10 10.3382434,10 9.40826249,9.89421903 C7.85539536,9.71778485 7.29039238,9.54585763 7.05828921,9.1306872 C6.87480225,8.80273968 7.17049142,8.04013576 7.31234808,7.7785996 C7.595206,7.25711797 7.80136151,6.99438879 8.18558635,6.62309493 C8.51763075,6.30217296 9.50863143,5.85001896 10.1483408,6.04885537 C10.6585971,6.15264798 10.6828339,6.42584921 11.5000424,6.42584921 C12.3172508,6.42584921 12.3413451,6.15278053 12.8516014,6.04885537 Z M11.5,8.8817842e-15 C12.8807175,8.8817842e-15 14,0.894540531 14,2.27524717 C14,3.65582607 12.7054632,5 11.5,5 C10.2549485,5 9,3.65595381 9,2.27524717 C9,0.894540531 10.1194348,8.8817842e-15 11.5,8.8817842e-15 Z" id="Mask" fill="#dcbc65" fill-rule="nonzero"></path>
+                    <g id="Group-34" transform="translate(0.000000, 9.000000)">
+                        <rect id="Rectangle" fill="#dcbc65" x="0" y="0" width="5" height="4" rx="1"></rect>
+                        <rect id="Rectangle" fill="#dcbc65" x="3" y="3" width="13" height="1"></rect>
+                        <line x1="0.5" y1="6.5" x2="4.5" y2="2.5" id="Path-7" stroke="#dcbc65" stroke-linecap="round"></line>
+                        <line x1="3.5" y1="6.5" x2="6.5" y2="3.5" id="Path-7" stroke="#dcbc65" stroke-linecap="round"></line>
+                        <line x1="6.5" y1="6.5" x2="9.5" y2="3.5" id="Path-7" stroke="#dcbc65" stroke-linecap="round"></line>
+                        <line x1="9.5" y1="6.5" x2="12.5" y2="3.5" id="Path-7" stroke="#dcbc65" stroke-linecap="round"></line>
+                        <line x1="12.5" y1="6.5" x2="15.5" y2="3.5" id="Path-7" stroke="#dcbc65" stroke-linecap="round"></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,141 @@
+<div class="container mt--24 mb--48">
+  <div *ngIf="!loading" class="floor-form">
+
+    <button type="button"
+            style="margin-left: -32px"
+            class="button button--ghost button--medium mb--16 mt--16"
+            (click)="onCloseForm(selectedFloor ? selectedFloor.number : floorForReturn ? floorForReturn.number : '')">
+      <span class="icon icon--chevron-left icon--size-16px button__icon"></span>
+      Back to {{ type === 'STRUCTURE' ? 'Building' : 'Dashboard' }}
+    </button>
+
+    <div class="floor-form__infra-title">{{ infrastructure?.name }}</div>
+    <div class="floor-form__title">{{ selectedFloor ? 'Floor Settings' : 'New floor' }}</div>
+    <form class="floor-form__new" [formGroup]="floor">
+      <div class="row mb-4">
+        <div class="col-6">
+          <div class="floor-form__type-section">
+            <label class="floor-form__label mt-0" [hidden]="submitted && floor.get('number').invalid">
+              Floor number (digits)
+            </label>
+            <label class="floor-form__label mt-0 text-danger" *ngIf="submitted && floor.get('number').invalid">
+              Floor number is required/invalid
+            </label>
+            <div class="floor-form__name input-wrap input-wrap--outlined input-wrap--small"
+                 [class.input-wrap--error]="submitted && (floorNumber.invalid || isNumber(floorNumber.value))">
+              <input class="input-wrap__input floor-form__name-input" autocomplete="off"
+                     type="text" placeholder="Enter floor number" formControlName="number"
+                     (keypress)="isFloorNumberValid($event)"
+                     pattern="^[0-9\-]{1,4}$">
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="floor-form__type-section">
+            <label class="floor-form__label mt-0" [hidden]="submitted && floor.get('name').invalid">
+              Floor name
+            </label>
+            <label class="floor-form__label mt-0 text-danger" *ngIf="submitted && floor.get('name').invalid">
+              Floor name is required
+            </label>
+            <div class="floor-form__name input-wrap input-wrap--outlined input-wrap--small"
+                 [class.input-wrap--error]="submitted && floor.get('name').invalid">
+              <input class="input-wrap__input floor-form__name-input pr-5" autocomplete="off"
+                     type="text" placeholder="Enter name" formControlName="name" maxlength="30">
+              <span class="input-wrap__counter">
+                {{ floor.get('name').value.length }}/30
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="floor-form__type-section">
+        <label class="floor-form__label floor-form__label--white mt-0 d-block">Floor map</label>
+        <label class="floor-form__label floor-form__label--small d-block">Supported formats:</label>
+        <div class="floor-form__formats">
+          <div class="floor-form__formats--left">
+						<span class="floor-form__format floor-form__format--disabled" tooltip="Soon" placement="left">
+							AutoCAD
+						</span>
+            <span class="floor-form__format">
+							PNG
+						</span>
+            <span class="floor-form__vertical"></span>
+            <label class="floor-form__label m-0">Max image size: 300 MB</label>
+          </div>
+          <div class="floor-form__formats--right">
+            <div placement="bottom" tooltip="Soon">
+              <button class="floor-form__manual-map-button button button--ghost button--medium" disabled>MANUAL FLOOR
+                Scanning
+              </button>
+            </div>
+            <span class="icon icon--info icon--dynamic floor-form__info-tooltip"
+                  tooltip="You'll switch to the piloting mode, which allows you to create a map by manually driving the robot around the premise to scan it for a map."
+                  placement="right"></span>
+          </div>
+        </div>
+      </div>
+      <input ng2FileSelect id="upload-files" #uploadFiles name="upload-files" class="upload-input form-control"
+             type="file"
+             [uploader]="driveUploader?.uploader" accept=".png"/>
+      <div class="floor-form__cover-section mt-3">
+        <label for="upload-files">
+          <div class="floor-form__cover" ng2FileDrop [uploader]="driveUploader?.uploader" accept=".png"
+               *ngIf="!logo" [class.floor-form__cover--error]="submitted && logoError">
+            <div class="floor-form__cover-info">
+              <div class="floor-form__requirements">
+                <span class="floor-form__requirement">Drop your map file to upload</span>
+                <span class="d-block">or <span for="upload-files" class="button button--ghost button--medium">Browse files</span></span>
+              </div>
+              <span class="floor-form__upload-error" *ngIf="false">File format is not support</span>
+            </div>
+          </div>
+          <div class="floor-form__cover_with_image" *ngIf="logo">
+            <img src="{{ logo.signedUrl }}" alt="Floor map">
+            <div class="floor-form__cover-background"></div>
+            <div class="floor-form__image-name">{{ logo.name }}</div>
+            <button class="floor-form__replace-button button button--ghost button--medium"
+                    type="button"
+                    (click)="shapes ? confirm() : uploadFiles.click() ">
+              Replace
+            </button>
+          </div>
+        </label>
+        <ai-drive-uploader (failedUploadFile)="failedUpload($event)" [autoUpload]="true" #driveUploader
+                           (success)="onSuccessUpload($event)" (afterAddingFile)="onAfterAdd($event)"
+                           [oganizationId]="currentOrganization?._id" [service]="serviceKey">
+        </ai-drive-uploader>
+      </div>
+      <div class="floor-form__scale-section" *ngIf="logo">
+        <label class="floor-form__label mt-0" [hidden]="submitted && floor.get('pixelScale').invalid">
+          Map Scale
+        </label>
+        <label class="floor-form__label mt-0 text-danger"
+               *ngIf="submitted && floor.get('pixelScale').invalid">
+          Map Scale is required/invalid
+        </label>
+        <div class="d-flex align-items-center flex-nowrap">
+          <div class="floor-form__name input-wrap input-wrap--outlined input-wrap--small"
+               [class.input-wrap--error]="submitted && floor.get('pixelScale').invalid">
+            <input class="input-wrap__input floor-form__name-input" autocomplete="off"
+                   type="number" formControlName="pixelScale" pattern="[0-9]+([.][0-9]+)?" placeholder="0"
+                   onkeydown="javascript: return event.keyCode === 101 || event.keyCode === 69 || event.keyCode == 45 || event.keyCode === 43  || event.keyCode === 189 ? false : ''">
+          </div>
+          <span class="floor-form__scale-section-info">units / mm</span>
+        </div>
+      </div>
+      <hr class="floor-form__hr">
+      <div class="floor-form__buttons-section">
+        <button class="floor-form__cancel-button btn btn-link" (click)="onCloseForm()">Cancel</button>
+        <button type="submit" class="floor-form__create-button btn btn-primary btn-medium"
+                [disabled]="submitted && floor.invalid" (click)="selectedFloor ? onUpdateFloor() : onNewOrgSubmit()">
+          {{ selectedFloor ? 'Update' : 'Save' }} floor
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <ai-loading></ai-loading>
+  </div>
+</div>

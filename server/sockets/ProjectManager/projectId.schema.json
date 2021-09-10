@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "required": [
+    "_id"
+  ],
+  "description": "Project Id",
+  "title": "ProjectId",
+  "$id": "5e8f624a524628001216643a"
+}

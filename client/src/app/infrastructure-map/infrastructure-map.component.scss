@@ -1,0 +1,167 @@
+.infrastructure-map {
+    position: relative;
+
+    &__hint {
+        background: #1a1a1a;
+        padding: 8px 24px;
+        min-width: 240px;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        opacity: 0;
+        transform: translate(-50%, -50px);
+        transition: transform .2s ease-in-out, opacity .2s ease-in-out;
+
+        &--visible {
+            opacity: 1;
+            transform: translate(-50%, 24px);
+        }
+    }
+
+    &__map-editor {
+        position: relative;
+        background: #181818;
+        width: fit-content;и
+
+        &--crosshair-cursor {
+            cursor: crosshair;
+        }
+
+        &--waypoint-cursor {
+            cursor: url('~/assets/img/infrastructure-map/waypoint-cursor.svg') 3 20, default;
+        }
+    }
+
+    &__overflow-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            display: none;
+        }
+    }
+
+    &__context-menu {
+        position: absolute;
+        padding: 8px 0;
+        width: 120px;
+        min-height: 24px;
+        background: #2b2b2b;
+    }
+
+    &__add-task-button {
+        position: fixed;
+        padding: 8px 8px;
+        width: 104px;
+        background: #2b2b2b;
+        border-radius: 2px;
+        box-shadow: 0 4px 8px 0 rgba(26,26,26,1);
+        z-index: 9999;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-width: 10px;
+            border-style: solid;
+            border-color: #2b2b2b transparent transparent transparent;
+            bottom: -19px;
+            right: 9%;
+        }
+
+        &--bottom {
+          &::before {
+            bottom: unset;
+            top: -19px;
+            transform: rotate(180deg);
+          }
+        }
+    }
+
+    &__add-task-button-wrap {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+    }
+
+    &__add-task-button-text {
+        color: #dcbc65;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    &__scale {
+        position: relative;
+        margin: 0 8px;
+        font-size: 14px;
+        letter-spacing: 0.3px;
+        line-height: 20px;
+        color: #fff;
+        cursor: pointer;
+
+        .scale {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+            transition: .2s ease-in-out;
+        }
+
+        .fit {
+            color: #fff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: .2s ease-in-out;
+            text-transform: uppercase;
+        }
+
+        &:hover {
+            .scale {
+                opacity: 0;
+                transition: .2s ease-in-out;
+            }
+
+            .fit {
+                opacity: 1;
+                transition: .2s ease-in-out;
+            }
+        }
+    }
+
+    &__zoom-buttons {
+        position: absolute;
+        bottom: 22px;
+        right: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 117px;
+        max-width: 117px;
+        height: 36px;
+        max-height: 36px;
+        padding: 8px 12px;
+        background: #383838;
+        box-shadow: 0 2px 10px 2px rgba(0, 0, 0, 0.4);
+        border-radius: 2px;
+
+        .icon {
+            cursor: pointer;
+        }
+    }
+}

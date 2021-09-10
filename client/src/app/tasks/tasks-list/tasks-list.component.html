@@ -1,0 +1,289 @@
+<div class="container tasks mt--24">
+  <div class="title ellipsis">
+    <span class="title__building-icon"></span>
+    {{ (infrastructure$ | async)?.name }}
+    <span class="title__archived-label"
+          *ngIf="(infrastructure$ | async)?.status === 'ARCHIVED'">
+        Archived
+    </span>
+  </div>
+  <h2 class="tasks__title">Tasks</h2>
+  <div class="row tasks__subMenu">
+    <!-- <span class="tasks__subMenu-item" (click)="changeTab(TAB.SCHEDULED)"
+      [ngClass]="{'tasks__subMenu-item--active': activeTab == TAB.SCHEDULED}">Scheduled Tasks</span> -->
+    <span class="tasks__subMenu-item" (click)="changeTab(TAB.QUEUE)"
+      [ngClass]="{'tasks__subMenu-item--active': activeTab == TAB.QUEUE}">Tasks Queue</span>
+    <span class="tasks__subMenu-item" (click)="changeTab(TAB.HISTORY)"
+      [ngClass]="{'tasks__subMenu-item--active': activeTab == TAB.HISTORY}">History</span>
+  </div>
+
+  <div>
+    <ai-filters-panel [infrastructure]="(infrastructure$ | async)"
+                      [initialFiltersData]="taskFiltersData.locations.length && taskFiltersData"
+                      [type]="'TASKS'"
+                      (filterData)="onFilterDataChange($event)"
+                      (addTask)="onAddTask()"
+                      (filtersOpen)="toggleFilters($event)"></ai-filters-panel>
+
+    <h2 *ngIf="isDemoMode">Demo Mode On.{{ demoMode.taskFound ? 'Task Found!!':  'Waiting for tasks...'}} <button *ngIf="demoMode.taskFound" class="btn btn-primary" (click)="demoComplete()">Complete Task</button> </h2>
+
+    <div *ngIf="activeTab == TAB.SCHEDULED" class="tasks__tab">
+      <div class="tasks__list tasks-list" *ngIf="scheduledTasks.length; else noTaskView">
+        <div class="tasks-list__head">
+          <div class="tasks-list__id tasks-list__head-item">
+            Task ID
+          </div>
+          <div class="tasks-list__name tasks-list__head-item">
+            Task Name
+          </div>
+          <div class="tasks-list__location tasks-list__head-item">
+            Location
+          </div>
+          <div class="tasks-list__type tasks-list__head-item">
+            Task Type
+          </div>
+          <div class="tasks-list__start-time tasks-list__head-item">
+            Start Time
+          </div>
+          <div class="tasks-list__end-time tasks-list__head-item">
+            End Time
+          </div>
+          <div class="tasks-list__device tasks-list__head-item">
+            Assigned Device
+          </div>
+          <div class="tasks-list__repeated tasks-list__head-item">
+            Repeated
+          </div>
+          <div class="tasks-list__status tasks-list__head-item">
+            Status
+          </div>
+        </div>
+        <div class="tasks-list__table" [class.tasks-list__table--filters-open]="filtersOpen">
+          <div class="tasks-list__item" *ngFor="let task of scheduledTasks" (click)="logTaskId(task._id)">
+            <div class="tasks-list__id tasks-list__item-section">
+              #{{ task?.taskNumber }}
+            </div>
+            <div class="tasks-list__name tasks-list__item-section">
+              {{ task?.orchestratorTask?.name }}
+            </div>
+            <div class="tasks-list__location tasks-list__item-section">
+              {{ task?.floor?.name  }} {{ getFloorNumber(task?.floor?.number) }}/{{task?.area?.name}}
+            </div>
+            <div class="tasks-list__type tasks-list__item-section">
+              {{ task?.type | prettyEnum}}
+            </div>
+            <div *ngIf="activeTab === TAB.SCHEDULED" class="tasks-list__start-time tasks-list__item-section">
+              {{ task?.orchestratorTask.startDate | date: 'M/d/yy, H:mm' }}
+            </div>
+            <div *ngIf="activeTab === TAB.SCHEDULED" class="tasks-list__end-time tasks-list__item-section">
+              {{ task?.orchestratorTask.finishDate | date: 'M/d/yy, H:mm' }}
+            </div>
+            <div class="tasks-list__device tasks-list__item-section">
+              {{ task?.orchestratorTask?.assignedToDevice?.name}}
+            </div>
+            <div class="tasks-list__repeated tasks-list__item-section">
+              -
+            </div>
+            <div class="tasks-list__status tasks-list__item-section">
+              <span class="tasks-list__item-status"
+                [ngClass]="cssClasses[task?.status === STATUS.PENDING ? 'SCHEDULED': task?.status]">
+                {{(task?.status === STATUS.PENDING ? 'SCHEDULED': task?.status) | prettyEnum }}</span>
+            </div>
+            <div class="tasks-list__actions">
+              <span class="tasks-list__task-action icon icon--edit icon--dynamic mr-2" tooltip="Edit task"
+                placement="left" container="body" containerClass="custom-tooltip">
+              </span>
+              <span class="tasks-list__task-action  icon icon--cancel-circle-o icon--dynamic" tooltip="Cancel task"
+                placement="left" container="body" containerClass="custom-tooltip">
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab == TAB.QUEUE" class="tasks__tab">
+      <div class="tasks__list tasks-list tasks-list--queue" *ngIf="(queueTasks.inProgress.length || queueTasks.other.length); else noTaskView">
+        <div class="tasks-list__head">
+          <div class="tasks-list__id tasks-list__head-item">
+            Task ID
+          </div>
+          <div class="tasks-list__name tasks-list__head-item">
+            Task Name
+          </div>
+          <div class="tasks-list__location tasks-list__head-item">
+            Location
+          </div>
+          <div class="tasks-list__type tasks-list__head-item">
+            Task Type
+          </div>
+          <div class="tasks-list__device tasks-list__head-item">
+            Assigned Device
+          </div>
+          <div class="tasks-list__status tasks-list__head-item">
+            Status
+          </div>
+        </div>
+        <div class="tasks-list__table" [class.tasks-list__table--filters-open]="filtersOpen">
+          <div class="tasks-list__item tasks-list__item--cursor-default" *ngFor="let task of queueTasks.inProgress" (click)="logTaskId(task._id)">
+            <div class="tasks-list__id tasks-list__item-section">
+              #{{ task?.taskNumber }}
+            </div>
+            <div class="tasks-list__name tasks-list__item-section">
+              {{ task?.orchestratorTask?.name }}
+            </div>
+            <div class="tasks-list__location tasks-list__item-section">
+              {{ task?.floor?.name  }} {{ getFloorNumber(task?.floor?.number) }}/{{task?.area?.name}}
+            </div>
+            <div class="tasks-list__type tasks-list__item-section">
+              {{ task?.type | prettyEnum}}
+            </div>
+            <div class="tasks-list__device tasks-list__item-section">
+              {{ task?.orchestratorTask?.assignedToDevice?.name}}
+            </div>
+            <div class="tasks-list__status tasks-list__item-section">
+              <span class="tasks-list__item-status"
+                    [ngClass]="cssClasses[task?.status]">{{ task?.status | prettyEnum }}</span>
+            </div>
+            <div class="tasks-list__actions">
+              <!-- <span class="tasks-list__task-action icon icon--pause icon--dynamic mr-2" tooltip="Pause" placement="left"
+                container="body" containerClass="custom-tooltip">
+              </span> -->
+              <span class="tasks-list__task-action  icon icon--cancel-circle-o icon--dynamic" tooltip="Cancel task" (click)="cancelTask($event, task)"
+                placement="left" container="body" containerClass="custom-tooltip">
+              </span>
+            </div>
+          </div>
+          <smooth-dnd-container [groupName]="'project'"
+                                (drop)="onTaskDrop($event)"
+                                (dragStart)="dragStart()"
+                                [getChildPayload]="getTaskDragData()"
+                                [animationDuration]="300"
+                                [dragClass]="'dragElement'">
+            <smooth-dnd-draggable *ngFor="let task of queueTasks.other; let i = index" (click)="logTaskId(task._id)">
+              <div class="tasks-list__item tasks-list__item--queue">
+                <div class="tasks-list__id tasks-list__item-section">
+                  #{{ task?.taskNumber }}
+                </div>
+                <div class="tasks-list__name tasks-list__item-section">
+                  {{ task?.orchestratorTask?.name }}
+                </div>
+                <div class="tasks-list__location tasks-list__item-section">
+                  {{ task?.floor?.name  }} {{ getFloorNumber(task?.floor?.number) }}/{{task?.area?.name}}
+                </div>
+                <div class="tasks-list__type tasks-list__item-section">
+                  {{ task?.type | prettyEnum }}
+                </div>
+                <div class="tasks-list__device tasks-list__item-section">
+                  {{ task?.orchestratorTask?.assignedToDevice?.name}}
+                </div>
+                <div class="tasks-list__status tasks-list__item-section">
+                  <span class="tasks-list__item-status"
+                        [ngClass]="cssClasses[task?.status]">{{ task?.status === STATUS.PENDING ? 'In Queue' : task?.status | prettyEnum }}</span>
+                </div>
+                <div class="tasks-list__actions">
+                  <!-- <span class="tasks-list__task-action icon icon--pause icon--dynamic mr-2" tooltip="Pause" placement="left"
+                    container="body" containerClass="custom-tooltip">
+                  </span> -->
+                  <span class="tasks-list__task-action  icon icon--cancel-circle-o icon--dynamic"
+                        tooltip="Cancel task"
+                        (click)="cancelTask($event, task)"
+                        placement="left" container="body" containerClass="custom-tooltip">
+                  </span>
+                </div>
+              </div>
+            </smooth-dnd-draggable>
+          </smooth-dnd-container>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div *ngIf="activeTab == TAB.HISTORY" class="tasks__tab">
+      <div class="tasks__list tasks-list" *ngIf="historyTasks.length; else noTaskView">
+        <div class="tasks-list__head">
+          <div class="tasks-list__id tasks-list__head-item">
+            Task ID
+          </div>
+          <div class="tasks-list__name tasks-list__head-item">
+            Task Name
+          </div>
+          <div class="tasks-list__location tasks-list__head-item">
+            Location
+          </div>
+          <div class="tasks-list__type tasks-list__head-item">
+            Task Type
+          </div>
+          <div class="tasks-list__start-time tasks-list__head-item">
+            Start Time
+          </div>
+          <div class="tasks-list__end-time tasks-list__head-item">
+            End Time
+          </div>
+          <div class="tasks-list__device tasks-list__head-item">
+            Assigned Device
+          </div>
+          <div class="tasks-list__repeated tasks-list__head-item">
+            Repeated
+          </div>
+          <div class="tasks-list__status tasks-list__head-item">
+            Status
+          </div>
+        </div>
+        <div class="tasks-list__table" [class.tasks-list__table--filters-open]="filtersOpen">
+          <div class="tasks-list__item" *ngFor="let task of historyTasks" (click)="logTaskId(task._id)">
+            <div class="tasks-list__id tasks-list__item-section">
+              #{{ task?.taskNumber }}
+            </div>
+            <div class="tasks-list__name tasks-list__item-section">
+              {{ task?.orchestratorTask?.name }}
+            </div>
+            <div class="tasks-list__location tasks-list__item-section">
+              {{ task?.floor?.name  }} {{ getFloorNumber(task?.floor?.number) }}/{{task?.area?.name}}
+            </div>
+            <div class="tasks-list__type tasks-list__item-section">
+              {{ task?.type | prettyEnum}}
+            </div>
+            <div class="tasks-list__start-time tasks-list__item-section">
+              {{ task?.orchestratorTask.startDate | date: 'M/d/yy, H:mm' }}
+            </div>
+            <div class="tasks-list__end-time tasks-list__item-section">
+              {{ task?.orchestratorTask.finishDate | date: 'M/d/yy, H:mm' }}
+            </div>
+            <div class="tasks-list__device tasks-list__item-section">
+              {{ task?.orchestratorTask?.assignedToDevice?.name}}
+            </div>
+            <div class="tasks-list__repeated tasks-list__item-section">
+              -
+            </div>
+            <div class="tasks-list__status tasks-list__item-section">
+              <span class="tasks-list__item-status"
+                [ngClass]="cssClasses[task?.status]">{{task?.status | prettyEnum }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingView [ngIf]="loading">
+  <div class="loading-container">
+    <ai-loading class="p-3 text-center"></ai-loading>
+  </div>
+</ng-template>
+
+
+<ng-template #noTaskView>
+    <div class="d-flex justify-content-center align-items-center flex-column no-tasks">
+      <p class="no-tasks__text mb-3">There are no tasks yet</p>
+      <button (click)="onAddTask()"
+              [class.button--disabled]="(infrastructure$ | async)?.status === 'ARCHIVED'"
+              class="button button--ghost button--medium no-tasks__add-task" *ngIf="activeTab != TAB.HISTORY">
+        <span class="icon icon--plus icon--size-16px button__icon"></span>
+        Add Task
+      </button>
+    </div>
+</ng-template>

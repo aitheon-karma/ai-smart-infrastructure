@@ -1,0 +1,46 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "organization": {
+      "type": "object"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "createdAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "updatedAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "startDate": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "endDate": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "description": "Epic",
+  "title": "Epic",
+  "$id": "5e90619475ad3600121e364c"
+}

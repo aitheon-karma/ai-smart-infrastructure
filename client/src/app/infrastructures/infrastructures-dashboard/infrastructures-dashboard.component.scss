@@ -1,0 +1,92 @@
+.dashboard {
+  margin: 0 auto;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 1224px;
+    max-width: 1224px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: #fff;
+    letter-spacing: 0px;
+    line-height: 32px;
+  }
+
+  &__archived-label {
+    margin-left: 16px;
+    font-size: 12px;
+    letter-spacing: .3px;
+    line-height: 17px;
+    padding: 4px 12px;
+    border-radius: 18px;
+    border: 1px solid #e96058;
+    color: #e96058;
+  }
+
+  &__layout {
+    width: 100%;
+    height: 528px;
+  }
+}
+
+.create-floor-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 125px auto;
+  color: #7e7e7e;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  line-height: 20px;
+  text-align: center;
+  max-width: 240px;
+
+  &__image {
+    width: 200px;
+    height: 200px;
+    background: url('~/assets/icons/building-without-floors.svg') center center no-repeat;
+    background-size: contain;
+    margin-bottom: 32px;
+  }
+}
+
+
+.demo-info {
+  max-width: 1224px;
+  margin: 0 auto;
+}
+
+.app-dashboard-wrap {
+  margin-top: 24px;
+}
+
+.create-dashboard-app {
+  width: 1224px;
+  max-width: 1224px;
+  min-height: 290px;
+  margin: 48px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: dashed 1px #dcbc65;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-image: url("~/assets/img/add-app-bg.png");
+
+  &--disabled {
+    filter: grayscale(100%);
+    border: dashed 1px #7e7e7e;
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: default;
+  }
+}

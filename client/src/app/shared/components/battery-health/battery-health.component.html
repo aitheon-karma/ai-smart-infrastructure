@@ -1,0 +1,38 @@
+<div class="battery-health"
+     [class.battery-health--reversed]="reverseView">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="26"
+         height="14"
+         viewBox="0 0 26 14">
+        <g fill="none">
+            <g>
+                <path d="M23 0C23.6 0 24 0.4 24 1L24 4 25 4C25.6 4 26 4.4 26 5L26 9C26 9.6 25.6 10 25 10L24 10 24 13C24 13.6 23.6 14 23 14L1 14C0.4 14 0 13.6 0 13L0 1C0 0.4 0.4 0 1 0L23 0ZM22 2L2 2 2 12 22 12 22 2Z"
+                      fill="#fff"
+                      id="battery"/>
+                <rect x="4"
+                      y="4"
+                      width="4"
+                      height="6"
+                      fill="transparent"
+                      id="battery-low"/>
+                <rect x="10"
+                      y="4"
+                      width="4"
+                      height="6"
+                      fill="transparent"
+                      id="battery-medium"/>
+                <rect x="16"
+                      y="4"
+                      width="4"
+                      height="6"
+                      fill="transparent"
+                      id="battery-full"/>
+            </g>
+        </g>
+    </svg>
+    <span class="ellipsis battery-health__percents {{ 'battery-health__percents--' + healthState?.toLowerCase() }}"
+          *ngIf="healthState"
+          [class.battery-health__percents--reversed]="reverseView">
+         {{ health }}%
+    </span>
+</div>

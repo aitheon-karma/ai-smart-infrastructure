@@ -1,0 +1,41 @@
+.activity-map {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  border: 1px solid #7e7e7e;
+  max-height: 100%;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 70px;
+    z-index: 1;
+    background: linear-gradient(#1a1a1a, rgba(26, 26, 26, .7), rgba(0, 0, 0, 0));
+  }
+
+  &__infrastructure-info {
+    position: relative;
+    left: 16px;
+    top: 8px;
+    color: var(--white);
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0;
+    z-index: 2;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+  }
+}

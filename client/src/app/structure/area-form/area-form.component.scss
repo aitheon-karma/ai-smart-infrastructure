@@ -1,0 +1,74 @@
+.area-form {
+  &__inputs-wrap {
+    display: flex;
+    align-items: center;
+    padding-right: 16px;
+
+    &--degree {
+      position: relative;
+      padding: 0;
+      margin: 0 0 0 16px;
+
+      input {
+        width: 94px !important;
+        max-width: 94px !important;
+      }
+    }
+  }
+
+  &__inputs-wrap-degree-label {
+    position: absolute;
+    left: 40px;
+    top: -24px;
+    white-space: nowrap;
+  }
+
+  &__name-input {
+    width: 300px;
+  }
+
+  &__color-picker-wrap {
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__color-picker {
+    width: 24px;
+    height: 24px;
+    position: relative;
+  }
+
+  .color-picker {
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+  }
+
+  &__separator {
+    height: 24px;
+    width: 1px;
+    background: #454545;
+    margin-left: 24px;
+  }
+
+  &__devices-control-wrap {
+    width: 240px;
+    margin-right: 16px;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}

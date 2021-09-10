@@ -1,0 +1,40 @@
+<div class="command-modal"
+     [ngStyle]="position"
+     aiClickOutside
+     (clickedOutside)="onClickOutside()"
+     *ngIf="show">
+    <div class="command-modal__commands-list"
+         [class.mb--0]="!isEdit"
+         *ngIf="commands ?.length">
+        <div class="command-modal__command"
+             *ngFor="let command of commands; let i = index">
+            {{ command }}
+            <span class="icon icon--close icon--size-16px"
+                  *ngIf="isEdit"
+                  (click)="removeCommand(i)"></span>
+        </div>
+    </div>
+    <div *ngIf="!isEdit && !commands?.length" class="command-modal__empty">
+        No commands for this point
+    </div>
+    <div class="command-modal__command-textarea" *ngIf="isEdit">
+        <div class="textarea-wrap textarea-wrap--contained"
+             [class.textarea-wrap--error]="submitted && codeControl.hasError('required')">
+                <textarea class="textarea-wrap__textarea command-modal__code"
+                          placeholder="Paste code here"
+                          [formControl]="codeControl"
+                          rows="2"></textarea>
+        </div>
+    </div>
+    <div class="command-modal__command-buttons" *ngIf="isEdit">
+        <button class="button button--ghost button--small"
+                (click)="saveCommands()">
+            close
+        </button>
+        <button class="button button--contained button--small ml-2"
+                [disabled]="!codeControl ?.value ?.length"
+                (click)="addCommand()">
+            Save
+        </button>
+    </div>
+</div>

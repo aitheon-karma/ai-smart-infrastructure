@@ -1,0 +1,213 @@
+.route-point-control {
+  max-width: 0;
+  max-height: 0;
+  position: absolute;
+
+  &--charge-station {
+
+    .route-point-control__circle {
+      width: 44px;
+      max-width: 44px;
+      height: 44px;
+      max-height: 44px;
+      background-size: 100%;
+    }
+
+    .route-point-control__button {
+      width: 16px;
+      height: 16px;
+
+      &--top-red,
+      &--top-green {
+        top: 2px;
+      }
+
+      &--right-red,
+      &--right-green {
+        right: 2px;
+      }
+
+      &--left-red,
+      &--left-green {
+        left: 2px;
+      }
+    }
+  }
+
+  &__relative-container {
+    position: relative;
+    max-width: 0;
+    max-height: 0;
+  }
+
+  &__circle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    width: 110px;
+    max-width: 110px;
+    height: 110px;
+    max-height: 110px;
+    transform: translate(-50%, -50%);
+
+    &--relative {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      border-radius: 50%;
+    }
+
+    &--green {
+      background: url('~/assets/img/infrastructure-map/structure-action-wheel-green.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 85%;
+    }
+
+    &--dock {
+      background: url('~/assets/icons-new/charging-dock-route-point.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 93% !important;
+    }
+
+    &--dock-not-cropped {
+      background: url('~/assets/icons-new/charging-dock-route-point--full.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 93% !important;
+    }
+
+    &--red {
+      background: url('~/assets/img/infrastructure-map/structure-action-wheel-red.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 85%;
+    }
+
+    &--red-not-cropped {
+      background: url('~/assets/img/infrastructure-map/structure-action-wheel-red-not-cropped.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 85%;
+    }
+
+    &--red-cropped-up {
+      background: url('~/assets/img/infrastructure-map/structure-action-wheel-red-cropped-up.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 92%;
+    }
+
+    &--green-cropped-up {
+      background: url('~/assets/img/infrastructure-map/structure-action-wheel-green-cropped-up.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 92%;
+    }
+
+    &--green-not-cropped {
+      background: url('~/assets/img/infrastructure-map/structure-action-wheel-green-not-cropped.svg') center center no-repeat;
+      background-size: contain;
+      background-size: 85%;
+    }
+
+    &--transparent {
+      opacity: 0;
+      background: none;
+    }
+  }
+
+  &__button {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    border-radius: 50%;
+    background: #181818;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: .1s ease-in-out;
+
+    &--left-red {
+      left: 10px;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: url('~/assets/img/infrastructure-map/structure-remove-point-red.svg') center center no-repeat;
+      background-size: contain;
+    }
+
+    &--right-red {
+      right: 10px;
+      top: 50%;
+      transform: translate(50%, -50%);
+      background: url('~/assets/img/infrastructure-map/structure-add-point-red.svg') center center no-repeat;
+      background-size: contain;
+    }
+
+    &--top-red {
+      left: 50%;
+      top: 10px;
+      transform: translate(-50%, -50%);
+      background: url('~/assets/img/infrastructure-map/structure-add-code-red.svg') center center no-repeat;
+      background-size: contain;
+    }
+
+    &--left-green {
+      left: 10px;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: url('~/assets/img/infrastructure-map/structure-remove-point-green.svg') center center no-repeat;
+      background-size: contain;
+    }
+
+    &--left-green-plus {
+      left: -15px !important;
+      top: 50%;
+      transform: translate(50%, -50%);
+      background: url('~/assets/img/infrastructure-map/structure-add-point-green.svg') center center no-repeat;
+      background-size: contain;
+    }
+
+    &--right-green {
+      right: 10px;
+      top: 50%;
+      transform: translate(50%, -50%);
+      background: url('~/assets/img/infrastructure-map/structure-add-point-green.svg') center center no-repeat;
+      background-size: contain;
+    }
+
+    &--top-green {
+      left: 50%;
+      top: 10px;
+      transform: translate(-50%, -50%);
+      background: url('~/assets/img/infrastructure-map/structure-add-code-green.svg') center center no-repeat;
+      background-size: contain;
+    }
+  }
+
+  &__center {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+  }
+}
+
+.textarea-wrap {
+
+  &:before {
+    display: none;
+  }
+
+  textarea {
+    resize: none;
+  }
+}
+
+.transparent {
+  opacity: 0;
+  transition: .1s ease-in-out;
+}

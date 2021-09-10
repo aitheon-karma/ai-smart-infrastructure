@@ -1,0 +1,77 @@
+<div class="container p-0"
+     *ngIf="!newStationMode">
+    <div class="stations">
+        <div class="stations__infrastructure-name ellipsis">
+            <span class="stations__building-icon"></span>
+            {{ infrastructure?.name }}
+            <span class="stations__archived-label"
+                  *ngIf="infrastructure?.status === 'ARCHIVED'">
+                Archived
+            </span>
+        </div>
+        <div class="stations__head">
+            <h2 class="stations__title">Stations</h2>
+            <div class="stations__search search-container search-container--outlined ml-auto"
+                 [class.search-container--filled]="searchValue.value.length">
+                <input type="search"
+                       placeholder="Search"
+                       [(ngModel)]="search"
+                       (ngModelChange)="onSearch(searchValue.value)"
+                       #searchValue
+                       class="search-container__input">
+                <div class="search-container__button icon icon--search icon--size-16px"></div>
+                <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+                     (click)="searchValue.value = ''">
+                </div>
+            </div>
+            <button class="button button--outlined button--medium ml--24"
+                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    (click)="addStation()" *ngIf="stations && stations?.length">
+                <span class="icon icon--plus icon--gold icon--size-16px mr--8"></span>
+                Add station
+            </button>
+        </div>
+    </div>
+    <div class="stations__list">
+        <ai-station-card *ngFor="let station of filteredStations"
+                         #stations
+                         (createApp)="createApp($event)"
+                         (editApplication)="editApplication($event)"
+                         (deleteApplication)="deleteApplication($event)"
+                         [archivedInfrastructure]="infrastructure?.status === 'ARCHIVED'"
+                         [station]="station"></ai-station-card>
+
+        <div class="stations__empty" *ngIf="stations && !stations?.length">
+            <img class="stations__empty-image" src="assets/icons/empty-stations.svg" alt="Empty stations list">
+            There are no stations added to this building yet.
+            <button class="button button--outlined button--medium mt--16"
+                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    (click)="addStation()">
+                <span class="icon icon--plus icon--gold icon--size-16px mr--8"></span>
+                Add station
+            </button>
+        </div>
+    </div>
+</div>
+
+<ai-loading *ngIf="isLoading"
+            class="loading-container"></ai-loading>
+
+<ai-station-form    *ngIf="newStationMode"
+                    [infrastructure]="infrastructure"
+                    (closeNewSectionForm)="closeNewSectionForm()"></ai-station-form>
+
+<ai-core-automate-modal></ai-core-automate-modal>
+
+<ai-core-create-node-modal (createdNode)="onCreateNode($event)"></ai-core-create-node-modal>
+
+<ai-core-add-application-modal (applicationsAdded)="deployExistingApplication($event)"></ai-core-add-application-modal>
+
+<ai-request-modal></ai-request-modal>
+
+<ai-build-status></ai-build-status>
+
+<ai-no-permission-to-pay-modal [status]="ptpStatus"
+                               [ptpType]="'STATION'"
+                               (ptpModalClose)="ptpStatus = 'DISABLED'">
+</ai-no-permission-to-pay-modal>

@@ -1,0 +1,56 @@
+<div class="warning-banner" [class.warning-banner--sub-header-space]="type !== 'INFRASTRUCTURE'">
+  <span>
+    You don't have any seats available for this {{ type | titlecase }}.
+    You'll be charged extra {{ perItem | currency: 'USD':'symbol':'1.0' }}
+    per additional {{ type | titlecase }} in
+    the current month and extra {{ perMonth | currency: 'USD':'symbol':'1.0' }}/mo starting next month.
+  </span>
+</div>
+
+<form class="payment-section" [formGroup]="subscriptionForm">
+  <div class="one-time">
+    <span>
+      One-time payment for {{ currentMonth }}, {{ currentYear }}
+    </span>
+    <span class="price">
+      {{ perItem | currency: 'USD':'symbol':'1.0' }}
+    </span>
+  </div>
+  <div class="form-group">
+    <label>
+      Card for payment till {{ daysInMonth }} {{ currentMonth }}
+    </label>
+    <ng-select class="dropdown dropdown--outlined"
+               formControlName="accountId"
+               [items]="accounts"
+               bindLabel="name"
+               bindValue="value"
+               [searchable]="false"
+               [clearable]="false">
+    </ng-select>
+  </div>
+  <div class="total-fee">
+    <div class="d-flex flex-column">
+      <span class="total-fee__title">
+        Total monthly fee for infrastructure (charged starting from next month)
+      </span>
+      <span class="total-fee__summary">
+        Your month payment {{ totalPrice | currency: 'USD':'symbol':'1.0' }} will be charged
+        from {{ defaultAccount?.name }}
+      </span>
+      <span></span>
+    </div>
+    <span class="price">
+      {{ totalPrice | currency: 'USD':'symbol':'1.0' }}
+    </span>
+  </div>
+  <div class="checkbox mt--16">
+    <input type="checkbox"
+           class="checkbox__input mr--8"
+           formControlName="agreeTerms"
+           id="agreeTerms">
+    <label for="agreeTerms" class="pl--4" style="color: #fff">
+      I agree with <a href="/terms" target="blank">Terms and Conditions</a> and pay {{ perItem | currency: 'USD':'symbol':'1.0' }}
+    </label>
+  </div>
+</form>

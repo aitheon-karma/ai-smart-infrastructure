@@ -1,0 +1,40 @@
+<div class="tree-dropdown"
+     [ngClass]="dropdownClass">
+    <div class="tree-dropdown__content"
+         [class.tree-dropdown__content--opened]="isOpened"
+         [class.tree-dropdown__content--empty]="!displayValue"
+         [class.tree-dropdown__content--error]="error">
+        <span class="tree-dropdown__display-value">
+            {{ displayValue ? displayValue : placeholder }}
+        </span>
+        <div class="tree-dropdown__arrow-main">
+            <div class="icon icon--arrow-drop-down tree-dropdown__arrow-main-content"
+                 [class.tree-dropdown__arrow-main-content--opened]="isOpened"></div>
+        </div>
+    </div>
+    <div class="tree-dropdown__dropdown"
+         *ngIf="isOpened">
+        <div class="d-flex flex-column"
+             *ngFor="let item of items"
+             (click)="toggleItem($event, item)">
+            <div class="tree-dropdown__dropdown-item"
+                 [class.tree-dropdown__dropdown-item--active]="groupId === item._id"
+                 [class.tree-dropdown__dropdown-item--opened]="activeItem === item._id">
+                <div class="icon icon--arrow-drop-right tree-dropdown__item-arrow"
+                     [class.tree-dropdown__item-arrow--active]="groupId === item._id"
+                     [class.tree-dropdown__item-arrow--opened]="activeItem === item._id"></div>
+                {{ item.label }}
+            </div>
+            <ng-container *ngIf="activeItem === item._id">
+                <div class="tree-dropdown__dropdown-item-nested"
+                     [class.tree-dropdown__dropdown-item--active]="value === nestedItem._id"
+                     (click)="setValue($event, nestedItem)"
+                     *ngFor="let nestedItem of item.items">
+                    <div class="tree-dropdown__dot"
+                         [class.tree-dropdown__dot--active]="value === nestedItem._id"></div>
+                    {{ nestedItem.name }}
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

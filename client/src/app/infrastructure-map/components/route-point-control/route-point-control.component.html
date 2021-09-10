@@ -1,0 +1,54 @@
+<div class="route-point-control"
+     #control
+     (mousemove)="onMouseMove($event)"
+     (drop)="dropControl()"
+     *ngIf="show"
+     [ngStyle]="position"
+     [class.route-point-control--charge-station]="isChargeStation">
+  <div class="route-point-control__relative-container">
+    <div class="route-point-control__circle"
+         aiClickOutside
+         (clickedOutside)="onClickOutside($event)"
+         [class.route-point-control__circle--dock]="isEdit && type === types.DOCK"
+         [class.route-point-control__circle--dock-not-cropped]="!isEdit && type === types.DOCK"
+         [class.route-point-control__circle--green]="isEdit && type === types.ENTRY && !isLast && type !== types.DOCK"
+         [class.route-point-control__circle--green-not-cropped]="isEdit && type === types.ENTRY && isLast && type !== types.DOCK"
+         [class.route-point-control__circle--red]="isEdit && type === types.EXIT && !isLast && type !== types.DOCK"
+         [class.route-point-control__circle--red-not-cropped]="isEdit && type === types.EXIT && isLast && type !== types.DOCK"
+         [class.route-point-control__circle--red-cropped-up]="type === types.EXIT && (!isEdit || !isLast) && type !== types.DOCK"
+         [class.route-point-control__circle--green-cropped-up]="type === types.ENTRY && (!isEdit || !isLast) && type !== types.DOCK"
+         [class.route-point-control__circle--transparent]="dragging || newRouteAdded">
+      <div class="route-point-control__circle--relative" >
+        <ng-container *ngIf="!dragging && !newRouteAdded">
+          <div  class="route-point-control__button"
+                [class.route-point-control__button--left-red]="type === types.EXIT && type !== types.DOCK"
+                [class.route-point-control__button--left-green]="type === types.ENTRY && type !== types.DOCK"
+                [class.route-point-control__button--left-green-plus]="type === types.DOCK"
+                [class.transparent]="dragging || newRouteAdded"
+                *ngIf="(!restrictRemoval && isEdit && isLast) || isEdit && type === types.DOCK"
+                (click)="type === types.DOCK ? triggerAction(actions.ADD, types.ENTRY, $event) : triggerAction(actions.REMOVE)">
+          </div>
+          <div  class="route-point-control__button"
+                #ncButton
+                [class.route-point-control__button--top-red]="type === types.EXIT"
+                [class.route-point-control__button--top-green]="type === types.ENTRY"
+                [class.transparent]="dragging || newRouteAdded"
+                (click)="triggerAction(actions.NC)"
+                *ngIf="type !== types.DOCK">
+          </div>
+          <div  class="route-point-control__button"
+                [class.route-point-control__button--right-red]="type === types.EXIT || type === types.DOCK"
+                [class.route-point-control__button--right-green]="type === types.ENTRY && type !== types.DOCK"
+                [class.transparent]="!isEdit || dragging || newRouteAdded"
+                *ngIf="isLast && isEdit || type === types.DOCK && isEdit"
+                (click)="triggerAction(actions.ADD, type === types.DOCK ? types.EXIT : null, $event)">
+            <div [class.icon--green]="type === types.ENTRY"
+                 [class.icon--red]="type === types.EXIT"></div>
+          </div>
+        </ng-container>
+        <div class="route-point-control__center"
+             (mousedown)="onDragStart($event)"></div>
+      </div>
+    </div>
+  </div>
+</div>

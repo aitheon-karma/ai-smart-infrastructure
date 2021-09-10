@@ -1,0 +1,435 @@
+<div class="container" [class.mt--24]="infrastructureId">
+  <div *ngIf="!loading" class="infrastructure-form" [class.mt--24]="userNeedToPay && !isEdit">
+    <a  href="javascript:;" class="infrastructure-form__back-link" [routerLink]="['/dashboard']"
+        *ngIf="!infrastructureId">
+      <button type="button"
+              style="margin-left: -32px"
+              class="button button--ghost button--medium mb--16 mt--16">
+        <span class="icon icon--chevron-left icon--size-16px button__icon"></span>
+        Back to Infrastructure
+      </button>
+    </a>
+    <div class="my-3 d-flex align-items-center justify-content-between w-100" *ngIf="infrastructureId">
+      <span class="title">Infrastructure settings</span>
+      <button class="infrastructure-form__archive-button button button--ghost button--medium button--error"
+              *ngIf="infrastructureData?.status !== 'ARCHIVED'"
+              (click)="onArchiveClick()">
+        <span class="infrastructure-form__archive-icon"></span>
+        Archive
+      </button>
+      <span class="infrastructure-form__archived-label mr--auto"
+            *ngIf="infrastructureData?.status === 'ARCHIVED'">
+          Archived
+      </span>
+      <button class="button button--ghost button--medium button--error ml--16"
+              *ngIf="infrastructureData?.status === 'ARCHIVED'"
+              (click)="onDeleteInfrastructure()">
+        <span class="button__icon icon icon--size-16px icon--delete"></span>
+        Delete
+      </button>
+    </div>
+
+    <form class="infrastructure-form__new"
+          *ngIf="checkbox === 'NEW'"
+          [formGroup]="newForm"
+          (ngSubmit)="onNewOrgSubmit()">
+
+      <div class="infrastructure-form__label mt-0">
+        <label [hidden]="!validationState?.name?.isValid">
+          Infrastructure name
+        </label>
+        <label  *ngIf="!validationState?.name?.isValid"
+                [class.text-error]="!validationState?.name?.isValid">
+          {{ validationState?.name?.message }}
+        </label>
+
+        <div  class="infrastructure-form__name input-wrap input-wrap--outlined input-wrap--small"
+              [class.input-wrap--error]="!validationState?.name?.isValid"
+              [class.ghostFocus]="ghostFocus">
+          <input class="input-wrap__input infrastructure-form__name-input"
+                 [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'"
+                 autocomplete="off"
+                 maxlength="30"
+                 type="text"
+                 formControlName="name"
+                 #nameInput>
+          <span class="input-wrap__counter">
+            {{ newForm.get('name').value.length }}/30
+          </span>
+        </div>
+      </div>
+
+      <div class="infrastructure-form__label">
+        <label [hidden]="!validationState?.type?.isValid">
+          Choose type
+        </label>
+        <label  *ngIf="!validationState?.type?.isValid"
+                [class.text-error]="!validationState?.type?.isValid">
+          {{ validationState?.type?.message }}
+        </label>
+        <ng-select  [multiple]="false" [items]="locationTypeOptions"  formControlName="type"
+                    [class.dropdown--disabled]="infrastructureData?.status === 'ARCHIVED'"
+                    [class.dropdown--error]="!validationState?.type?.isValid"
+                    [clearable]="false" [searchable]="false"
+                    class="dropdown dropdown--outlined">
+        </ng-select>
+      </div>
+
+      <label  class="infrastructure-form__label infrastructure-form__label--uppercase">Infrastructure location</label>
+      <hr class="infrastructure-form__hr">
+      <div *ngIf="!isEdit"  class="infrastructure-form__radio-buttons-section btn-group" data-toggle="radio">
+        <div class="radio infrastructure-form__radio">
+          <input type="radio" name="infrastructure" id="new" checked (click)="changeInfrastructure('NEW')">
+          <label for="new">New location</label>
+        </div>
+        <div class="radio infrastructure-form__radio">
+          <input type="radio" name="infrastructure" id="fromOrg" (click)="changeInfrastructure('FROM_ORG')">
+          <label for="fromOrg">Add from Organization</label>
+        </div>
+      </div>
+
+      <div class="infrastructure-form__location-section" formGroupName="address">
+
+        <div class="infrastructure-form__label mt-0">
+          <label [hidden]="!validationState?.locationName?.isValid">
+            Location name
+          </label>
+          <label  *ngIf="!validationState?.locationName?.isValid"
+                  [class.text-error]="!validationState?.locationName?.isValid">
+            {{ validationState?.locationName?.message }}
+          </label>
+          <div  class="infrastructure-form__location-name input-wrap input-wrap--outlined input-wrap--small"
+                [class.infrastructure-form__error]="!validationState?.locationName?.isValid">
+            <input class="input-wrap__input infrastructure-form__location-name-input" autocomplete="off"
+                   type="text" formControlName="locationName"
+                   [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'">
+          </div>
+        </div>
+
+        <div class="infrastructure-form__label">
+          <label [hidden]="!validationState?.country?.isValid">
+            Country
+          </label>
+          <label  *ngIf="!validationState?.country?.isValid"
+                  [class.text-error]="!validationState?.country?.isValid">
+            {{ validationState?.country?.message }}
+          </label>
+          <div  class="infrastructure-form__country input-wrap input-wrap--outlined input-wrap--small"
+                [class.infrastructure-form__error]="!validationState?.country?.isValid">
+            <input class="input-wrap__input infrastructure-form__country-input" autocomplete="off"
+                   type="text" formControlName="country"
+                   [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'">
+          </div>
+        </div>
+
+        <div class="infrastructure-form__label">
+          <label [hidden]="!validationState?.regionState?.isValid">
+            Region state
+          </label>
+          <label  *ngIf="!validationState?.regionState?.isValid"
+                  [class.text-error]="!validationState?.regionState?.isValid">
+            {{ validationState?.regionState?.message }}
+          </label>
+          <div  class="infrastructure-form__region-state input-wrap input-wrap--outlined input-wrap--small"
+                [class.infrastructure-form__error]="!validationState?.regionState?.isValid">
+            <input class="input-wrap__input infrastructure-form__country-input" autocomplete="off"
+                   type="text" formControlName="regionState"
+                   [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'">
+          </div>
+        </div>
+
+        <div class="infrastructure-form__label">
+          <label [hidden]="!validationState?.city?.isValid">
+            City
+          </label>
+          <label  *ngIf="!validationState?.city?.isValid"
+                  [class.text-error]="!validationState?.city?.isValid">
+            {{ validationState?.city?.message }}
+          </label>
+          <div  class="infrastructure-form__city input-wrap input-wrap--outlined input-wrap--small"
+                [class.infrastructure-form__error]="!validationState?.city?.isValid">
+            <input class="input-wrap__input infrastructure-form__country-input" autocomplete="off"
+                   type="text" formControlName="city"
+                   [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'">
+          </div>
+        </div>
+
+        <div class="infrastructure-form__label">
+          <label [hidden]="!validationState?.addressLine1?.isValid">
+            Address line 1
+          </label>
+          <label  *ngIf="!validationState?.addressLine1?.isValid"
+                  [class.text-error]="!validationState?.addressLine1?.isValid">
+            {{ validationState?.addressLine1?.message }}
+          </label>
+          <div  class="infrastructure-form__address-line-1 input-wrap input-wrap--outlined input-wrap--small"
+                [class.infrastructure-form__error]="!validationState?.addressLine1?.isValid">
+            <input class="input-wrap__input infrastructure-form__country-input" autocomplete="off"
+                   type="text" formControlName="addressLine1"
+                   [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'">
+          </div>
+        </div>
+
+        <div class="infrastructure-form__label">
+          <label>Address line 2</label>
+          <div  class="infrastructure-form__address-line-2 input-wrap input-wrap--outlined input-wrap--small"
+                [class.infrastructure-form__error]="submitted && newForm.get('address.addressLine2').invalid">
+            <input class="input-wrap__input infrastructure-form__country-input" autocomplete="off"
+                   type="text" formControlName="addressLine2"
+                   [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'">
+          </div>
+        </div>
+
+        <div class="infrastructure-form__label d-flex flex-column">
+          <label [hidden]="!validationState?.code?.isValid">
+            Postal code
+          </label>
+          <label  *ngIf="!validationState?.code?.isValid"
+                  [class.text-error]="!validationState?.code?.isValid">
+            {{ validationState?.code?.message }}
+          </label>
+          <div  class="infrastructure-form__code input-wrap input-wrap--outlined input-wrap--small mr-auto"
+                [class.infrastructure-form__error]="!validationState?.code?.isValid">
+            <input class="input-wrap__input infrastructure-form__country-input" autocomplete="off"
+                   type="text" formControlName="code"
+                   [class.input-wrap--disabled]="infrastructureData?.status === 'ARCHIVED'">
+          </div>
+        </div>
+      </div>
+
+      <label  class="infrastructure-form__label infrastructure-form__label--uppercase">Items</label>
+      <hr class="infrastructure-form__hr">
+
+      <ng-select  [multiple]="false"
+                  [items]="items"
+                  formControlName="items"
+                  [searchable]="false"
+                  placeholder="Items"
+                  bindLabel="name"
+                  bindValue="_id"
+                  [multiple]="true"
+                  class="dropdown dropdown--outlined"
+                  [class.dropdown--disabled]="infrastructureData?.status === 'ARCHIVED'">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items | slice:0:4">
+            <span class="ng-value-label">
+              <div class="chip chip--icon-right chip--outlined">
+                {{ item.name }}
+                <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                  (click)="clear(item)" aria-hidden="true"></button>
+              </div>
+            </span>
+          </div>
+          <div class="ng-value" *ngIf="items.length > 4">
+            <span class="ng-value-label chips-amount">+{{items.length - 4}}</span>
+          </div>
+        </ng-template>
+      </ng-select>
+
+      <label  class="infrastructure-form__label infrastructure-form__label--uppercase">Upload image</label>
+      <hr class="infrastructure-form__hr">
+
+      <input ng2FileSelect id="upload-files" name="upload-files" class="upload-input form-control" type="file"
+             [uploader]="driveUploader?.uploader" accept=".jpg, .png" [disabled]="infrastructureData?.status === 'ARCHIVED'"/>
+      <div class="infrastructure-form__cover-section"
+           [class.infrastructure-form__cover-section--disabled]="infrastructureData?.status === 'ARCHIVED'">
+        <label for="upload-files">
+          <div class="infrastructure-form__cover" *ngIf="!logo"></div>
+          <div class="infrastructure-form__cover_with_image"
+               *ngIf="logo" [style.background-image]="'url(' + logo?.signedUrl + ')'"
+               [ngStyle]="{'background-size': 'contain','background-repeat': 'no-repeat', 'background-position': 'center'}"></div>
+        </label>
+
+        <div class="infrastructure-form__cover-info">
+          <label  for="upload-files"
+                  class="infrastructure-form__upload-button btn btn-link">
+            Upload
+          </label>
+          <span class="infrastructure-form__upload-error" *ngIf="false">File format is not support</span>
+          <div class="infrastructure-form__requirements">
+            <span class="infrastructure-form__requirement">Max image size: 3MB</span>
+            <span class="infrastructure-form__requirement">Formats: JPG, PNG</span>
+          </div>
+        </div>
+
+        <ai-drive-uploader  #driveUploader
+                            [autoUpload]="true"
+                            [oganizationId]="currentOrganization?._id"
+                            [service]="serviceKey"
+                            (failedUploadFile)="failedUpload($event)"
+                            (success)="onSuccessUpload($event)"
+                            (afterAddingFile)="onAfterAdd($event)">
+        </ai-drive-uploader>
+      </div>
+
+      <hr class="infrastructure-form__hr">
+
+      <!-- billing-payment-section -->
+      <ai-billing-payment-section *ngIf="userNeedToPay && !isEdit"
+                                  (paymentFormData)="validatePaymentFormData($event)"
+                                  [type]="'INFRASTRUCTURE'">
+      </ai-billing-payment-section>
+      <!-- /billing-payment-section -->
+
+      <hr class="infrastructure-form__hr mt--24" *ngIf="userNeedToPay && !isEdit">
+
+      <div class="infrastructure-form__buttons-section">
+        <button type="button" class="button button--medium button--ghost" (click)="backToInfra()">Cancel</button>
+        <button type="submit"
+                [disabled]="(userNeedToPay && !isEdit) ? (newForm.invalid || billingForm.invalid) : newForm.invalid"
+                [class.button--disabled]="(userNeedToPay && !isEdit) ?
+                (newForm.invalid || billingForm.invalid) :
+                newForm.invalid"
+                class="button button--medium button--contained ml--16">
+          {{ isEdit == true ? 'Update' : 'Create' }}<span *ngIf="userNeedToPay && !isEdit">&nbsp;& Pay</span>
+        </button>
+      </div>
+    </form>
+
+    <form class="infrastructure-form__from-org" *ngIf="checkbox === 'FROM_ORG'" [formGroup]="orgForm" (ngSubmit)="onExistOrgSubmit()">
+      <div class="infrastructure-form__label mt-0">
+        <label [hidden]="!fromOrgValidationState?.name?.isValid">
+          Infrastructure name
+        </label>
+        <label  *ngIf="!fromOrgValidationState?.name?.isValid"
+                [class.text-error]="!fromOrgValidationState?.name?.isValid">
+          {{ fromOrgValidationState?.name?.message }}
+        </label>
+
+        <div class="infrastructure-form__location input-wrap input-wrap--outlined input-wrap--small"
+             [class.input-wrap--error]="!fromOrgValidationState?.name?.isValid">
+          <input class="input-wrap__input"
+                 maxlength="30"
+                 type="text"
+                 autocomplete="off"
+                 formControlName="name">
+          <span class="input-wrap__counter">
+            {{ orgForm.get('name').value.length }}/30
+          </span>
+        </div>
+      </div>
+
+      <div class="infrastructure-form__label">
+        <label [hidden]="!fromOrgValidationState?.type?.isValid">
+          Choose type
+        </label>
+        <label  *ngIf="!fromOrgValidationState?.type?.isValid"
+                [class.text-error]="!fromOrgValidationState?.type?.isValid">
+          {{ fromOrgValidationState?.type?.message }}
+        </label>
+        <ng-select  [items]="locationTypeOptions"  formControlName="type"
+                    [clearable]="false" [searchable]="false"
+                    class="dropdown dropdown--outlined"
+                    [class.dropdown--error]="!fromOrgValidationState?.type?.isValid">
+        </ng-select>
+      </div>
+
+      <label  class="infrastructure-form__label infrastructure-form__label--uppercase">Infrastructure location</label>
+      <hr class="infrastructure-form__hr">
+      <div *ngIf="!isEdit"  class="infrastructure-form__radio-buttons-section btn-group" data-toggle="radio">
+        <div class="radio infrastructure-form__radio">
+          <input type="radio" name="infrastructure" id="new" (click)="changeInfrastructure('NEW')">
+          <label for="new">New location</label>
+        </div>
+        <div class="radio infrastructure-form__radio">
+          <input type="radio" name="infrastructure" id="fromOrg" checked (click)="changeInfrastructure('FROM_ORG')">
+          <label for="fromOrg">Add from Organization</label>
+        </div>
+      </div>
+
+      <div class="infrastructure-form__label">
+        <label [hidden]="!fromOrgValidationState?.location?.isValid">
+          Add location
+        </label>
+        <label  *ngIf="!fromOrgValidationState?.location?.isValid"
+                [class.text-error]="!fromOrgValidationState?.location?.isValid">
+          {{ fromOrgValidationState?.location?.message }}
+        </label>
+        <ng-select  [multiple]="false"
+                    [items]="options"
+                    formControlName="location"
+                    bindLabel="name"
+                    [searchable]="false"
+                    placeholder="Location"
+                    class="dropdown dropdown--outlined"
+                    [class.dropdown--error]="!fromOrgValidationState?.location?.isValid">
+        </ng-select>
+      </div>
+
+      <label  class="infrastructure-form__label infrastructure-form__label--uppercase">Upload image</label>
+      <hr class="infrastructure-form__hr">
+
+      <input ng2FileSelect id="upload-files" name="upload-files" class="upload-input form-control" type="file"
+             [uploader]="driveUploader?.uploader" accept=".jpg, .png "/>
+      <div class="infrastructure-form__cover-section">
+        <label for="upload-files">
+          <div class="infrastructure-form__cover" *ngIf="!logo"></div>
+          <div class="infrastructure-form__cover_with_image"
+               *ngIf="logo"
+               [style.background-image]="'url(' + logo.signedUrl + ')'"
+               [ngStyle]="{'background-size': 'contain','background-repeat': 'no-repeat', 'background-position': 'center'}"></div>
+        </label>
+
+        <div class="infrastructure-form__cover-info">
+
+          <div *ngIf="!isEdit"  class="cover-radio-buttons btn-group" data-toggle="radio">
+            <div class="radio infrastructure-form__cover-radio">
+              <input type="radio"
+                     name="cover"
+                     id="new-image"
+                     checked
+                     (click)="changeCoverSettings('NEW_COVER')">
+              <label for="new-image">New image</label>
+              <label *ngIf="!isUseOrganizationCoverEnabled" for="upload-files" class="infrastructure-form__upload-button btn btn-link">Upload</label>
+            </div>
+            <div class="radio infrastructure-form__cover-radio">
+              <input type="radio"
+                     name="cover"
+                     id="org-image"
+                     (click)="changeCoverSettings('ORG_COVER')">
+              <label for="org-image">Use organization cover</label>
+            </div>
+          </div>
+
+          <span class="infrastructure-form__upload-error" *ngIf="false">File format is not support</span>
+
+          <div class="infrastructure-form__requirements">
+            <span class="infrastructure-form__requirement">Max image size: 3MB</span>
+            <span class="infrastructure-form__requirement">Formats: JPG, PNG</span>
+          </div>
+
+        </div>
+        <ai-drive-uploader (failedUploadFile)="failedUpload($event)" [autoUpload]="true" #driveUploader
+                           (success)="onSuccessUpload($event)" (afterAddingFile)="onAfterAdd($event)" [oganizationId]="currentOrganization?._id"
+                           [service]="serviceKey">
+        </ai-drive-uploader>
+      </div>
+
+      <hr class="infrastructure-form__hr">
+
+      <!-- billing-payment-section -->
+      <ai-billing-payment-section *ngIf="userNeedToPay && !isEdit"
+                                  (paymentFormData)="validatePaymentFormData($event)"
+                                  [type]="'INFRASTRUCTURE'">
+      </ai-billing-payment-section>
+      <!-- /billing-payment-section -->
+
+      <hr class="infrastructure-form__hr mt--24" *ngIf="userNeedToPay && !isEdit">
+
+      <div class="infrastructure-form__buttons-section">
+        <button type="button" class="button button--medium button--ghost" routerLink="/dashboard">Cancel</button>
+        <button type="submit" class="button button--medium button--contained ml--16"
+                [disabled]="(userNeedToPay && !isEdit) ? (orgForm.invalid || billingForm.invalid) : orgForm.invalid"
+                [class.button--disabled]="(userNeedToPay && !isEdit) ?
+                (orgForm.invalid || billingForm.invalid) :
+                orgForm.invalid">
+          {{ userNeedToPay ? 'Create & Pay' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+      <ai-loading></ai-loading>
+    </div>
+</div>

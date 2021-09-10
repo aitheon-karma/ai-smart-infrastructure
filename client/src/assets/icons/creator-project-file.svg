@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="58" viewBox="0 0 41 58">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#353535" d="M0 0h25.002v14.995H40V58H0z"/>
+        <path stroke="#353535" d="M24 0l16 16"/>
+        <text fill="#222" font-family="HiraMaruProN-W4, Hiragino Maru Gothic ProN" font-size="18" letter-spacing=".45">
+            <tspan x="6" y="37">&lt;/&gt;</tspan>
+        </text>
+    </g>
+</svg>

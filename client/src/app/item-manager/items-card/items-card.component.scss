@@ -1,0 +1,303 @@
+.hover{
+  cursor: pointer;
+}
+.breadcrumb-sec {
+  
+  ul {
+    
+    li {
+      float: left;
+    }
+  }
+}
+.items-sec{
+  margin-bottom: 30px;
+  outline: none;
+  
+  img{
+    width: auto;
+  }
+}
+.item-name{
+ // cursor: pointer;
+  flex: 16;
+}
+
+.item-info{
+  
+  p {
+    margin-bottom: 5px;
+  }
+  
+  i {
+    margin-right:10px;
+    color: green;
+    font-size: 12px;
+  }
+}
+.item-img{
+  overflow-y: hidden;
+  height: 200px;
+  background-color: #2e2e2e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    max-height: 200px;
+    height: auto;
+    width: auto;
+    max-width: 100%;
+  }
+}
+
+.img-id-top {
+  position: absolute;
+  color: #7e7e7e;
+  left: 30px;
+  font-size: 12px;
+  top: 10px;
+  text-shadow:  0px 1px 2px rgba(0,0,0,0.5);
+}
+
+.card-padd {
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.stock-notif-color i{
+  font-size: 12px;
+  color: green;
+}
+
+.item-info h2 {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  min-height: 40px;
+  color:#fff;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 3rem;
+  line-height: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.item-info p {
+  color:#7e7e7e
+}
+.item-info p,
+.item-info span {
+  font-size: 14px;
+}
+.boxrow {
+  padding-bottom: 3px
+}
+
+.listview p {
+  margin-bottom: 0px;
+}
+
+.item-row h2 {
+  font-size: 16px;
+  font-weight: 400;margin-bottom:0px
+}
+
+.item-row {
+  padding: 20px 0px;
+  flex-direction: unset;
+
+  p {
+    font-size: 14px;
+  }
+
+  span {
+    font-size: 12px;
+    color:#7e7e7e
+  }
+}
+
+.item-row i {
+  margin-right:10px;
+  color: green;
+  font-size: 12px;
+}
+
+.listview {
+  height: 124px;
+  min-height: 124px;
+  // cursor: pointer;
+  outline: none;
+  &-left {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  &__photo {
+    width: 80px;
+    min-width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 20px;
+    &-image{
+      height: auto;
+      width: auto;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+  &__name {
+
+    &-title {
+      font-size: 16px;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.25;
+      letter-spacing: 0.5px;
+      max-height: 4rem;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      overflow: hidden;
+    }
+  }
+}
+.settings-icon {
+  position: relative;
+  width: 24px;
+  flex: 1;
+  cursor: pointer;
+  float: right;
+  &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 24px;
+      height: 24px;
+      background: url('~/assets/img/icons/settings.svg') center center no-repeat;
+      background-size: contain;
+      content: '';
+  }
+}
+.flex{
+  display: flex;
+}
+
+.header{
+  text-align: left;
+  padding: 24px 24px 0 24px;
+  font-size: 18px;
+  letter-spacing: 0px;
+  margin: 0;
+  font-weight: 300;
+}
+.setting-mt{
+  margin-top: -25px;
+}
+.input {  
+  width: 100%;
+  margin: 1rem 0;
+  input {
+    height: 36px;
+    padding: 10px;
+    background-color: #1f1f1f;
+    border-radius: 2px;
+  }
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+label {
+  font-size: 16px;
+}
+
+.preview {
+  height: auto !important;
+  width: 100% !important;
+  overflow-x: scroll !important;
+  overflow-y: hidden;
+  display: inline-flex;
+  .imagePreview {
+    float: left !important;
+    margin: 3px;
+    cursor: pointer;
+    img {
+      // height: 50px;
+      width: 50px;
+    }
+  }
+}
+
+.image {
+  img {
+    width: 100%;
+  }
+}
+
+.custom {
+  height: 350px;
+  padding: 0px -15px;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  width: 3px;
+  height: 3px;
+  background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 3px;
+  height: 3px;
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  width: 3px;
+  height: 3px;
+  background: #555;
+}
+
+.row {
+  margin: 0px -7px;
+} 
+
+.config-img{
+  overflow-y: hidden;
+  height: 100px;
+  padding: 10px;
+  background-color: #383838;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    max-height: 100px;
+    height: auto;
+    width: auto;
+    max-width: 100%;
+  }
+}
+
+.padding{
+  padding:0px;
+  .row{
+    label{
+      color:#ffffff;
+      margin: 0px;
+    }
+    small{
+      color:#7e7e7e;
+    }
+    float: left;
+  }
+}

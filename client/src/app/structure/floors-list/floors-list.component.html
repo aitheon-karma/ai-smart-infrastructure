@@ -1,0 +1,30 @@
+<div  class="floors-list"
+      aiClickOutside
+      (clickedOutside)="hideList($event)">
+  <div class="floors-list__search">
+    <div class="search-container search-container--contained"
+         [class.search-container--filled]="search ?.value ?.length">
+      <input type="search"
+             placeholder="Search"
+             class="search-container__input"
+             [formControl]="search">
+      <div class="search-container__button icon icon--search icon--size-16px"></div>
+      <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+           (click)="search.reset()"></div>
+    </div>
+  </div>
+  <div class="floors-list__list">
+    <div  class="floors-list__list-item"
+          [class.floors-list__list-item--active]="floor?._id === currentFloor?._id"
+          (click)="onSelectFloor($event, floor)"
+          *ngFor="let floor of filteredFloors"
+    >
+      <span class="floors-list__floor-number">
+        {{ getFormattedFloorNumber(floor?.number) }}
+      </span>
+      <span class="floors-list__floor-title">
+        {{ floor?.name }}
+      </span>
+    </div>
+  </div>
+</div>

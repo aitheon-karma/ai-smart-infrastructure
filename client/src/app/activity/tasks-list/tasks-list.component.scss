@@ -1,0 +1,33 @@
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__header {
+    color: var(--white);
+    font-size: 18px;
+    height: 28px;
+    letter-spacing: 0;
+    line-height: 28px;
+  }
+
+  &__search {
+    margin-top: 8px;
+  }
+
+  &__list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 312px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 2px !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 2px !important;
+    }
+  }
+}

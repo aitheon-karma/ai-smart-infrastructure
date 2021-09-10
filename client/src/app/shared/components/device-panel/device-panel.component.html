@@ -1,0 +1,110 @@
+<div class="device-panel" [class.device-panel--open]="showDevicePanel" #panelElement>
+	<div class="device-panel__top">
+		<div class="device-panel__top-head">
+			<div class="device-panel__title">Device Panel</div>
+			<span class="device-panel__close-icon icon icon--close icon--dynamic"
+				(click)="closePanel()"></span>
+		</div>
+		<form class="device-panel__search-container" [formGroup]="searchForm">
+			<div class="search-container search-container--contained mb--8"
+           [class.search-container--filled]="search.value.length">
+        <input type="search" placeholder="Search" formControlName="name"
+							 #search class="search-container__input">
+        <div class="search-container__button icon icon--search icon--size-16px"></div>
+        <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+             (click)="searchForm.get('name').setValue('')"></div>
+			</div>
+			<ng-select class="dropdown dropdown--contained" [multiple]="false" placeholder="Type"
+									formControlName="type" bindLabel="name" bindValue="value" [items]="typesList"
+									[searchable]="false" [closeOnSelect]="true" [clearable]="false">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items">
+            {{item?.name}}
+          </div>
+        </ng-template>
+      </ng-select>
+		</form>
+	</div>
+	<div class="device-panel__list">
+		<div 	class="device-panel__item device" *ngFor="let device of filteredDevices"
+					(click)="selectDevice(device)"
+					[class.device--active]="selectedDevice && selectedDevice?._id === device?._id">
+			<span class="device__gradient"></span>
+			<span class="device__status label"
+						[class.label--blue]="device?.status === 'IN_WORK'"
+						[class.label--green]="device?.status === 'ONLINE'"
+						[class.label--red]="device?.status === 'OFFLINE'"
+						[class.label--red]="device?.status === 'CHARGING'">
+				{{ device?.status | titlecase }}
+			</span>
+			<div class="device__battery" [ngStyle]="getBatteryColor(device)">
+				<!-- Battery Icon -->
+				<svg xmlns="http://www.w3.org/2000/svg" width="26" height="14" viewBox="0 0 26 14">
+					<title>charge-battery</title>
+					<g fill="none">
+						<g>
+							<path d="M23 0C23.6 0 24 0.4 24 1L24 4 25 4C25.6 4 26 4.4 26 5L26 9C26 9.6 25.6 10 25 10L24 10 24 13C24 13.6 23.6 14 23 14L1 14C0.4 14 0 13.6 0 13L0 1C0 0.4 0.4 0 1 0L23 0ZM22 2L2 2 2 12 22 12 22 2Z"
+										fill="#fff"
+										id="battery" />
+							<rect x="4"
+										y="4"
+										width="4"
+										height="6"
+										fill="transparent"
+										id="battery-low" />
+							<rect x="10"
+										y="4"
+										width="4"
+										height="6"
+										fill="transparent"
+										id="battery-medium" />
+							<rect x="16"
+										y="4"
+										width="4"
+										height="6"
+										fill="transparent"
+										id="battery-full" />
+						</g>
+					</g>
+				</svg>
+				<!-- / Battery Icon -->
+				<span class="ellipsis pl--8"
+							[class.charge--red]="device?.batteryHealth <= 30">
+					{{ device?.batteryHealth }}%
+				</span>
+			</div>
+			<div class="device__image-container">
+				<img class="device__image" *ngIf="device?.image?.signedUrl" [src]="device?.image?.signedUrl">
+				<img class="device__image" *ngIf="!device?.image?.signedUrl" style="height: 80%;" src="assets/img/device.png">
+			</div>
+			<div class="device__info">
+				<div class="device__info-section mb--8">
+					<div class="device__name">{{ device?.name }}</div>
+				</div>
+				<div class="device__info-section mb--8">
+					<label class="device__info-label">Device Type</label>
+					<span class="device__floor-data">
+						{{ device?.type?.name === 'AOS_DEVICE' ? 'AOS Device' : device?.type?.name === 'CAMERA' ? 'IP Camera' : '' }}
+					</span>
+				</div>
+				<div class="device__info-section mb--8">
+					<label class="device__info-label">Work Area</label>
+					<span class="device__area-data" [class.device__area-data--gray]="!device?.area">
+						{{ device?.area ? device?.area : 'No area' }}
+					</span>
+				</div>
+				<div class="device__info-section">
+					<label class="device__info-label">Current Task</label>
+					<span class="device__task-name" (click)="selectDevice(device); toggleInfo($event)">
+						{{ device?.currentTask?.orchestratorTask?.name }}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ai-task-info *ngIf="taskInfoOpen" [currentFloor]="currentFloor"
+							[ngStyle]="taskInfoPosition" [device]="selectedDevice"
+							(close)="closeTaskInfo()">
+</ai-task-info>

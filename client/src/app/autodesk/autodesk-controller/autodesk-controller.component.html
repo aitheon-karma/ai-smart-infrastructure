@@ -1,0 +1,10 @@
+<ai-autodesk-uploader *ngIf="uploadView" (canceled)="canceled()" (uploaded)="fileUploaded($event)" [infrastructure]="infrastructure"></ai-autodesk-uploader>
+
+<button *ngIf="!uploadView" class="btn btn-link p-0 m-0 upload-button" (click)="uploadView = true" >Upload a new file</button>
+
+<div *ngIf="processing" class="processing d-flex w-100 justify-content-center align-items-center h-100">
+  <ai-loading class="m-0 mr-3 d-block"></ai-loading>
+  <h2 class="m-0">Upload complete... processing file {{ progress ? ',' + progress: '' }}</h2>
+</div>
+
+<ai-autodesk-viewer [viewerData]="viewerData" *ngIf="viewerData && !uploadView && !processing"></ai-autodesk-viewer>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>exit-route</title>
+    <g id="Smart-Infrastructure-v4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-03-Sctructure-/-03_03_Areas-Panel-with-scroll" transform="translate(-985.000000, -235.000000)" fill="#E96058">
+            <g id="Group-16" transform="translate(680.000000, 225.000000)">
+                <g id="Group-19" transform="translate(305.000000, 8.000000)">
+                    <g id="Group-12" transform="translate(0.000000, 2.000000)">
+                        <path d="M5.92871163,0 C9.20304865,0 11.8574233,2.65437461 11.8574233,5.92871163 C11.8574233,7.20929988 11.4514154,8.3950599 10.7611015,9.3642898 L15.7105868,14.313176 C16.0964711,14.6990603 16.0964711,15.3247024 15.7105868,15.7105868 C15.3247024,16.0964711 14.6990603,16.0964711 14.313176,15.7105868 L9.3642898,10.7611015 C8.3950599,11.4514154 7.20929988,11.8574233 5.92871163,11.8574233 C2.65437461,11.8574233 0,9.20304865 0,5.92871163 C0,2.65437461 2.65437461,0 5.92871163,0 Z" id="exit-route"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

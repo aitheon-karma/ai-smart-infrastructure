@@ -1,0 +1,19 @@
+<div class="activity-map"
+     *ngIf="!isLoading; else loadingView">
+    <div class="activity-map__infrastructure-info">
+        {{ task?.infrastructure?.name }} / {{ floor?.name }} {{ floor?.number }}
+    </div>
+
+    <ai-infrastructure-map [shapes]="mapShapes"
+                           #mapView
+                           [mapContainerStyles]="mapStyles"
+                           [centerOn]="task?.area?._id"
+                           (shapesRendered)="onShapesAdd()"
+                           [floor]="floor"></ai-infrastructure-map>
+</div>
+
+<ng-template #loadingView>
+    <div class="activity-map__loading">
+        <ai-loading></ai-loading>
+    </div>
+</ng-template>

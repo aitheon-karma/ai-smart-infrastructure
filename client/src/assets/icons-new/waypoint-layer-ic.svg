@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="26px" viewBox="0 0 24 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>waypoint-layer-ic</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.862745 0 0 0 0 0.737255 0 0 0 0 0.396078 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+        <polygon id="path-2" points="14.4 6 14 4 5 4 5 21 7 21 7 14 12.6 14 13 16 20 16 20 6"></polygon>
+    </defs>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-03-Sctructure-/-03_03_Areas-Panel-with-scroll" transform="translate(-657.000000, -569.000000)">
+            <g id="Group-22" transform="translate(566.000000, 367.000000)">
+                <g id="Group-5-Copy-3" transform="translate(24.000000, 191.000000)">
+                    <g id="waypoint-layer-ic" transform="translate(67.000000, 11.602740)">
+                        <rect id="Rectangle" x="0" y="0.397260274" width="24" height="24"></rect>
+                        <g id="icon-/-24-cont-/-info-/-pin-24" transform="translate(0.000000, 0.397260)" filter="url(#filter-1)">
+                            <g>
+                                <mask id="mask-3" fill="white">
+                                    <use xlink:href="#path-2"></use>
+                                </mask>
+                                <use id="Path" fill="#000000" fill-rule="nonzero" xlink:href="#path-2"></use>
+                                <g id="Group" mask="url(#mask-3)" fill="#7E7E7E">
+                                    <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray">
+                                        <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0" y="0" width="24" height="24"></rect>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

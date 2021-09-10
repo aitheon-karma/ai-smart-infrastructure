@@ -1,0 +1,95 @@
+.infrastructures {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    z-index: 99;
+}
+
+.nav-pills .nav-link.active {
+    border-color: transparent;
+}
+
+.nav-pills {
+    position: sticky;
+    top: 7rem;
+
+    .nav-link {
+        padding-left: 24px;
+        cursor: pointer;
+    }
+}
+
+.nav {
+    background: transparent;
+
+    .nav-link {
+        background: transparent;
+        user-select: none;
+    }
+
+    .nav-link-arrow {
+        position: relative;
+
+        &:after {
+            content: "";
+            position: absolute;
+            background: url("~/assets/icons/arrow.svg") center center no-repeat;
+            width: 8px;
+            height: 6px;
+            top: 50%;
+            left: 4px;
+            transform: translateY(-50%) rotate(-90deg);
+            transition: 0.15s ease-out;
+        }
+    }
+
+    .rotate {
+        &:after {
+            top: 42%;
+            transform: rotate(0);
+            transition: 0.15s ease-out;
+        }
+    }
+}
+
+.nav-sub {
+    transition: 0.3s ease-out;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+
+.show {
+    opacity: 1;
+    height: auto;
+    transition: .2s ease-in-out;
+}
+
+.nav-tabs {
+    background: transparent !important;
+    border-bottom: 2px solid #454545;
+}
+
+.nav-item {
+    //margin-bottom: -2px;
+}
+
+.nav-link {
+    background: transparent !important;
+    border-bottom: 2px solid transparent;
+
+    &.active {
+      color: #dcbc65;
+      border-bottom: 2px solid #dcbc65;
+      font-weight: normal;
+    }
+
+    &--small {
+        color: #7e7e7e;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        line-height: 20px;
+    }
+}

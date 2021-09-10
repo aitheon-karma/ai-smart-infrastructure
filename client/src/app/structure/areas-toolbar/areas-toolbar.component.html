@@ -1,0 +1,149 @@
+<div class="areas-toolbar"
+     *ngIf="show">
+    <div class="areas-toolbar__section">
+        <div class="areas-toolbar__section-items">
+            <div class="areas-toolbar__section-item"
+                 [class.areas-toolbar__section-item--active]="activeMode === mapModes.RECTANGLE"
+                 (click)="setMapMode(mapModes.RECTANGLE, $event)"
+                 (mouseover)="showRectangleTooltip = true" (mouseout)="showRectangleTooltip = false">
+                <div class="areas-toolbar__icon areas-toolbar__icon--area"></div>
+            </div>
+            <div class="areas-toolbar__section-item"
+                 [class.areas-toolbar__section-item--active]="activeMode === mapModes.SHAPE"
+                 (click)="setMapMode(mapModes.SHAPE, $event)"
+                 (mouseover)="showPolygonTooltip = true" (mouseout)="showPolygonTooltip = false">
+                <div class="areas-toolbar__icon areas-toolbar__icon--shape"></div>
+            </div>
+        </div>
+    </div>
+    <ai-tooltip *ngIf="showRectangleTooltip" [data]="rectangle"></ai-tooltip>
+    <ai-tooltip *ngIf="showPolygonTooltip" [data]="polygon"></ai-tooltip>
+    <div class="areas-toolbar__section areas-toolbar__section--padding-top-8px">
+        <div class="areas-toolbar__section-items">
+            <div class="areas-toolbar__section-item"
+                 [class.areas-toolbar__section-item--active]="activeMode === mapModes.RESTRICTED_RECTANGLE"
+                 (click)="setMapMode(mapModes.RESTRICTED_RECTANGLE, $event)"
+                 (mouseover)="showRestrictedRectangleTooltip = true"
+                 (mouseout)="showRestrictedRectangleTooltip = false">
+                <div class="areas-toolbar__icon areas-toolbar__icon--restricted-area"></div>
+            </div>
+            <div class="areas-toolbar__section-item"
+                 [class.areas-toolbar__section-item--active]="activeMode === mapModes.RESTRICTED_SHAPE"
+                 (click)="setMapMode(mapModes.RESTRICTED_SHAPE, $event)"
+                 (mouseover)="showRestrictedPolygonTooltip = true" (mouseout)="showRestrictedPolygonTooltip = false">
+                <div class="areas-toolbar__icon areas-toolbar__icon--restricted-shape"></div>
+            </div>
+        </div>
+    </div>
+    <ai-tooltip *ngIf="showRestrictedRectangleTooltip" [data]="restrictedRectangle"></ai-tooltip>
+    <ai-tooltip *ngIf="showRestrictedPolygonTooltip" [data]="restrictedPolygon"></ai-tooltip>
+    <div class="areas-toolbar__section areas-toolbar__section--padding-top-8px">
+        <div class="areas-toolbar__section-items">
+            <div class="areas-toolbar__section-item"
+                 [class.areas-toolbar__section-item--active]="isChargeStationsToolbarOpened && !activeMode"
+                 (click)="openChargeStationsToolbar($event)">
+                <div class="areas-toolbar__icon areas-toolbar__icon--station"></div>
+            </div>
+            <div class="areas-toolbar__section-item"
+                tooltip="Allows you to place an Anchor device on the map."
+                container='body'
+                [class.areas-toolbar__section-item--active]="activeMode === mapModes.ANCHOR"
+                (click)="setMapMode(mapModes.ANCHOR, $event)">
+                <div class="areas-toolbar__icon areas-toolbar__icon--anchor"></div>
+            </div>
+            <div class="areas-toolbar__section-item"
+                tooltip="Allows you to place a work station on the map."
+                container='body'
+                [class.areas-toolbar__section-item--active]="activeMode === mapModes.WORK_STATION"
+                (click)="openStationsToolbar($event)">
+                <div class="areas-toolbar__icon areas-toolbar__icon--work-station"></div>
+            </div>
+            <div class="areas-toolbar__section-item"
+                tooltip="Allows you to place a camera on the map."
+                container='body'
+                [class.areas-toolbar__section-item--active]="activeMode === mapModes.CAMERA"
+                (click)="setMapMode(mapModes.CAMERA, $event)">
+                <div class="areas-toolbar__icon areas-toolbar__icon--camera"></div>
+            </div>
+        </div>
+    </div>
+    <ai-tooltip *ngIf="showChargingStationTooltip" [data]="chargingStation"></ai-tooltip>
+
+    <div *ngIf="isChargeStationsToolbarOpened"
+         aiClickOutside
+         (clickedOutside)="closeChargeStationsToolbar()"
+         class="stations-toolbar stations-toolbar--small">
+        <div class="stations-toolbar__container">
+            <div class="stations-toolbar__overflow-container">
+                <div class="stations-toolbar__section pb--4">
+                    <div class="stations-toolbar__charge-station"
+                         (click)="setMapMode(mapModes.CHARGING_STATION_TRACK, $event)">
+                        <div class="stations-toolbar__charge-station-layout stations-toolbar__charge-station-layout--track"></div>
+                        <div class="stations-toolbar__charge-station-name">
+                            Charging Station Track
+                        </div>
+                    </div>
+                </div>
+                <div class="stations-toolbar__section">
+                    <div class="stations-toolbar__charge-station"
+                        (click)="setMapMode(mapModes.CHARGING_STATION_DOCK, $event)">
+                        <div class="stations-toolbar__charge-station-layout stations-toolbar__charge-station-layout--dock"></div>
+                        <div class="stations-toolbar__charge-station-name">
+                            Charging Station Dock
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isStationsToolbarOpened"
+         aiClickOutside
+         (clickedOutside)="closeStationsToolbar()"
+         class="stations-toolbar">
+        <div class="stations-toolbar__container">
+            <div class="search-container search-container--contained">
+                <input type="search"
+                       [formControl]="stationsSearchControl"
+                       placeholder="Search"
+                       class="search-container__input">
+                <div class="search-container__button icon icon--search icon--size-16px">
+                </div>
+                <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"></div>
+            </div>
+            <div class="stations-toolbar__overflow-container">
+                <div class="stations-toolbar__section">
+                    <div class="stations-toolbar__header">
+                        <div class="icon icon--arrow-drop-down mr--4"></div>
+                        <div class="stations-toolbar__section-title">Stations from this infrastructure</div>
+                    </div>
+                    <div class="stations-toolbar__station"
+                         (click)="selectStation(station, $event)"
+                         *ngFor="let station of filteredStations">
+                        <div class="stations-toolbar__station-layout"
+                             [ngStyle]="{ 'backgroundImage': station?.layoutImage?.signedUrl ? 'url(' + station?.layoutImage?.signedUrl + ')' : '',
+                                          'backgroundSize': station?.layoutImage?.signedUrl ? 'contain' : ''}">
+                        </div>
+                        <div class="stations-toolbar__station-content">
+                            <div class="stations-toolbar__station-name">
+                                {{ station?.name }}
+                            </div>
+                            <div class="stations-toolbar__id">#{{ station?._id.slice(-6) || '-' }}</div>
+                            <div class="stations-toolbar__app" *ngIf="station?.application">
+                              {{ station.application?.project?.name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt--64" *ngIf="loading">
+                      <ai-loading></ai-loading>
+                    </div>
+
+                    <div class="stations-toolbar__empty-message"
+                         *ngIf="!loading && (!filteredStations?.length || !stations?.length)">
+                        No stations {{ stationsSearchControl?.value ? 'with this name' : 'for this infrastructure' }} available
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

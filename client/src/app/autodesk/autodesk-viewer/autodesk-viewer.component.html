@@ -1,0 +1,26 @@
+<div class="viewer"  >
+    <adsk-forge-viewer id="forgeViewer" #forgeViewer *ngIf="viewerData"  [viewerOptions]="viewerOptions">
+    </adsk-forge-viewer>
+</div>
+
+
+
+<ng-template #loadingView>
+
+  <ai-loading></ai-loading>
+
+</ng-template>
+
+<ng-template #robotDetails>
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Robot Details</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+ <p>Battery: 58%</p>
+ <p>Wifi: Aitheon</p>
+ <p>Task: Pick up container</p>
+</div>
+</ng-template>

@@ -1,0 +1,32 @@
+<main class="container mt--24 p-0">
+  <div class="title ellipsis">
+    <span class="title__building-icon"></span>
+    {{infrastructure?.name}}
+    <span class="title__archived-label"
+          *ngIf="infrastructure?.status === 'ARCHIVED'">
+        Archived
+    </span>
+  </div>
+
+  <ai-filters-panel [initialFiltersData]="initialFiltersDate"
+                    (filterData)='onFilterData($event)'
+                    (callAddDeviceModal)="onAddDeviceModal()"
+                    [infrastructure]='infrastructure'>
+  </ai-filters-panel>
+  <ai-device-manager-list [infrastructure]='infrastructure'
+                          [devices]="devices"
+                          (callAddDeviceModal)="onAddDeviceModal()"
+                          *ngIf="!loading else loadTempl">
+  </ai-device-manager-list>
+
+  <ng-template #loadTempl>
+    <ai-loading></ai-loading>
+  </ng-template>
+</main>
+
+<ai-add-device-modal (deviceAdded)="getDevices()"></ai-add-device-modal>
+
+<ai-no-permission-to-pay-modal [status]="ptpStatus"
+                               [ptpType]="'DEVICE'"
+                               (ptpModalClose)="ptpStatus = 'DISABLED'">
+</ai-no-permission-to-pay-modal>

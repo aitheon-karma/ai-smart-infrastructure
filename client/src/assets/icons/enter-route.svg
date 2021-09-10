@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>enter-point</title>
+    <g id="Smart-Infrastructure-v4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-03-Sctructure-/-03_03_Areas-Panel-with-scroll" transform="translate(-863.000000, -235.000000)" fill="#67B231">
+            <g id="Group-16" transform="translate(680.000000, 225.000000)">
+                <g id="Group-11" transform="translate(183.000000, 8.000000)">
+                    <path d="M5.92871163,2 C9.20304865,2 11.8574233,4.65437461 11.8574233,7.92871163 C11.8574233,9.20929988 11.4514154,10.3950599 10.7611015,11.3642898 L15.7105868,16.313176 C16.0964711,16.6990603 16.0964711,17.3247024 15.7105868,17.7105868 C15.3247024,18.0964711 14.6990603,18.0964711 14.313176,17.7105868 L9.3642898,12.7611015 C8.3950599,13.4514154 7.20929988,13.8574233 5.92871163,13.8574233 C2.65437461,13.8574233 0,11.2030487 0,7.92871163 C0,4.65437461 2.65437461,2 5.92871163,2 Z" id="enter-point"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,100 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "orchestratorTask": {
+      "type": "object"
+    },
+    "labels": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "order": {
+      "type": "number"
+    },
+    "stage": {
+      "type": "object"
+    },
+    "project": {
+      "type": "object"
+    },
+    "epic": {
+      "type": "object"
+    },
+    "board": {
+      "type": "object"
+    },
+    "archived": {
+      "type": "boolean"
+    },
+    "parent": {
+      "type": "object"
+    },
+    "readOnly": {
+      "type": "boolean"
+    },
+    "createdAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "updatedAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "commentsCount": {
+      "type": "number"
+    },
+    "startDate": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "finishDate": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "files": {
+      "type": "object"
+    },
+    "type": {
+      "type": "string"
+    },
+    "assigned": {
+      "type": "object"
+    },
+    "state": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "number"
+    },
+    "service": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "object"
+    }
+  },
+  "type": "object",
+  "required": [
+    "project",
+    "stage",
+    "board",
+    "archived"
+  ],
+  "description": "ProjectTask",
+  "title": "ProjectTask",
+  "$id": "5e96e9ce8c1dad0011c9f227"
+}

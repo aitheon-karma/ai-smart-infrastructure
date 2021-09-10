@@ -1,0 +1,47 @@
+<div class="task">
+	<div class="task__section">
+		<div class="task__number">#{{ device?.currentTask?.taskNumber }}</div>
+		<div class="task__type label">{{ device?.currentTask?.type === 'GO_TO' ? 'Go to' : ''}}</div>
+		<div 	class="task__status label ml-auto"
+					[class.label--blue]="device?.currentTask?.status === 'IN_PROGRESS'"
+					[class.label--aqua-blue]="device?.currentTask?.status === 'ESTIMATING'"
+					[class.label--violet]="device?.currentTask?.status === 'PENDING'"
+					[class.label--orange]="device?.currentTask?.status === 'CANCELED'"
+					[class.label--red]="device?.currentTask?.status === 'FAILED'"
+					[class.label--green]="device?.currentTask?.status === 'COMPLETED'">
+			{{ device?.currentTask?.status | titlecase }}
+		</div>
+		<span class="task__close-icon icon icon--close icon--dynamic ml--8"
+					(click)="closeTaskInfo($event)"></span>
+	</div>
+	<div class="task__section bb">
+		<div class="task__name">{{ device?.currentTask?.orchestratorTask?.name }}</div>
+	</div>
+	<div class="task__section mb--8">
+		<div class="task__label">Work Floor:</div>
+		<div class="task__floor">{{ currentFloor?.name }}</div>
+	</div>
+	<div class="task__section mb--8">
+		<div class="task__label">Work Area:</div>
+		<div class="task__area" 
+				[class.task__area--gray]="!device?.area">
+			{{ device?.area ? device?.area : 'No area' }}
+		</div>
+	</div>
+	<div class="task__section mb--8">
+		<div class="task__label">Creator:</div>
+		<div class="task__created-by label label--user">
+			<span class="label__avatar"
+						[ngStyle]="{'background-image': 'url(' + device?.currentTask?.orchestratorTask?.createdBy?.profile?.avatarUrl + ')'}">
+			</span>
+			{{ device?.currentTask?.orchestratorTask?.createdBy?.profile?.firstName }} 
+			{{ device?.currentTask?.orchestratorTask?.createdBy?.profile?.lastName }}
+		</div>
+	</div>
+	<div class="task__section mb--0">
+		<div class="task__label">Start Time:</div>
+		<div class="task__start-time">
+			{{ device?.currentTask?.orchestratorTask?.updatedAt | date: 'shortTime' }}
+		</div>
+	</div>
+</div>

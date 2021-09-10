@@ -1,0 +1,804 @@
+<div class="container mt--24 p-0"
+     *ngIf="!isLoading && deviceDetails">
+  <div class="device-page__head">
+    <div class="device-page__title">
+      <span class="device-page__building-icon"></span>
+      {{ infrastructure?.name }}
+      <span class="device-page__divider"></span>
+      {{ (floor?.number || '') + ' ' + (floor?.name || '') }}
+      {{ floor ? (floor?.name.includes('floor') ? '' : 'floor') : '' }}
+    </div>
+  </div>
+  <div class="device"
+       [class.device--controller]="device?.isController">
+    <div class="device__header">
+      <span class="device__title ellipsis"
+            *ngIf="device?.name"
+            tooltip="{{ device?.name }} {{ device?.isController ? '(Controller)' : ''}}"
+            container="body">
+        {{ device?.name }} {{ device?.isController ? '(Controller)' : ''}}
+      </span>
+      <button class="button button--ghost button--small button--core-container button--core-container--small ml--24"
+              *ngIf="graphURL"
+              (click)="openCore()">
+        <span class="button--core"><span class="icon icon--size-16px service-icon system_graph"></span>
+          Open core
+        </span>
+      </button>
+      <!-- <div class="switch-container mr--24 mb-0" *ngIf="!device?.isController">
+              <label class="d-flex align-items-center white" for="switch">
+                Bridge Mode
+              </label>
+              <label class="switch">
+                <input id="switch" name="switch" type="checkbox" [(ngModel)]="isChecked" (change)="toggleBridgeMode(isChecked)">
+                <span class="slider round"></span>
+              </label>
+            </div> -->
+      <button type="button"
+              *ngIf="!device?.isController"
+              class="button button--ghost button--medium ml--24"
+              [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+              (click)="addTask()">
+        <span class="icon icon--plus icon--size-16px button__icon"></span>
+        Add Task
+      </button>
+      <button type="button"
+              class="button button--ghost button--medium mr--24 ml--24"
+              [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+              (click)="goToDeviceSettings()">
+        <span class="icon icon--settings icon--size-16px button__icon ml--0 mr--8"></span>
+        Device settings
+      </button>
+      <button type="button"
+              class="button button--ghost button--medium button--error button--disabled"
+              disabled
+              (click)="turnOffDevice()">
+        <span class="icon icon--attention icon--size-16px button__icon ml--0 mr--8"></span>
+        Turn Off
+      </button>
+    </div>
+    <div class="device__visual-info">
+      <div class="device__visual-info__image"
+           [class.device__visual-info__image--controller]="device?.isController">
+        <img src="{{ device?.image?.signedUrl }}"
+             *ngIf="device?.image else uploaderBlock">
+        <ng-template #uploaderBlock>
+          <div class="uploader-block"
+               [class.uploader-block--disabled]="infrastructure?.status === 'ARCHIVED'">
+            <button type="button"
+                    (click)="uploaderInput.click()"
+                    class="button button--ghost button--medium"
+                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'">
+              <span class="icon icon--image icon--size-16px button__icon"></span>
+              Upload image
+            </button>
+
+            <input #uploaderInput
+                   ng2FileSelect
+                   id="upload-files"
+                   name="upload-files"
+                   class="upload-input form-control"
+                   type="file"
+                   [uploader]="driveUploader?.uploader"
+                   accept=".jpg, .png" />
+
+            <ai-drive-uploader (failedUploadFile)="failedUpload($event)"
+                               [autoUpload]="true"
+                               #driveUploader
+                               (success)="onSuccessUpload($event)"
+                               [oganizationId]="serviceKey?.key"
+                               [service]="serviceKey"
+                               (afterAddingFile)="onAfterAdd($event)">
+            </ai-drive-uploader>
+          </div>
+        </ng-template>
+      </div>
+      <div class="device__visual-info__map-info"
+           *ngIf="!device?.isController">
+        <span>Device Location</span>
+        <span class="ellipsis">{{ device?.area?.name }}
+          <span *ngIf="floor?.name || floor?.number">({{ floor?.name }} {{ floor?.number }})</span>
+        </span>
+      </div>
+      <div class="device__visual-info__map"
+           *ngIf="!device?.isController">
+        <div class="im-robot"></div>
+      </div>
+    </div>
+    <div class="device__info-container">
+      <div class="device__tasks"
+           *ngIf="!device?.isController">
+        <tabset class="tabs tabs--large">
+          <tab heading="Tasks"
+               [active]="tabState == 1"
+               (change)="switchTab(1)">
+            <span class="device__tasks__title"
+                  *ngIf="sortedTasks?.currentTask || (!sortedTasks?.currentTask && sortedTasks?.taskQueue?.length !== 0)">
+              Current task
+            </span>
+            <div *ngIf="!sortedTasks?.currentTask && sortedTasks?.taskQueue?.length > 0">
+              <span class="empty-state">No Task in Progress</span>
+            </div>
+            <ai-device-manager-task-card [task]="sortedTasks?.currentTask"
+                                         [floor]='floor'
+                                         *ngIf="sortedTasks?.currentTask">
+            </ai-device-manager-task-card>
+            <div *ngIf="sortedTasks?.taskQueue?.length || sortedTasks?.currentTask">
+              <span class="device__tasks__title"
+                    *ngIf="sortedTasks?.taskQueue?.length > 0 || sortedTasks?.currentTask">
+                Task Queue
+              </span>
+              <div *ngIf="sortedTasks?.currentTask && sortedTasks?.taskQueue?.length === 0">
+                <span class="empty-state">No Tasks in Queue</span>
+              </div>
+              <ai-device-manager-task-card *ngFor="let taskInQueue of sortedTasks?.taskQueue"
+                                           [task]="taskInQueue"
+                                           [floor]='floor'
+                                           (reloadTasks)="getTasksQueue(device?._id)">
+              </ai-device-manager-task-card>
+            </div>
+            <div *ngIf="!sortedTasks?.taskQueue?.length && !sortedTasks?.currentTask"
+                 class="no-tasks-block">
+              <div class="no-tasks-block__icon">
+                <img src="assets/img/icons/no-tasks-img.svg"
+                     style="width: 100%">
+              </div>
+              <span class="pt--16">
+                The Device hasn’t received new tasks yet
+              </span>
+              <button type="button"
+                      class="button button--ghost button--medium mt--8"
+                      (click)="addTask()">
+                <span class="icon icon--plus icon--size-16px button__icon"></span>
+                Add Task
+              </button>
+            </div>
+          </tab>
+          <tab heading="Task History"
+               [active]="tabState == 2"
+               (change)="switchTab(2)">
+            <div class="search-container search-container--contained mt--16 mb--16"
+                 [class.search-container--filled]="search.value.length">
+              <input type="search"
+                     placeholder="Search by Task ID or Name…"
+                     (input)="searchHistoryTasks(search.value)"
+                     #search
+                     class="search-container__input">
+              <div class="search-container__button icon icon--search icon--size-16px"></div>
+              <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+                   (click)="searchHistoryTasks(''); search.value = ''">
+              </div>
+            </div>
+            <ai-device-manager-task-card *ngFor="let taskInQueue of sortedTasks?.taskHistory"
+                                         [actions]="false"
+                                         [task]="taskInQueue"
+                                         [floor]='floor'>
+            </ai-device-manager-task-card>
+            <div *ngIf="sortedTasks?.taskHistory.length === 0">
+              <span class="empty-state">No Tasks in History</span>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+
+      <div class="device__system-information"
+           [class.device__system-information--no-border]="device?.isController">
+        <span class="device__system-information__title">
+          System Information
+        </span>
+
+        <div class="sys-info-card">
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="detail-label">Status:</span>
+          </div>
+
+          <div class="d-flex justify-content-start">
+            <span class="status-label"
+                  [ngClass]="statusDeviceColor">
+              {{ device?.status | replace : '_' : ' ' | titlecase }}
+            </span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="detail-label">Name:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis">
+            <span class="ellipsis">{{ device?.name }}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">Battery:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <div class="d-flex align-items-center">
+              <!-- Battery Icon -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   width="26"
+                   height="14"
+                   viewBox="0 0 26 14">
+                <title>charge-battery</title>
+                <g fill="none">
+                  <g>
+                    <path d="M23 0C23.6 0 24 0.4 24 1L24 4 25 4C25.6 4 26 4.4 26 5L26 9C26 9.6 25.6 10 25 10L24 10 24 13C24 13.6 23.6 14 23 14L1 14C0.4 14 0 13.6 0 13L0 1C0 0.4 0.4 0 1 0L23 0ZM22 2L2 2 2 12 22 12 22 2Z"
+                          fill="#fff"
+                          id="battery" />
+                    <rect x="4"
+                          y="4"
+                          width="4"
+                          height="6"
+                          fill="transparent"
+                          id="battery-low" />
+                    <rect x="10"
+                          y="4"
+                          width="4"
+                          height="6"
+                          fill="transparent"
+                          id="battery-medium" />
+                    <rect x="16"
+                          y="4"
+                          width="4"
+                          height="6"
+                          fill="transparent"
+                          id="battery-full" />
+                  </g>
+                </g>
+              </svg>
+              <!-- / Battery Icon -->
+              <span class="ellipsis pl--8"
+                    [class.charge--red]="device?.batteryHealth <= 30">
+                {{ device?.batteryHealth }}%
+              </span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">Form:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <span class="ellipsis">Robotics</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="detail-label">Type:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis">
+            <span
+                  class="ellipsis">{{ device?.isController ? 'Controller' : device?.type?.name | replace : '_' : ' ' | titlecase }}</span>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-start" *ngIf="device?.isController">
+            <span class="detail-label">Linked to station:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis" *ngIf="device?.isController && currentControllerStation?.name">
+            <span
+                  class="ellipsis">{{ currentControllerStation?.name }}</span>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-start" *ngIf="device?.isController">
+            <span class="detail-label">Station floor:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis" *ngIf="device?.isController && currentControllerStation">
+            <span
+                  class="ellipsis">{{ currentControllerStationFloor || '-' }}</span>
+          </div>
+
+
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">Model:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <span class="ellipsis">{{ device?.model || 'None' }}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">Address Port:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <span class="ellipsis">{{ device?.port }}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">IP address:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <span class="ellipsis">{{ device?.address }}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="detail-label">Serial Number:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start" *ngIf="device?.isController">
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               [class.ellipsis]="!device?.isController">
+            <span [class.ellipsis]="!device?.isController"
+                  [class.serial-controller-mode]="device?.isController">{{ device?.serialNumber }}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">Driver:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <span class="ellipsis">
+              {{ device?.driver | replace : '\\.' : ' ' | titlecase }}
+            </span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">Home charging:</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <span class="ellipsis">{{ device?.chargingStation?.name || 'None' }}</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-start"
+               *ngIf="!device?.isController">
+            <span class="detail-label">Default task:</span>
+          </div>
+          <!-- <div class="d-flex align-items-center justify-content-start ellipsis"
+               *ngIf="!device?.isController">
+            <span class="ellipsis">{{ device?.defaultTask?.orchestratorTask.name}}</span>
+          </div> -->
+          <div class="d-flex align-items-center justify-content-start ellipsis go-floor" *ngIf="floor?.name">
+            <div  *ngIf="floor?.number"
+                (click)="goToFloor()"
+                class="ellipsis"
+                tooltip="{{floor?.number}} {{floor?.name}} {{device?.defaultTask?.area?.name}}">
+                Go to Floor {{ floor?.number }} {{ floor?.name }} {{device?.defaultTask?.area?.name}}
+            </div>
+
+            <span *ngIf="device?.chargingStation?.name" class="ellipsis">
+              Go to Charge Name Test
+            </span>
+          </div>
+
+          <div class="divider"
+               *ngIf="!device?.isController"></div>
+        </div>
+
+        <div class="divider mb--16"
+             *ngIf="!device?.isController"></div>
+        <span class="device__system-information__title mb-0"
+              *ngIf="!device?.isController">
+          Modules
+        </span>
+        <div class="box"
+             *ngIf="!device?.isController"
+             #batteryModuleBlock>
+          <div class="box__header">
+            <span>
+              Battery Module
+            </span>
+            <button class="icon icon--dynamic"
+                    [ngClass]="batteryModuleBlock?.showInfo === true ? 'icon--arrow-drop-up' : 'icon--arrow-drop-down'"
+                    (click)="batteryModuleBlock['showInfo'] = batteryModuleBlock['showInfo'] !== true">
+            </button>
+          </div>
+          <div class="sys-info-card"
+               *ngIf="batteryModuleBlock?.showInfo">
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">Charging Cycles:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis">10 / 300</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">Camera:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis charge--red">Offline</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">Motor:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis charge--green">Active</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">%Module.Name%:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis">%Value%</span>
+            </div>
+          </div>
+        </div>
+        <div class="box"
+             *ngIf="!device?.isController"
+             #cameraModuleBlock>
+          <div class="box__header">
+            <span>
+              Camera Module
+            </span>
+            <button class="icon icon--dynamic"
+                    [ngClass]="cameraModuleBlock?.showInfo === true ? 'icon--arrow-drop-up' : 'icon--arrow-drop-down'"
+                    (click)="cameraModuleBlock['showInfo'] = cameraModuleBlock['showInfo'] !== true">
+            </button>
+          </div>
+          <div class="sys-info-card"
+               *ngIf="cameraModuleBlock?.showInfo">
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">Charging Cycles:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis">10 / 300</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">Camera:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis charge--red">Offline</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">Motor:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis charge--green">Active</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start">
+              <span class="detail-label">%Module.Name%:</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start ellipsis">
+              <span class="ellipsis">%Value%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="device__controller-information"
+           *ngIf="device?.isController">
+        <div class="device__controller-section device__controller-section--border-bottom">
+          <div class="device__controller-section-head mb-0">
+            <div class="d-flex w-100 align-items-center">
+              <label class="mr--8 mb-0">Driver:</label>
+              <label class="mb-0"
+                     [class.white]="deviceDriver?.name">
+                {{ deviceDriver?.name || 'No driver' }}
+              </label>
+              <span class="icon icon--delete icon--dynamic ml-auto"
+                    [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    (click)="deleteDriver()" tooltip="Remove driver"
+                    container="body" placement="bottom"
+                    *ngIf="deviceDriver"></span>
+            </div>
+            <button class="button button--ghost button--small"
+                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    *ngIf="!deviceDriver"
+                    (click)="openDiverFlowModal()">
+              <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+              Add Driver
+            </button>
+          </div>
+        </div>
+
+
+        <div class="device__controller-section device__controller-section--border-bottom">
+          <div class="device__controller-section-head">
+            <div class="device__system-information__title device__system-information__title--small">
+              AOS nodes
+            </div>
+            <button class="button button--ghost button--small"
+                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    (click)="openAutomationNodeAosModal()">
+              <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+              Add Node
+            </button>
+          </div>
+          <div class="device__controller-section-list">
+            <div class="applications__item application mt-2"
+                 *ngFor="let app of device?.computeNodeApplications">
+              <div class="application__top">
+                <div class="application__info">
+                  <div class="application__name">{{ app?.project?.name }}</div>
+                  <div class="application__version">v {{ app?.version }}</div>
+                </div>
+                <div class="application__status"
+                     [class.application__status--base-red]="app?.status !== 'RUNNING' && app?.status !== 'PENDING'"
+                     [class.application__status--base-green]="app?.status === 'RUNNING' || app?.status === 'PENDING'">
+                  {{ app?.status !== 'RUNNING' && app?.status !== 'PENDING' ? 'Stopped' : 'Running' }}
+                </div>
+              </div>
+              <div class="application__divider"></div>
+              <div class="d-flex flex-column w-100">
+                <div class="application__bottom">
+                  <div class="application__control">
+                    <span class="icon icon--pause icon--red icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          *ngIf="(app?.status === 'RUNNING' || app?.status === 'PENDING'); else deployAppButton"
+                          tooltip="Stop application"
+                          (click)="deployApplication(app, false)"
+                          container="body"></span>
+                    <ng-template #deployAppButton>
+                      <span class="icon icon--play icon--green icon--dynamic"
+                            [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                            (click)="deployApplication(app, true)"
+                            tooltip="Run application"
+                            container="body"></span>
+                    </ng-template>
+                  </div>
+                  <div class="application__actions">
+                    <span class="icon icon--show icon--dynamic icon--disabled mr--16"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED' || (app?.status !== 'RUNNING' && app?.status !== 'PENDING')"
+                          tooltip="View application"
+                          (click)="goToApplication(app)"
+                          container="body"></span>
+                    <span class="icon icon--edit icon--dynamic mr--16"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="editApplication(app?.project)"></span>
+                    <span class="icon icon--delete icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="deleteApplication(app?.graphNodeId)"></span>
+                  </div>
+                </div>
+                <div class="application__new-version"
+                     *ngIf="!app?.isLatest">
+                  <div class="application__new-version-info">
+                    <div class="application__new-version-text">
+                      New version is ready! Let’s update
+                    </div>
+                    <button class="button button--ghost button--small"
+                            (click)="updateAppToLatest(app?.graphNodeId)">
+                      <span class="icon icon--update icon--active mr--4"></span>
+                      update
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="device__controller-section-empty"
+                 *ngIf="!device?.computeNodeApplications?.length">
+              No added nodes
+            </div>
+          </div>
+        </div>
+
+
+        <div class="device__controller-section device__controller-section--border-bottom">
+          <div class="device__controller-section-head">
+            <div class="device__system-information__title device__system-information__title--small">
+              Applications
+            </div>
+            <button class="button button--ghost button--small"
+                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    (click)="openAutomationNodeModal()">
+              <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+              Add Application
+            </button>
+          </div>
+
+          <!-- UI App -->
+
+          <div class="device__controller-section-list mt--8">
+            <!-- Robot App -->
+            <span class="application__title"
+                  *ngIf="device?.uiApplications?.length">
+              UI Application
+            </span>
+            <div class="applications__item application mt-2"
+                 *ngFor="let app of device?.uiApplications">
+              <div class="application__top">
+                <div class="application__info">
+                  <div class="application__name">{{ app?.project?.name }}</div>
+                  <div class="application__version">v {{ app?.version }}</div>
+                </div>
+                <div class="application__status"
+                     [class.application__status--base-red]="app?.status !== 'RUNNING' && app?.status !== 'PENDING'"
+                     [class.application__status--base-green]="app?.status === 'RUNNING' || app?.status === 'PENDING'">
+                  {{ app?.status !== 'RUNNING' && app?.status !== 'PENDING' ? 'Stopped' : 'Running' }}
+                </div>
+              </div>
+              <div class="application__divider"></div>
+              <div class="d-flex flex-column w-100">
+                <div class="application__bottom">
+                  <div class="application__control">
+                    <span class="icon icon--pause icon--red icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          *ngIf="(app?.status === 'RUNNING' || app?.status === 'PENDING'); else deployAppButton"
+                          tooltip="Stop application"
+                          (click)="deployApplication(app, false)"
+                          container="body"></span>
+                    <ng-template #deployAppButton>
+                      <span class="icon icon--play icon--green icon--dynamic"
+                            [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                            (click)="deployApplication(app, true)"
+                            tooltip="Run application"
+                            container="body"></span>
+                    </ng-template>
+                  </div>
+                  <div class="application__actions">
+                    <span class="icon icon--show icon--dynamic mr--16"
+                          [class.icon--disabled]="(app?.status !== 'RUNNING' && app?.status !== 'PENDING' || infrastructure?.status === 'ARCHIVED')"
+                          tooltip="View application"
+                          (click)="goToApplication(app)"
+                          container="body"></span>
+                    <span class="icon icon--edit icon--dynamic mr--16"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="editApplication(app?.project)"></span>
+                    <span class="icon icon--delete icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="deleteApplication(app?.graphNodeId)"></span>
+                  </div>
+                </div>
+                <div class="application__new-version"
+                     *ngIf="!app?.isLatest">
+                  <div class="application__new-version-info">
+                    <div class="application__new-version-text">
+                      New version is ready! Let’s update
+                    </div>
+                    <button class="button button--ghost button--small"
+                            (click)="updateAppToLatest(app?.graphNodeId)">
+                      <span class="icon icon--update icon--active mr--4"></span>
+                      update
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="application__title"
+                  *ngIf="device?.robotApplications?.length">
+              Robot Application
+            </span>
+            <div class="applications__item application mt-2"
+                 *ngFor="let app of device?.robotApplications">
+              <div class="application__top">
+                <div class="application__info">
+                  <div class="application__name">{{ app?.project?.name }}</div>
+                  <div class="application__version">v {{ app?.version }}</div>
+                </div>
+                <div class="application__status"
+                     [class.application__status--base-red]="app?.status !== 'RUNNING' && app?.status !== 'PENDING'"
+                     [class.application__status--base-green]="app?.status === 'RUNNING' || app?.status === 'PENDING'">
+                  {{ app?.status !== 'RUNNING' && app?.status !== 'PENDING' ? 'Stopped' : 'Running' }}
+                </div>
+              </div>
+              <div class="application__divider"></div>
+              <div class="d-flex flex-column w-100">
+                <div class="application__bottom">
+                  <div class="application__control">
+                    <span class="icon icon--pause icon--red icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          *ngIf="(app?.status === 'RUNNING' || app?.status === 'PENDING'); else deployAppButton"
+                          tooltip="Stop application"
+                          (click)="deployApplication(app, false)"
+                          container="body"></span>
+                    <ng-template #deployAppButton>
+                      <span class="icon icon--play icon--green icon--dynamic"
+                            [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                            (click)="deployApplication(app, true)"
+                            tooltip="Run application"
+                            container="body"></span>
+                    </ng-template>
+                  </div>
+                  <div class="application__actions">
+                    <span class="icon icon--show icon--dynamic icon--disabled mr--16"
+                          [class.icon--disabled]="app?.status !== 'RUNNING' && app?.status !== 'PENDING' || infrastructure?.status === 'ARCHIVED'"
+                          tooltip="View application"
+                          (click)="goToApplication(app)"
+                          container="body"></span>
+                    <span class="icon icon--edit icon--dynamic mr--16"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="editApplication(app?.project)"></span>
+                    <span class="icon icon--delete icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="deleteApplication(app?.graphNodeId)"></span>
+                  </div>
+                </div>
+                <div class="application__new-version"
+                     *ngIf="!app?.isLatest">
+                  <div class="application__new-version-info">
+                    <div class="application__new-version-text">
+                      New version is ready! Let’s update
+                    </div>
+                    <button class="button button--ghost button--small"
+                            (click)="updateAppToLatest(app?.graphNodeId)">
+                      <span class="icon icon--update icon--active mr--4"></span>
+                      update
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="device__controller-section-empty"
+                 *ngIf="!device?.robotApplications?.length && !device?.uiApplications?.length">
+              No applications
+            </div>
+          </div>
+        </div>
+
+
+        <div class="device__controller-section">
+          <div class="device__controller-section-head">
+            <div class="device__system-information__title device__system-information__title--small">
+              Linked devices
+            </div>
+            <button class="button button--ghost button--small"
+                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    (click)="openAddDevicesModal()">
+              <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+              Add Device
+            </button>
+          </div>
+          <div class="device__controller-section-list">
+            <div class="devices__list"
+                 *ngIf="linkedDevices?.length">
+              <div class="devices__item device-item"
+                   [class.device-item--bridge]="linkedDevice?.bridgeMode"
+                   *ngFor="let linkedDevice of linkedDevices"
+                   (click)="goToDevice($event, linkedDevice._id)">
+                <div class="device-item__visual-info">
+                  <div class="device-item__image">
+                    <span class="icon icon--image icon--size-16px"></span>
+                  </div>
+                </div>
+                <div class="device-item__center">
+                  <div class="device-item__info">
+                    <div class="device-item__name">{{ linkedDevice.name }}</div>
+                    <div class="device-item__version mb--8">v 1.01</div>
+                    <div class="device-item__type">
+                      {{ linkedDevice.type?.name | replace : '_' : ' ' | titlecase }}
+                    </div>
+                  </div>
+                </div>
+                <div class="device-item__right ml-auto">
+                  <div class="device-item__status ml-auto mr--16"
+                       [ngClass]="linkedDevice.online ? 'device-item__status--base-green' : 'device-item__status--base-red'">
+                    {{ linkedDevice.online ? 'Online' : 'Offline' }}
+                  </div>
+                  <button class="icon icon--delete icon--dynamic"
+                          (click)="onRemoveDevice($event, linkedDevice._id, device)"></button>
+                </div>
+                <span class="device-item__bridge"
+                      *ngIf="linkedDevice.bridgeMode">Using as a Bridge</span>
+              </div>
+            </div>
+            <div class="device__controller-section-empty my-5"
+                 *ngIf="!linkedDevices?.length">
+              No devices
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="device-item-settings mt--24"
+     *ngIf="deviceSettings">
+  <div class="container p-0 mt--24 mb--16">
+    <div class="w-50 d-flex align-items-center justify-content-between ml-auto mr-auto">
+      <h2 class="device__title">
+        Device Settings
+      </h2>
+      <button class="button button--ghost button--error button--medium"
+              (click)="onDeleteDevice()">
+        Delete Device
+      </button>
+    </div>
+  </div>
+  <ai-device-manager-form [editMode]="true"
+                          (quitEditMode)="quitEditMode($event)"
+                          (updateDevice)="onUpdateDevice($event)"
+                          [device]="device"></ai-device-manager-form>
+</div>
+
+<div class="mt--24"
+     *ngIf="isLoading">
+  <ai-loading></ai-loading>
+</div>
+
+<ai-add-device-modal></ai-add-device-modal>
+
+<ai-core-automate-modal></ai-core-automate-modal>
+
+<ai-core-create-node-modal (createdNode)="onCreateNode($event)"></ai-core-create-node-modal>
+
+<ai-core-add-application-modal (closeModalEvent)="isChecked = false"></ai-core-add-application-modal>
+
+<ai-request-modal></ai-request-modal>
+
+<ai-build-status></ai-build-status>

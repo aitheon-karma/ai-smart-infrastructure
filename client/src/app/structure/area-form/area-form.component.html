@@ -1,0 +1,80 @@
+<div class="area-form"
+     *ngIf="show">
+  <form [formGroup]="areaForm" *ngIf="!type">
+    <div class="area-form__inputs-wrap">
+      <div class="input-wrap input-wrap--outlined input-wrap--small area-form__name-input"
+           [class.input-wrap--error]="submitted && !areaForm.get('name').valid">
+        <input class="input-wrap__input pr--48"
+               autocomplete="off"
+               aiFocus
+               [placeholder]="shapeType === 'CHARGING_DOCK' || shapeType === 'CHARGING_TRACK' || shapeType === 'CHARGING' ? 'Enter Station Name' : 'Enter Area Name'"
+               [title]="shapeType === 'CHARGING_DOCK' || shapeType === 'CHARGING_TRACK' || shapeType === 'CHARGING' ? 'Enter Station Name' : 'Enter Area Name'"
+               formControlName="name"
+               maxlength="50"
+               (focus)="onFocus(true)"
+               (blur)="onFocus(false)">
+        <span class="input-wrap__counter">
+          {{ areaForm.get('name')?.value?.length || 0 }}/50
+        </span>
+      </div>
+      <div class="area-form__color-picker-wrap"
+           *ngIf="shapeType !== 'RESTRICTED' && shapeType !== 'CHARGING' && shapeType !== 'CHARGING_DOCK' && shapeType !== 'CHARGING_TRACK'">
+        <div class="area-form__color-picker">
+          <div class="color-picker m--0">
+            <input [(colorPicker)]="backgroundInputValue"
+                   (colorPickerOpen)="colorPickerOpened = true"
+                   (colorPickerClose)="colorPickerOpened = false"
+                   [style.background]="areaForm.get('backgroundColor').value"
+                   (colorPickerChange)="areaForm.get('backgroundColor').setValue($event);"
+                   [value]="areaForm.get('backgroundColor').value"
+                   formControlName="backgroundColor"
+                   cpPosition="bottom"/>
+          </div>
+        </div>
+        <div class="icon icon--arrow-drop-down cursor-pointer"
+             [class.icon--arrow-drop-up]="colorPickerOpened"
+             (click)="toggleColorPicker()"></div>
+      </div>
+      <div class="area-form__inputs-wrap area-form__inputs-wrap--degree" *ngIf="data?.type === 'CHARGING_DOCK' || data?.type === 'CHARGING_TRACK'">
+        <label class="area-form__inputs-wrap-degree-label"
+               [class.text-danger]="!areaForm.get('degree').valid">
+          Rotation {{!areaForm.get('degree').valid ? '0 - 360°' : ''}}
+        </label>
+        <span class="icon icon--refresh mx--8"></span>
+        <div class="input-wrap input-wrap--outlined input-wrap--small area-form__degree-input"
+             [class.input-wrap--error]="!areaForm.get('degree').valid">
+          <input class="input-wrap__input"
+                  autocomplete="off"
+                  placeholder="0°"
+                  maxlength="3"
+                  max="360"
+                  min="0"
+                  formControlName="degree"
+                  type="number"
+                  (focus)="onDegreeInputFocus(true)"
+                  (blur)="onDegreeInputFocus(false)"/>
+        </div>
+      </div>
+      <div class="area-form__separator"></div>
+    </div>
+  </form>
+  <div class="area-form__devices-control-wrap"
+       *ngIf="devicesControl">
+    <ng-select class="dropdown dropdown--outlined"
+               [multiple]="false"
+               placeholder="Choose the Device"
+               [items]="devices"
+               bindLabel="name"
+               bindValue="_id"
+               [closeOnSelect]="true"
+               [clearable]="false"
+               [searchable]="false"
+               [formControl]="devicesControl">
+      <!--      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">-->
+      <!--        <div class="ng-value" *ngFor="let item of items">-->
+      <!--          {{item?.name}} {{item?.number}}-->
+      <!--        </div>-->
+      <!--      </ng-template>-->
+    </ng-select>
+  </div>
+</div>

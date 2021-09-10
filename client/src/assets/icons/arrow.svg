@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="5px" viewBox="0 0 10 5" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>icon / 24-cont / arrows / arrow-drop-down-24</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="7 10 12 15 17 10"></polygon>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Components-/-List-/-1-line-/-Icon-+-Option-+-Dropdown" transform="translate(-207.000000, -22.000000)">
+            <g id="icon-/-24-cont-/-arrows-/-arrow-drop-down-24" transform="translate(200.000000, 12.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#7E7E7E" fill-rule="nonzero" transform="translate(12.000000, 12.500000) rotate(-360.000000) translate(-12.000000, -12.500000) " xlink:href="#path-1"></use>
+                <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" mask="url(#mask-2)" fill="#7E7E7E" fill-rule="evenodd">
+                    <g transform="translate(12.000000, 12.000000) rotate(-360.000000) translate(-12.000000, -12.000000) " id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray">
+                        <rect x="0" y="0" width="24" height="24" rx="2"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

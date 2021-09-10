@@ -1,0 +1,457 @@
+<div class="structure" *ngIf="!addFloorForm">
+    <div class="structure__header-wrap"
+         [class.border-none]="!infrastructure?.floors?.length || dashboardView">
+        <div class="structure__header">
+            <div class="structure__name ellipsis">
+                <span class="structure__building-icon"></span>
+                {{ infrastructure?.name }}
+                <span class="structure__archived-label"
+                      *ngIf="infrastructure?.status === 'ARCHIVED'">
+                    Archived
+                </span>
+            </div>
+        </div>
+
+    <div class="structure__floors-section" *ngIf="infrastructure?.floors?.length">
+      <span class="structure__floors-tooltip icon icon--info ml--16"
+            tooltip="Here you can change the floor"
+            container="body"
+            placement="top"></span>
+      <ng-container>
+        <div class="structure__floor-name"
+             [class.structure__floor-name--active]="showFloorsList"
+             (click)="toggleFloorsList($event)">
+          <span class="structure__floor-number">
+            {{ getFloorNumber(selectedFloor?.number) }}
+          </span>
+          <span class="structure__floor-title">
+            {{ selectedFloor?.name }}
+          </span>
+          <div class="icon icon--arrow-drop-down ml--16"
+               [class.icon--arrow-drop-up]="showFloorsList"></div>
+        </div>
+        <div class="structure__floors-list"
+             *ngIf="showFloorsList">
+          <ai-floors-list [floors]="infrastructure.floors"
+                          [currentFloor]="selectedFloor"
+                          (hided)="hideFloorsList($event)"
+                          (floorSelected)="onFloorSelected($event)"></ai-floors-list>
+        </div>
+      </ng-container>
+      <div class="structure__divider"></div>
+      <div class="structure__buttons w-100">
+
+        <ai-area-form *ngIf="showAreaButtons" class="ml-auto"></ai-area-form>
+
+                <ng-container *ngIf="showAreaButtons; else structureButtons">
+                    <button class="button button--medium button--ghost"
+                            (click)="exitEditMode()">
+                        cancel
+                    </button>
+                    <button class="button button--medium button--contained ml--16"
+                            [class.button--disabled]="!shapeValid"
+                            (click)="saveActiveShape(activeShape ? activeShape : '')">
+                        save
+                    </button>
+                </ng-container>
+                <ng-template #structureButtons>
+                    <button class="button button--medium button--ghost mr--auto"
+                            [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                            (click)="goAddFloorForm('NEW_FLOOR')"
+                            *ngIf="infrastructure?.floors?.length && !dashboardView">
+                        <span class="icon icon--plus icon--active icon--size-16px mr--8"></span>
+                        Add New Floor
+                    </button>
+                    <button class="button button--medium button--ghost ml--8"
+                            [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                            *ngIf="!dashboardView && infrastructure?.floors?.length"
+                            (click)="addTask()">
+                        <span class="icon icon--plus icon--active icon--size-16px mr--8"></span>
+                        Create Task
+                    </button>
+                    <button class="button button--ghost button--small button--core-container button--core-container--small ml--8"
+                            *ngIf="graphUrl && !isApplication"
+                            (click)="openCore()">
+                        <span class="button--core">
+                        <span class="icon icon--size-16px service-icon system_graph"></span>
+                        Open core
+                        </span>
+                    </button>
+                    <span class="icon icon--settings icon--dynamic ml--16"
+                          *ngIf="!dashboardView"
+                          [class.icon--disabled]="infrastructure?.status ==='ARCHIVED'"
+                          (click)="editFloor()"></span>
+                    <button class="button button--medium button--ghost ml-auto"
+                            *ngIf="dashboardView"
+                            (click)="togglePanel()">
+                        <span class="structure__device-panel-icon"></span>
+                        Device Panel
+                    </button>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+  <div class="structure__create-floor" *ngIf="infrastructure && !infrastructure?.floors?.length">
+    <span class="structure__create-floor-image"></span>
+    No floors in this infrastructure. Let’s create the first one ;)
+    <button type="button"
+            class="button button--ghost button--medium mt--24"
+            [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+            (click)="goAddFloorForm()">
+      <span class="icon icon--plus icon--size-16px button__icon"></span>
+      Add floor
+    </button>
+  </div>
+
+  <div class="structure__map-wrap" *ngIf="infrastructure && selectedFloor"
+       [class.structure__map-wrap--small]="showAreasList"
+       [class.structure__map-wrap--medium]="!showAreasList"
+       [class.structure__map-wrap--dashboard]="dashboardView"
+       [class.structure__map-wrap--collapsed]="!isInfrastructureMapVisible">
+
+    <ai-areas-toolbar class="structure__areas-toolbar"
+                      [infrastructureId]="infrastructureId"
+                      *ngIf="!dashboardView && infrastructure?.status !== 'ARCHIVED'">
+    </ai-areas-toolbar>
+
+    <div class="structure__legend" *ngIf="!dashboardView&& infrastructure?.status !== 'ARCHIVED'"
+         [class.structure__legend--open]="legendOpen"
+         [class.cursor-pointer]="!legendOpen"
+         (click)="toggleLegend('OPEN', $event)">
+      <span class="structure__legend-title" *ngIf="legendOpen && iconShow">
+        <span class="structure__legend-station"></span>
+        Charge station
+      </span>
+      <span class="structure__legend-title" *ngIf="legendOpen && iconShow">
+        <span class="structure__legend-enter-route"></span>
+        Enter Route
+      </span>
+      <span class="structure__legend-title" *ngIf="legendOpen && iconShow">
+        <span class="structure__legend-exit-route"></span>
+        Exit Route
+      </span>
+      <span class="icon icon--info mr--8" *ngIf="!legendOpen"></span>
+      <span class="structure__legend-title" *ngIf="!legendOpen">Show Legend</span>
+      <span class="icon icon--close ml-auto cursor-pointer" (click)="toggleLegend('CLOSE', $event)"
+            *ngIf="legendOpen"></span>
+    </div>
+
+    <div class="structure-map__header" *ngIf="dashboardView">
+      <div class="structure-map__header-title">
+        <span>Floor Map</span>
+      </div>
+      <div class="structure-map__toggler-container">
+        <button class="button button--medium button--ghost structure-map__toggler-button"
+                (click)="toggleMapView()">
+          <span class="icon structure-map__toggler-icon"
+                [class]="{'icon--hide': isInfrastructureMapVisible, 'icon--show': !isInfrastructureMapVisible}"></span>
+          <span>{{ mapTooglerTitle }}</span>
+        </button>
+      </div>
+    </div>
+        <ai-infrastructure-map #map
+                               (shapeAdded)="onShapeAdd($event)"
+                               (shapesRendered)="onShapesRender()"
+                               *ngIf="isInfrastructureMapVisible"
+                               [mapContainerStyles]="getDashboardInfrastructureMapStyles()"
+                               (dimensionChanged)="onMapDimensionChange()"
+                               [isProd]="isProd"
+                               [shapes]="filteredShapes"
+                               [floor]="selectedFloor"
+                               [dashboardView]="dashboardView"
+                               [archivedInfrastructure]="infrastructure?.status === 'ARCHIVED'"
+                               [controlsPositionTop]="!dashboardView && !shapes?.length"></ai-infrastructure-map>
+    <span class="right-shadow"></span>
+    <span class="left-shadow"></span>
+  </div>
+
+  <div class="structure__areas-list"
+       *ngIf="!loading && !dashboardView && infrastructure?.floors?.length"
+       [class.structure__areas-list--open]="showAreasList">
+
+    <form class="structure__areas-list-top" [formGroup]="filterShapesForm">
+
+      <div class="areas-search">
+        <span class="areas-search__open-icon icon icon--arrow-drop-down icon--gold"
+              (click)="openList()"
+              [class.areas-search__open-icon--open]="showAreasList">
+          </span>
+        <div class="areas-search__search search-container search-container--contained"
+             [class.search-container--filled]="filterShapesForm?.get('searchText').value?.length">
+          <input type="search" formControlName="searchText" (focus)="showAreasList = true"
+                 class="search-container__input" placeholder="Search elements by name…" #search>
+          <div class="search-container__button icon icon--search icon--size-16px"></div>
+          <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+               (click)="filterShapesForm?.get('searchText').setValue('')"></div>
+        </div>
+      </div>
+      <div class="structure__map-filters" *ngIf="!dashboardView && infrastructure?.floors?.length">
+        <div class="position-relative"
+             (clickOutside)="showFilters = false">
+          <button class="button button--medium button--ghost" #layersButton (click)="toggleFilters()">
+            Map Layers
+            <span class="button__icon icon icon--split-mode icon--size-16px mr--0 ml--8"></span>
+          </button>
+          <div class="map-layers"
+               *ngIf="showFilters"
+               [ngStyle]="layersButtonCoords">
+            <span class="map-layers__title">
+              Map layers
+            </span>
+            <span class="map-layers__sub-title">
+              Select the layers that you want to see on map
+            </span>
+            <div class="map-layers__list">
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('robots').disabled"
+                   [class.layer--active]="filterShapesForm.get('robots').value">
+                <input formControlName="robots"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="robots"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/robot-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Robots</span>
+              </div>
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('areas').disabled"
+                   [class.layer--active]="filterShapesForm.get('areas').value">
+                <span class="layer__toggle-name layer__toggle-name--hide"
+                      *ngIf="!hideAreasNames && filterShapesForm.get('areas').value"
+                      aiTooltip="Hide name of all areas"
+                      (click)="toggleGroupNames('AREAS', $event)"></span>
+                <span class="layer__toggle-name layer__toggle-name--show"
+                      *ngIf="hideAreasNames || !filterShapesForm.get('areas').value"
+                      aiTooltip="Show name of all areas"
+                      (click)="filterShapesForm.get('areas').value ? toggleGroupNames('AREAS', $event) : ''"></span>
+                <input formControlName="areas"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="visible-areas"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/areas-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Areas</span>
+              </div>
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('chargingStations').disabled"
+                   [class.layer--active]="filterShapesForm.get('chargingStations').value">
+                <span class="layer__toggle-name layer__toggle-name--hide"
+                      *ngIf="!hideChargingStationsNames && filterShapesForm.get('chargingStations').value"
+                      aiTooltip="Hide name of all charging stations"
+                      (click)="toggleGroupNames('CHARGING', $event)"></span>
+                <span class="layer__toggle-name layer__toggle-name--show"
+                      *ngIf="hideChargingStationsNames || !filterShapesForm.get('chargingStations').value"
+                      aiTooltip="Show name of all charging stations"
+                      (click)="filterShapesForm.get('chargingStations').value ? toggleGroupNames('CHARGING', $event) : ''"></span>
+                <input formControlName="chargingStations"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="charge-stations"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/charge-station-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Charge stations</span>
+              </div>
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('anchors').disabled"
+                   [class.layer--active]="filterShapesForm.get('anchors').value">
+                <input formControlName="anchors"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="anchors"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/anchor-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Anchors</span>
+              </div>
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('stations').disabled"
+                   [class.layer--active]="filterShapesForm.get('stations').value">
+                <span class="layer__toggle-name layer__toggle-name--hide"
+                      *ngIf="!hideStationsNames && filterShapesForm.get('stations').value"
+                      aiTooltip="Hide name of all stations"
+                      (click)="toggleGroupNames('WORK', $event)"></span>
+                <span class="layer__toggle-name layer__toggle-name--show"
+                      *ngIf="hideStationsNames || !filterShapesForm.get('stations').value"
+                      aiTooltip="Show name of all stations"
+                      (click)="filterShapesForm.get('stations').value ? toggleGroupNames('WORK', $event) : ''"></span>
+                <input formControlName="stations"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="stations"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/station-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Stations</span>
+              </div>
+
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('tags').disabled"
+                   [class.layer--active]="filterShapesForm.get('tags').value">
+                <input formControlName="tags"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="tags"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/tags-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Tags</span>
+              </div>
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('camera').disabled"
+                   [class.layer--active]="filterShapesForm.get('camera').value">
+                <input formControlName="camera"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="camera"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/camera-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Cameras</span>
+              </div>
+              <div class="layer"
+                   [class.layer--disable]="filterShapesForm.get('progress')?.disabled"
+                   [class.layer--active]="filterShapesForm.get('progress')?.value">
+                <input formControlName="progress"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="progress"
+                       tabindex="1">
+                <img src="assets/icons-new/progress.svg" class="layer__img">
+                <span class="layer__name">Task Progress</span>
+              </div>
+              <div class="layer"
+                   tooltip="Soon"
+                   [class.layer--disable]="filterShapesForm.get('waypoints').disabled"
+                   [class.layer--active]="filterShapesForm.get('waypoints').value">
+                <input formControlName="waypoints"
+                       class="layer__checkbox"
+                       type="checkbox"
+                       id="waypoints"
+                       checked
+                       tabindex="1">
+                <img src="assets/icons-new/waypoint-layer-ic.svg" class="layer__img">
+                <span class="layer__name">Waypoints</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="structure__map-objects-hint-wrap" *ngIf="infrastructure?.status !== 'ARCHIVED'">
+        <div class="structure__map-objects-hint">Pro tip:</div>
+        <div class="structure__map-objects-hint-combination">Right Mouse Click</div>
+        <div class="structure__map-objects-hint">on object to call options menu</div>
+      </div>
+    </form>
+    <div class="position-relative" #shapesList>
+      <ng-container *ngIf="filteredShapes.length * 160 > (shapesList.clientWidth - 48)">
+        <div class="arrow-block arrow-block--left"
+             [ngStyle]="{ 'opacity': !disableLeftScroll ? '0' : '1', 'visibility': !disableLeftScroll ? 'hidden' : 'visible'}">
+          <button type="button"
+                  class="icon icon--chevron-left"
+                  (click)="moveLeft()">
+          </button>
+        </div>
+        <div class="arrow-block arrow-block--right"
+             [ngStyle]="{ 'opacity': !disableRightScroll ? '0' : '1', 'visibility': !disableRightScroll ? 'hidden' : 'visible'}">
+          <button type="button"
+                  class="icon icon--chevron-right"
+                  (click)="moveRight()">
+          </button>
+        </div>
+      </ng-container>
+      <div class="areas"
+           #areas
+           (scroll)="areasScrolled()">
+        <div class="areas__empty" *ngIf="!filteredShapes.length">
+          No objects on this floor yet
+          <div class="areas__empty-items">
+            <span class="areas__empty-item"
+                  *ngFor="let opacity of [100, 80, 60, 40, 20, 10]"
+                  [style.opacity.%]="opacity">
+            </span>
+          </div>
+        </div>
+        <div class="areas__item"
+             [id]="shape?._id"
+             [class.areas__item--active]="activeShape?._id === shape?._id"
+             (click)="setActiveArea(shape, $event)"
+             *ngFor="let shape of filteredShapes; let i = index"
+             [hidden]="shape?.type === 'DEVICE' && shape?.subType === 'ROBOT'">
+          <span class="areas__toggle-name areas__toggle-name--hide"
+                *ngIf="!shape.hideName"
+                aiTooltip="Hide name on map" [placement]="i === 0 ? 'right' : 'top'"
+                (click)="toggleAreaName($event, shape)"></span>
+          <span class="areas__toggle-name areas__toggle-name--show"
+                *ngIf="shape.hideName"
+                aiTooltip="Show name on map" [placement]="i === 0 ? 'right' : 'top'"
+                (click)="toggleAreaName($event, shape)"></span>
+          <span class="areas__more icon icon--more icon--dynamic icon--size-16px"
+                [class.icon--active-open]="showAreaMenu"
+                *ngIf="activeShape?._id === shape?._id && shape?.subType !== 'ANCHOR' && infrastructure?.status !== 'ARCHIVED'"
+                (click)="openAreaMenu($event)"></span>
+
+          <ai-task-progress [objectId]="shape._id"
+                            *ngIf="shape?.type !== 'CHARGING' && shape?.type !== 'WORK' && shape?.subType !== 'CAMERA' && shape?.subType !== 'ANCHOR' && shape?.type !== 'RESTRICTED'"
+                            class="areas__area-task-progress"
+                            [color]="shape.shape?.styling?.backgroundColor"></ai-task-progress>
+
+          <div class="areas__item-border"
+               *ngIf="shape?.type !== 'CHARGING' && shape?.type !== 'CHARGING_DOCK' && shape?.type !== 'CHARGING_TRACK' && shape?.type !== 'WORK' && shape?.subType !== 'CAMERA' && shape?.subType !== 'ANCHOR' && shape?.type !== 'RESTRICTED'; else shapeIcon"
+               [ngStyle]="{'border' : '2px solid ' + shape?.shape?.styling?.backgroundColor}">
+          </div>
+          <ng-template #shapeIcon>
+            <div class="areas__item-icon"
+                 *ngIf="shape?.type !== 'WORK' && shape?.subType !== 'CAMERA' && shape?.subType !== 'ANCHOR'"
+                 [class.areas__item-icon--station]="shape?.type === 'CHARGING'"
+                 [class.areas__item-icon--station-dock]="shape?.type === 'CHARGING_DOCK'"
+                 [class.areas__item-icon--station-track]="shape?.type === 'CHARGING_TRACK'"
+                 [class.areas__item-icon--restricted]="shape?.type === 'RESTRICTED'"></div>
+            <div class="areas__item-icon"
+                 [class.areas__item-icon-work-station]="shape?.type === 'WORK'"
+                 [class.areas__item-icon-camera]="shape?.subType === 'CAMERA'"
+                 [class.areas__item-icon-anchor]="shape?.subType === 'ANCHOR'"
+                 *ngIf="shape.type === 'WORK' || shape?.subType === 'CAMERA' || shape?.subType === 'ANCHOR'"></div>
+          </ng-template>
+          <div class="areas__item-name">{{ shape?.name }}</div>
+        </div>
+        <div class="areas__item--empty"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ai-add-floor-form *ngIf="addFloorForm"
+                   [type]="!dashboardView ? 'STRUCTURE' : 'DASHBOARD'"
+                   [selectedFloor]="floorForEdit"
+                   [floorForReturn]="floorForReturn"
+                   [shapes]="shapes?.length"
+                   [tasks]="floorTasks?.length"
+                   (close)="!dashboardView ? closeAddFloorModalForm($event) : closeAddFloorModalOnDashboard($event)"
+                   [infrastructure]="infrastructure"></ai-add-floor-form>
+
+<ai-device-panel [showDevicePanel]="showDevicePanel" [infrastructure]="infrastructureId"
+                 [currentFloor]="selectedFloor" (onClosePanel)="closePanel()" #devicePanel></ai-device-panel>
+
+<ai-command-modal></ai-command-modal>
+
+<ai-shape-dropdown-menu mode="STATIC"
+                        [show]="showAreaMenu"
+                        [shape]="activeShape"
+                        [position]="areaMenuPosition"
+                        (close)="showAreaMenu = false">
+</ai-shape-dropdown-menu>
+
+<ai-device-popup *ngIf="selectedDeviceInfo"
+                 (close)="closeEmployeeInfo()"
+                 [config]="selectedDeviceInfo"></ai-device-popup>
+
+<ng-template #loadTemplate [ngIf]="loading">
+  <div class="loading-container">
+    <ai-loading></ai-loading>
+  </div>
+</ng-template>

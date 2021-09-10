@@ -1,0 +1,53 @@
+{
+  "name": "ai-smart-infrastructure",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "node dist/index.js",
+    "lint": "npm run server:tslint && cd client && npm run lint",
+    "start:ts": "tsc-watch -p ./server/tsconfig.json --onSuccess \"npm run server:concurrently\"",
+    "clean": "rimraf dist",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"Server,Rest\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run start:ts\" \"npm run server:watch\" ",
+    "build": "npm run clean && npm run client:build && npm run server:build",
+    "build:prod": "npm run clean && npm run client:build:prod && npm run server:build",
+    "client:build": "cd client && npm run build",
+    "client:build:prod": "cd client && npm run build:prod",
+    "client:watch": "cd client && npm run watch",
+    "client:lib": "cd client && npm run lib:build",
+    "client:lib:version": "cd client && npm run lib:version",
+    "client:lib:watch": "cd client && npm run lib:watch",
+    "client:lib:publish": "cd client && npm run lib:publish",
+    "server:build": "npm run clean && npm run server:build-ts &&  npm run copy:html && npm run server:tslint",
+    "server:build-ts": "tsc -p ./server/tsconfig.json",
+    "server:watch": "tsc -p ./server/tsconfig.json -w",
+    "server:tslint": "tslint -c ./server/tslint.json -p ./server/tsconfig.json --fix",
+    "debug": "npm run server:build",
+    "copy:html": "cpx \"server/modules/**/*.html\" dist/modules",
+    "core:publish-lib": "./node_modules/@aitheon/core-server/publish-lib.sh",
+    "core:deploy": "NPM_CLIENT_LIB_NAME=smart-infrastructure ./node_modules/@aitheon/core-server/deploy.sh",
+    "core:build": "./node_modules/@aitheon/core-server/build.sh",
+    "server:get-sockets": "node ./node_modules/@aitheon/core-server/dist/sockets/get-sockets.js",
+    "core:init": "./node_modules/@aitheon/core-server/init.sh",
+    "core:generate-rest": "./node_modules/@aitheon/core-server/generate-rest.sh",
+    "serve:all": "npm run server:build-ts && concurrently -p \"[{name}]\" -n \"Server,Client\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run start:ts\" \"npm run client:concurrently\"",
+    "server:concurrently": "concurrently  -p \"[{name}]\" -n \"Node,Rest\" \"npm run start\"  \"npm run core:generate-rest\"",
+    "client:concurrently": "./serve-client.sh"
+  },
+  "private": true,
+  "dependencies": {
+    "@aitheon/core-server": "3.1.2",
+    "@aitheon/device-manager-server": "1.6.0",
+    "@aitheon/item-manager-server": "1.19.0",
+    "@aitheon/orchestrator-server": "1.56.0",
+    "@aitheon/system-graph-server": "1.143.0",
+    "@aitheon/transporter": "3.1.2",
+    "@types/pngjs": "^3.4.2",
+    "aws-sdk": "^2.748.0",
+    "axios": "^0.20.0",
+    "pngjs": "^5.0.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/socket.io": "^2.1.10"
+  }
+}

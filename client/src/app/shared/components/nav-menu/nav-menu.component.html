@@ -1,0 +1,43 @@
+<div class="navigation-menu__wrap">
+    <div class="navigation-menu" *ngIf="isInfrastructureMode"
+         [hidden]="loadingService.loading$ | async">
+        <div class="navigation-menu__item"
+             (click)="changeTab($event, ['/'])">
+          {{ (infrastructureType$ | async) === 'ARCHIVED' ? 'All archived Infrastructure' : 'All Infrastructure' }}
+        </div>
+        <div class="navigation-menu__separator"></div>
+        <ng-container *ngFor="let item of menuData">
+            <div class="navigation-menu__item"
+                 (click)="changeTab($event, item.routerLink)"
+                 [class.navigation-menu__item--active]="router?.url?.includes('/' + item.routerLink[0]) && !router?.url?.includes('/applications')">
+                {{ item.title }}
+            </div>
+        </ng-container>
+        <button class="automate-button button button--contained button--medium ml-auto"
+                *ngIf="!router?.url.includes('/automation') && !archivedInfrastructure"
+                (click)="goToInfraAutomation()">
+            <span class="icon icon--automate"></span>
+            Automation
+        </button>
+    </div>
+
+    <div class="navigation-menu" *ngIf="!isInfrastructureMode"
+         [hidden]="loadingService.loading$ | async">
+        <div class="navigation-menu__item"
+             [class.navigation-menu__item--active]="(infrastructureType$ | async) === 'ACTIVE'"
+             (click)="switchInfrastructuresType('ACTIVE')">
+            All Infrastructure
+        </div>
+        <div class="navigation-menu__item"
+             *ngIf="hasArchivedInfrastructures"
+             [class.navigation-menu__item--active]="(infrastructureType$ | async) === 'ARCHIVED'"
+             (click)="switchInfrastructuresType('ARCHIVED')">
+            Archived Infrastructure
+        </div>
+        <div class="navigation-menu__item"
+             routerLinkActive="navigation-menu__item--active"
+             routerLink="/activity">
+            Activity History
+        </div>
+    </div>
+</div>

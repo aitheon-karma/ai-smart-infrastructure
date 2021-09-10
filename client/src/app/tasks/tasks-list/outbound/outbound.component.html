@@ -1,0 +1,140 @@
+<div class="container task-list p-0">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="table-container">
+                <div class="table-header row m-0">
+                    <!-- Table Headers -->
+                    <div class="col-3">Order ID</div>
+                    <div class="col-2">Qty in order</div>
+                    <div class="col-2">Progress</div>
+                    <div class="col-5"></div>
+                </div>
+                <div *ngIf="!loading; else loadingView">
+                    <div class="table-row" *ngFor="let task of outboundList; let i=index" [ngClass]="{'invert':i%2!=0}">
+                        <div class="col-3">
+                            {{ task?.action?.data.order.lines.length > 0 ? '#'+task?.action?.data.order.lines[0].orderNumber :'#123' }}
+                        </div>
+                        <div class="col-2">
+                            {{ task?.action?.data.order.lines.length > 0 ? task?.action?.data.order.lines[0].qty.count : '10'}}
+                        </div>
+                        <div class="col-2">{{'Progress'}}</div>
+                        <div class="col-5">
+                            <!-- <div [ngClass]="{'completed__first' : task?.action?.data?.currentProgress >= 0 }"></div>
+                            <div [ngClass]="{'completed__middle' : task?.action?.data?.currentProgress >= 1, 'in-progress__middle' : task?.action?.data?.currentProgress < 1 }"></div>
+                            <div [ngClass]="{'completed__middle' : task?.action?.data?.currentProgress >= 2, 'in-progress__middle' : task?.action?.data?.currentProgress < 2 }"></div>
+                            <div [ngClass]="{'completed__middle' : task?.action?.data?.currentProgress >= 3, 'in-progress__middle' : task?.action?.data?.currentProgress < 3 }"></div>
+                            <div [ngClass]="{'completed__last' : task?.action?.data?.currentProgress >= 4, 'in-progress__last' : task?.action?.data?.currentProgress < 4 }"></div> -->
+
+                            <div class="row">
+                                <div class="progress-status p-0">
+                                    <div class="row progress-text"> <span
+                                            [ngClass]="{'hide' : task?.action?.data?.currentProgress != 1 }">Pick
+                                            Away</span>
+                                    </div>
+                                    <div *ngIf="task?.action?.data?.currentProgress"
+                                        [ngClass]="{'completed__first' : task?.action?.data?.currentProgress >= 1, 'in-progress__first' : task?.action?.data?.currentProgress == 1 , 'pending__first' : task?.action?.data?.currentProgress < 1 }">
+                                    </div>
+                                    <!-- Show pending if currentProgress field is not found in task -->
+                                    <div *ngIf="!task?.action?.data?.currentProgress" class="pending__first"> </div>
+                                </div>
+
+                                <div class="progress-status p-0">
+                                    <div class="row progress-text"><span
+                                            [ngClass]="{'hide' : task?.action?.data?.currentProgress != 2 }">Robo</span>
+                                    </div>
+                                    <div *ngIf="task?.action?.data?.currentProgress"
+                                        [ngClass]="{'completed__middle' : task?.action?.data?.currentProgress >= 3,'in-progress__middle' : task?.action?.data?.currentProgress == 2 , 'pending__middle' : task?.action?.data?.currentProgress < 2 }">
+                                    </div>
+                                    <!-- Show pending if currentProgress field is not found in task -->
+                                    <div *ngIf="!task?.action?.data?.currentProgress" class="pending__middle"> </div>
+                                </div>
+
+                                <div class="progress-status p-0">
+                                    <div class="row progress-text"><span
+                                            [ngClass]="{'hide' : task?.action?.data?.currentProgress != 3 }">Pick
+                                            Pack</span>
+                                    </div>
+                                    <div *ngIf="task?.action?.data?.currentProgress"
+                                        [ngClass]="{'completed__middle' : task?.action?.data?.currentProgress >= 4,'in-progress__middle' : task?.action?.data?.currentProgress == 3 , 'pending__middle' : task?.action?.data?.currentProgress < 3 }">
+                                    </div>
+                                    <!-- Show pending if currentProgress field is not found in task -->
+                                    <div *ngIf="!task?.action?.data?.currentProgress" class="pending__middle"> </div>
+                                </div>
+
+                                <div class="progress-status p-0">
+                                    <div class="row progress-text"><span
+                                            [ngClass]="{'hide' : task?.action?.data?.currentProgress != 4 }">Transfer
+                                            Bin</span>
+                                    </div>
+                                    <div *ngIf="task?.action?.data?.currentProgress"
+                                        [ngClass]="{'completed__middle' : task?.action?.data?.currentProgress >= 5,'in-progress__middle' : task?.action?.data?.currentProgress == 4 , 'pending__middle' : task?.action?.data?.currentProgress < 4 }">
+                                    </div>
+                                    <!-- Show pending if currentProgress field is not found in task -->
+                                    <div *ngIf="!task?.action?.data?.currentProgress" class="pending__middle"> </div>
+                                </div>
+
+                                <div class="progress-status p-0">
+                                    <div class="row progress-text"><span
+                                            [ngClass]="{'hide' : task?.action?.data?.currentProgress != 5 }">Order
+                                            Exit</span></div>
+                                    <div *ngIf="task?.action?.data?.currentProgress"
+                                        [ngClass]="{'completed__end' : task?.action?.data?.currentProgress >= 5, 'pending__end' : task?.action?.data?.currentProgress < 5 }">
+                                    </div>
+                                    <!-- Show pending if currentProgress field is not found in task -->
+                                    <div *ngIf="!task?.action?.data?.currentProgress" class="pending__end"> </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="outboundList.length == 0 && !loading" class="p-3 text-center">No tasks found</div>
+                    <div class="table-container" *ngIf="outboundList.length">
+                        <div class="table-actions table-footer flex-center align-items-center justify-content-end">
+                            <ul #pagination class="pagination pagination-ul" *ngIf="optionFlag">
+                                <div *ngIf="pageNumberList[0] == 1"> </div>
+                                <li class="page-item" *ngIf="currentPage > 1">
+                                    <a class="page-link previous" href="javascript:void(0)"
+                                        (click)="setPage(currentPage-1)">Previous</a>
+                                </li>
+                                <li class="page-item" *ngFor="let page of pageNumberList">
+                                    <a *ngIf="page > 0; else dots" class="page-link"
+                                        [ngClass]="{active:currentPage === page}" href="javascript:void(0)"
+                                        (click)="setPage(page)">{{page}}</a>
+                                    <ng-template #dots>
+                                        <span class="dots">...</span>
+                                    </ng-template>
+                                </li>
+                                <li class="page-item" *ngIf="totalPages != currentPage">
+                                    <a class="page-link next" href="javascript:void(0)"
+                                        (click)="setPage(currentPage+1)">Next</a>
+                                </li>
+                                <!-- <div class="select-page" *ngIf="optionFlag">
+                      <select id='cursor' class="selectdrop" [(ngModel)]="recordPerPage"
+                        (change)="setRecordCount($event.target.value)">
+                        <option selected>5</option>
+                        <option>10</option>
+                        <option>20</option>
+                        <option>25</option>
+                        <option>50</option>
+                        <option>100</option>
+                      </select>
+                    </div> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #taskNotFoundPlaceholder>
+    <div class="p-3 text-center">
+        No tasks found
+    </div>
+</ng-template>
+
+<ng-template #loadingView>
+    <div class="loading-container">
+      <ai-loading class="p-3 text-center"></ai-loading>
+    </div>  
+  </ng-template>

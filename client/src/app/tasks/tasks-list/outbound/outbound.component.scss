@@ -1,0 +1,555 @@
+/**** Table css *****/
+.table-container {
+  .column1,
+  .column2,
+  .column3,
+  .column4 {
+    width: 22%;
+    padding-right: 10px;
+  }
+}
+
+.table-container {
+  font-size: 14px;
+  background: #282828;
+  .table-actions {
+    display: flex;
+    padding: 10px 15px;
+    .buttons {
+      width: 60%;
+      display: flex;
+      align-items: center;
+    }
+    .search-box {
+      width: 40%;
+      align-items: right;
+      .search {
+        float: right;
+      }
+    }
+  }
+
+  .table-header {
+    color: #7e7e7e;
+    display: flex;
+    padding: 10px 15px;
+    > div {
+      //padding-left: 15px;
+    }
+  }
+
+  .table-row {
+    display: flex;
+    color: #ffffff;
+    padding: 10px 15px;
+    background: #1e1e1e;
+    > div {
+      //  padding-left: 15px;
+    }
+    &.invert {
+      background: #282828;
+    }
+    .actions {
+      text-align: right;
+      // padding-right: 20px;
+    }
+
+    border-radius: 2px;
+    border: 0.9px solid transparent;
+  }
+
+  .fa-ellipsis-h {
+    display: inline-block;
+    color: #7e7e7e;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    border-radius: 50%;
+    text-align: center;
+    padding-top: 5px;
+    // margin-right: 20px;
+  }
+
+  .fa-ellipsis-h:hover {
+    cursor: pointer;
+    background: #151515;
+    border-radius: 50%;
+  }
+  .dropdown-menu {
+    font-size: 14px;
+    a.dropdown-item {
+      color: #8c8c8c;
+    }
+    a.dropdown-item:hover {
+      color: #ffffff;
+    }
+  }
+
+  a {
+    color: #dcbc65;
+    text-decoration: none;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.invoice {
+  &__addbutn {
+    height: 35px;
+    width: 70px;
+  }
+  &__searchbox {
+    width: 340px;
+    height: 45px;
+    background-color: #1e1e1e;
+    border-radius: 2px;
+    padding: 10px;
+  }
+  &__select {
+    background-color: #1e1e1e;
+    font-size: 14px;
+    height: 25px;
+    border: none;
+    border-right: 1px solid #454545;
+    color: #fff;
+    width: 55px;
+    &:focus {
+      outline: none;
+      border: 1px solid #dcbc65;
+      border-radius: 2px;
+    }
+  }
+  &__deletebutn {
+    border: none;
+    background-color: transparent;
+  }
+  &__search {
+    width: 285px;
+  }
+  &__textfield {
+    width: 175px;
+    height: 25px;
+    background: url("~/assets/images/icons/search.png") no-repeat 20px center transparent;
+    padding-left: 47px;
+  }
+  &__searchbutn {
+    background: transparent;
+    color: #dcbc65;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  &__listhead {
+    font-size: 14px;
+    color: #7e7e7e;
+  }
+  &__list {
+    font-size: 14px;
+    color: #fff;
+    padding: 11px 0px 12px;
+  }
+}
+
+.line-graph__tooltip {
+  font-size: 12px;
+}
+.line-graph__title {
+  float: left;
+  font-size: 18px;
+}
+.line-graph__tooltip {
+  float: right;
+}
+.line-graph {
+  &__title {
+    color: #dcbc65;
+  }
+
+  &__tooltip {
+    color: #838383;
+  }
+}
+.top-heading {
+  padding-top: 41px;
+}
+
+.active {
+  background-color: #f1f1f1;
+}
+
+.addBtn {
+  cursor: pointer;
+}
+
+h2 {
+  font-size: 24px;
+  // font-weight: 600;
+  line-height: 1.25;
+  // letter-spacing: 1px;
+  color: #dcbc65;
+}
+
+.bill {
+  &__butn {
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 2px;
+  }
+}
+.sg-header {
+  font-size: 14px;
+  color: #7e7e7e;
+}
+.table-grid-sec {
+  font-size: 14px;
+  color: #fff;
+}
+.card-body {
+  padding: 15px;
+}
+
+div.table-grid-sec > div.row.active {
+  background: #3b3e3e !important;
+}
+.arrow {
+  color: #fff;
+  font-weight: 900;
+  font-size: 20px;
+}
+.pagiBox {
+  font-size: 20px;
+  color: #fff;
+  background-color: #151515;
+  padding: 8px;
+  margin: 5px 14px;
+}
+.pagination-container {
+  margin-top: 2px;
+  width: 200px;
+  height: 5px;
+}
+//pagination style
+.pagination-ul {
+  li {
+    a {
+      background-color: #282828;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    a:hover {
+      color: black !important;
+      background-color: #dcbc65;
+    }
+
+    .dots {
+      color: #dcbc65;
+    }
+  }
+
+  .next {
+    margin-right: 10px;
+  }
+
+  .active {
+    color: black !important;
+    font-weight: 450;
+    background-color: #dcbc65 !important;
+  }
+}
+
+.select-page {
+  padding-left: 12px;
+  margin-left: 10px;
+  border-left: 2px solid gray;
+  height: 33px !important;
+  select {
+    background-color: #202020;
+    color: #dcbc65;
+    border-color: transparent;
+    height: 33px;
+    font-size: 16px;
+    width: 50px;
+    outline: none;
+    ng-deep option {
+      width: 50px !important;
+      border: #202020;
+    }
+  }
+  .selectdrop ::-webkit-scrollbar {
+    width: 2px !important;
+  }
+}
+
+::ng-deep #type {
+  min-width: 64px !important;
+  outline: none;
+  border: 0;
+  background: #181818;
+  color: #7e7e7e;
+}
+
+::ng-deep #type option {
+  text-align: center;
+  background: #282828;
+  border: 0;
+}
+
+.cursor {
+  cursor: pointer;
+  padding-left: 8px;
+  color: #7e7e7e;
+  font-size: 15px;
+}
+
+.checkcontainer {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  height: 15px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding-left: 25px;
+  margin-left: 5px;
+}
+
+/* Hide the browser's default checkbox */
+.checkcontainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: transparent;
+  border-radius: 2px;
+  border: 1px solid #7e7e7e;
+}
+
+/* On mouse-over, add a grey background color */
+.checkcontainer:hover input ~ .checkmark {
+  background-color: #121212;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkcontainer input:checked ~ .checkmark {
+  background-color: #dcbc65;
+  border: 1px solid #dcbc65;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkcontainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkcontainer .checkmark:after {
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 1px 1px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.col-md-2 {
+  a {
+    color: #dcbc65;
+    text-decoration: none;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+.small-check-box {
+  width: 15%;
+}
+
+.col-c-2 {
+  flex: 0 0 11.66667%;
+  max-width: 10.66667%;
+}
+
+.invoice {
+  &__addbutn {
+    height: 35px;
+    width: 70px;
+  }
+  &__searchbox {
+    width: 340px;
+    height: 45px;
+    background-color: #1e1e1e;
+    border-radius: 2px;
+    padding: 10px;
+  }
+  &__select {
+    background-color: #1e1e1e;
+    font-size: 14px;
+    height: 25px;
+    border: none;
+    border-right: 1px solid #454545;
+    color: #fff;
+    width: 55px;
+    &:focus {
+      outline: none;
+      border: 1px solid #dcbc65;
+      border-radius: 2px;
+    }
+  }
+  &__deletebutn {
+    border: none;
+    background-color: transparent;
+  }
+  &__search {
+    width: 285px;
+  }
+  &__textfield {
+    width: 175px;
+    height: 25px;
+    background: url("~/assets/images/icons/search.png") no-repeat 20px center transparent;
+    padding-left: 47px;
+  }
+  &__searchbutn {
+    background: transparent;
+    color: #dcbc65;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  &__listhead {
+    font-size: 14px;
+    color: #7e7e7e;
+  }
+  &__list {
+    font-size: 14px;
+    color: #fff;
+    padding: 11px 0px 12px;
+  }
+}
+
+.completed {
+  &__first{
+    float: left;
+     background: rgb(220, 188, 101);
+    border-radius: 6px 0px 0px 6px;
+    height: 10px;
+    width: 65px;
+    margin: 6px 6px 0 2px;
+  }
+
+  &__middle{
+    float: left;
+    background: #dcbc65;
+    border-radius: 0px 0px 0px 0px;
+    height: 10px;
+    width: 65px;
+    margin: 6px 6px 0 2px;
+  }
+
+  &__end{
+    float: left;
+    background: #dcbc65;
+    border-radius: 0px 6px 6px 0px;
+    height: 10px;
+    width: 65px;
+    margin: 6px 6px 0 2px;
+  }
+}
+.in-progress {
+   &__first{
+    float: left;
+    background: #6b8e23;
+    border-radius: 6px 0px 0px 6px;
+    height: 10px;
+    width: 65px;
+    margin: 6px 6px 0 2px;
+  }
+
+  &__middle{
+    float: left;
+    background: #6b8e23;
+    border-radius: 0px 0px 0px 0px;
+    height: 10px;
+    width: 65px;
+    margin: 6px 6px 0 2px;
+  }
+
+  &__end{
+    float: left;
+    background: #6b8e23;
+    border-radius: 0px 6px 6px 0px;
+    height: 10px;
+    width: 65px;
+    margin: 6px 6px 0 2px;
+  }
+}
+.pending {
+  &__first{
+   float: left;
+   background: rgb(69, 69, 69);
+   border-radius: 6px 0px 0px 6px;
+   height: 10px;
+   width: 65px;
+   margin: 6px 6px 0 2px;
+ }
+
+ &__middle{
+   float: left;
+   background: rgb(69, 69, 69);
+   border-radius: 0px 0px 0px 0px;
+   height: 10px;
+   width: 65px;
+   margin: 6px 6px 0 2px;
+ }
+
+ &__end{
+   float: left;
+   background: rgb(69, 69, 69);
+   border-radius: 0px 6px 6px 0px;
+   height: 10px;
+   width: 65px;
+   margin: 6px 6px 0 2px;
+ }
+}
+
+.progress-text {
+  margin-left: 2px;
+}
+
+.progress-bar {
+  flex: 0 0 16.66667%;
+  max-width: 12.66667%;
+}
+
+.label-heading {
+  color: rgb(126, 126, 126);
+  font-size: 14px;
+  font-weight: normal;
+  height: 20px;
+  letter-spacing: 0.2px;
+  line-height: 20px;
+  width: 55px;
+}
+.hide{
+  visibility: hidden;
+}

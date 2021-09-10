@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div *ngIf="!isLoading; else loadingView">
+        <div class="row">
+          <div *ngFor="let pickpack of pickStations">
+            <div class="card mr-2 mt-4 hover"
+              [ngClass]="{'busy-state': pickpack.status === 'BUSY','busy-state': pickpack.status === 'READY','available-state' :pickpack.status === 'AVAILABLE'}">
+              <div class="card-body" (click)="OpenSettingModal(pickpack)">
+                <div class="ptl ">
+                  {{pickpack.station}}#{{pickpack.code}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #ptlModal>
+  <!-- Modal Header -->
+  <div class="modal-header d-flex align-items-center">
+    <h4 class="modal-title pull-left">PTL Info</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onCloseDialog()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- Modal Body -->
+  <div class="modal-body p-0">
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="row">
+          <div class="col-12">
+            <div class="p-3">
+              <div class="mt-2">
+                <label>Code : <span>{{selectedptlInfo.code}}</span></label>
+              </div>
+              <div class="mt-2">
+                <label>Station : <span>{{selectedptlInfo.station}}</span></label>
+              </div>
+              <div class="mt-2">
+                <label>OrderNumber : <span>{{selectedptlInfo.currentOrder.orderNumber}}</span></label>
+              </div>
+              <div class="mt-2">
+                <label>Status : <span class="ml-1"
+                    [ngClass]="{ 'busy' : selectedptlInfo.status === 'BUSY','busy' : selectedptlInfo.status === 'READY', 'available' : selectedptlInfo.status === 'AVAILABLE'}">{{selectedptlInfo.status}}</span></label>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row m-1">
+      <button class="btn btn-link btn-text pull-right mr-2" (click)="onCloseDialog()">Close</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingView>
+  <div class="loading-container">
+    <ai-loading class="p-3 text-center"></ai-loading>
+  </div>  
+</ng-template>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="26px" viewBox="0 0 24 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>tags-layer-ic</title>
+    <defs>
+        <path d="M11.969501,4 C15.8354942,4 19,6.57987711 19,11.0043895 C19,15.4289019 13.0699882,21 12,21 C10.9300118,21 5,15.4208241 5,11.0043895 C5,6.58795492 8.10350771,4 11.969501,4 Z M11.969501,6.00118249 C8.99361131,6.00118249 7,7.89966257 7,11.0043895 C7,12.4097323 7.9999141,14.4074556 9.63720299,16.3796444 C10.2412497,17.1072461 10.8928332,17.7812357 11.4878556,18.3084497 L11.7390988,18.5251406 L12.0005485,18.7367669 L12.2617062,18.5256023 C12.9208204,17.9737726 13.6730399,17.2130863 14.3631229,16.3822811 C16.0004013,14.4111279 17,12.4133736 17,11.0043895 C17,7.91149112 14.9679608,6.00118249 11.969501,6.00118249 Z M11.969501,9.00320702 C13.0740705,9.00320702 13.969501,9.89916693 13.969501,11.0043895 C13.969501,12.109612 13.0740705,13.0055719 11.969501,13.0055719 C10.8649315,13.0055719 9.96950096,12.109612 9.96950096,11.0043895 C9.96950096,9.89916693 10.8649315,9.00320702 11.969501,9.00320702 Z" id="path-1"></path>
+    </defs>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-03-Sctructure-/-03_03_Areas-Panel-with-scroll" transform="translate(-657.000000, -657.000000)">
+            <g id="Group-22" transform="translate(566.000000, 367.000000)">
+                <g id="Group-5-Copy-6" transform="translate(24.000000, 279.000000)">
+                    <g id="tags-layer-ic" transform="translate(67.000000, 11.602740)">
+                        <rect id="Rectangle" x="0" y="0.397260274" width="24" height="24"></rect>
+                        <g id="icon-/-24-cont-/-info-/-pin-24" transform="translate(0.000000, 0.397260)">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Combined-Shape" fill="#7E7E7E" fill-rule="nonzero" xlink:href="#path-1"></use>
+                            <g id="Group" mask="url(#mask-2)" fill="#F39ABA">
+                                <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray">
+                                    <rect id="Additional-Colors-/-Filled-/-$base-violet" x="0" y="0" width="24" height="24"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

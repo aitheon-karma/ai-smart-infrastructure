@@ -1,0 +1,363 @@
+<form [formGroup]="searchForm" class="filter-search" role="search" *ngIf="type !== 'TASKS'">
+  <div class="row mx-0 pt--8 align-items-center">
+    <div class="col pl-0">
+      <h2 class="filter-title">
+        {{ initialFiltersData?.title }}
+      </h2>
+    </div>
+    <div class="d-flex align-items-center justify-content-end mr--24">
+      <button class="icon icon--filter icon--size-24px icon--dynamic" tooltip="Show Filters"
+              *ngIf="!isFiltersOpen" (click)="toggleFilters()">
+        <div class="filter-counter" *ngIf="activeFilters > 0 && isFiltersOpen === false">
+          {{ activeFilters }}
+        </div>
+      </button>
+      <button class="icon icon--filter icon--size-24px icon--dynamic icon--active" tooltip="Hide Filters"
+              *ngIf="isFiltersOpen" (click)="toggleFilters()">
+      </button>
+    </div>
+    <div  class="d-flex align-items-center justify-content-end" style="width: 240px;">
+      <div class="search-container search-container--outlined" [class.search-container--filled]="search.value.length">
+        <input type="search"
+               autocomplete="off"
+               formControlName="name"
+               placeholder="Search"
+               class="search-container__input"
+               #search>
+        <div class="search-container__button icon icon--search icon--size-16px"></div>
+        <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+             (click)="clearSearch()"></div>
+      </div>
+    </div>
+    <button [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+            class="button button--ghost button--outlined button--medium ml--24"
+            (click)="addDevice()">
+      <span class="icon icon--plus icon--size-16px button__icon"></span>
+      Add Device
+    </button>
+  </div>
+  <div class="mt--16 mb--24 filters-wrapper" [class.hidden]="!isFiltersOpen">
+    <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+               [multiple]="true"
+               placeholder="Status"
+               [items]="statusList"
+               bindLabel="name"
+               bindValue="value"
+               [searchable]="false"
+               [closeOnSelect]="false"
+               #statusFilter
+               formControlName="statuses">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">
+            <div class="chip chip--icon-right chip--outlined">
+              <span class="chip__label">{{item?.name}}</span>
+              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+            </div>
+          </span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+        </div>
+        <ng-template ng-footer-tmp let-clear="clear">
+          <button class="button button--ghost button--medium"
+                  (click)="resetSelect('statuses', statusFilter)">
+            unselect all ({{ items.length }})
+          </button>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+    <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+               [multiple]="true"
+               placeholder="Type"
+               [items]="typesList"
+               bindLabel="name"
+               bindValue="_id"
+               [searchable]="false"
+               [closeOnSelect]="false"
+               #typeFilter
+               formControlName="types">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">
+            <div class="chip chip--icon-right chip--outlined">
+              <span class="chip__label">{{item?.name}}</span>
+              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+            </div>
+          </span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+        </div>
+        <ng-template ng-footer-tmp let-clear="clear">
+          <button class="button button--ghost button--medium"
+                  (click)="resetSelect('types', typeFilter)">
+            unselect all ({{ items.length }})
+          </button>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+    <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+               [multiple]="true"
+               placeholder="Floor"
+               [items]="infrastructure?.floors"
+               bindLabel="name"
+               bindValue="_id"
+               [searchable]="false"
+               [closeOnSelect]="false"
+               #modelFilter
+               formControlName="floors">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">
+            <div class="chip chip--icon-right chip--outlined">
+              <span class="chip__label">{{item?.name}}</span>
+              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+            </div>
+          </span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+        </div>
+        <ng-template ng-footer-tmp let-clear="clear">
+          <button class="button button--ghost button--medium"
+                  (click)="resetSelect('floors', modelFilter)">
+            unselect all ({{ items.length }})
+          </button>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+    <div>
+      <button class="button button--medium button--ghost button--clear-filters"
+              (click)="clearFilters()"
+              [disabled]="activeFilters === 0">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+  <div class="row mx-0 mt--24" *ngIf="initialFiltersData?.description">
+    <div class="col-8 p-0">
+      <p class="epic-description">
+        {{ initialFiltersData?.description }}
+      </p>
+    </div>
+  </div>
+</form>
+
+<!-- Filters for Tasks -->
+<form [formGroup]="searchTasksForm" class="filter-search" role="search" *ngIf="type === 'TASKS'">
+  <div class="row mx-0 pt--24 align-items-center">
+    <div  class="d-flex align-items-center justify-content-end">
+      <div class="search-container search-container--outlined search-container--big" [class.search-container--filled]="search.value.length">
+        <input type="search"
+               autocomplete="off"
+               formControlName="searchText"
+               placeholder="Search"
+               class="search-container__input"
+               #search>
+        <div class="search-container__button icon icon--search icon--size-16px"></div>
+        <div class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+             (click)="clearSearch('TASKS')"></div>
+      </div>
+    </div>
+    <button class="button button--ghost button--ghost button--medium ml-auto"
+            [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+            (click)="addTask.emit()">
+      <span class="icon icon--plus icon--size-16px button__icon"></span>
+      Add Task
+    </button>
+    <div class="d-flex align-items-center justify-content-end ml--24">
+      <button class="icon icon--filter icon--size-24px icon--dynamic" tooltip="Show Filters"
+              *ngIf="!isFiltersOpen" (click)="toggleFilters()">
+        <div class="filter-counter" *ngIf="activeFilters > 0 && !isFiltersOpen">
+          {{ activeFilters }}
+        </div>
+      </button>
+      <button class="icon icon--filter icon--size-24px icon--dynamic icon--active" tooltip="Hide Filters"
+              *ngIf="isFiltersOpen" (click)="toggleFilters()">
+      </button>
+    </div>
+    <button class="button button--medium button--ghost button--clear-filters ml--24"
+              (click)="clearFilters()"
+              *ngIf="activeFilters > 0 && !isFiltersOpen">
+        Clear Filters
+    </button>
+  </div>
+  <div class="mt--16 mb--24 filters-wrapper" [class.hidden]="!isFiltersOpen">
+    <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+               [multiple]="true"
+               placeholder="Location"
+               [items]="taskLocations"
+               bindLabel="name"
+               bindValue="name"
+               [searchable]="false"
+               [closeOnSelect]="false"
+               #taskLocationFilter
+               formControlName="location">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">
+            <div class="chip chip--icon-right chip--outlined">
+              <span class="chip__label">{{item?.name}}</span>
+              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+            </div>
+          </span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+        </div>
+        <ng-template ng-footer-tmp let-clear="clear">
+          <button class="button button--ghost button--medium"
+                  (click)="resetSelect('location', taskLocationFilter)">
+            unselect all ({{ items.length }})
+          </button>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+    <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+               [multiple]="true"
+               placeholder="Type"
+               [items]="taskTypeList"
+               bindLabel="name"
+               bindValue="value"
+               [searchable]="false"
+               [closeOnSelect]="false"
+               #taskTypeFilter
+               formControlName="type">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">
+            <div class="chip chip--icon-right chip--outlined">
+              <span class="chip__label">{{item?.name}}</span>
+              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+            </div>
+          </span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+        </div>
+        <ng-template ng-footer-tmp let-clear="clear">
+          <button class="button button--ghost button--medium"
+                  (click)="resetSelect('type', taskTypeFilter)">
+            unselect all ({{ items.length }})
+          </button>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+    <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+               [multiple]="true"
+               placeholder="Robot"
+               [items]="taskRobots"
+               bindLabel="name"
+               bindValue="name"
+               [searchable]="false"
+               [closeOnSelect]="false"
+               #modelFilter
+               formControlName="robot">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">
+            <div class="chip chip--icon-right chip--outlined">
+              <span class="chip__label">{{item?.name}}</span>
+              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+            </div>
+          </span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+        </div>
+        <ng-template ng-footer-tmp let-clear="clear">
+          <button class="button button--ghost button--medium"
+                  (click)="resetSelect('robot', modelFilter)">
+            unselect all ({{ items.length }})
+          </button>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+    <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+               [multiple]="true"
+               placeholder="Status"
+               [items]="taskStatusList"
+               bindLabel="name"
+               bindValue="value"
+               [searchable]="false"
+               [closeOnSelect]="false"
+               #taskStatusFilter
+               formControlName="status">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">
+            <div class="chip chip--icon-right chip--outlined">
+              <span class="chip__label">{{item?.name}}</span>
+              <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+            </div>
+          </span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 2">
+          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+        </div>
+        <ng-template ng-footer-tmp let-clear="clear">
+          <button class="button button--ghost button--medium"
+                  (click)="resetSelect('status', taskStatusFilter)">
+            unselect all ({{ items.length }})
+          </button>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+
+<!--    Is commented since there is no functionality yet -->
+
+<!--    <ng-select class="dropdown dropdown&#45;&#45;contained dropdown&#45;&#45;outlined ngx-select-custom-width"-->
+<!--               [multiple]="true"-->
+<!--               placeholder="Repeat"-->
+<!--               [items]="[]"-->
+<!--               bindLabel="name"-->
+<!--               bindValue="value"-->
+<!--               [searchable]="false"-->
+<!--               [closeOnSelect]="false"-->
+<!--               #modelFilter-->
+<!--               formControlName="repeat">-->
+<!--      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">-->
+<!--        <div class="ng-value" *ngFor="let item of items | slice:0:2">-->
+<!--          <span class="ng-value-label" tooltip="{{item?.name}}" container="body">-->
+<!--            <div class="chip chip&#45;&#45;icon-right chip&#45;&#45;outlined">-->
+<!--              <span class="chip__label">{{item?.name}}</span>-->
+<!--              <button class="chip__icon-wrap&#45;&#45;right icon icon&#45;&#45;cancel-circle-f icon&#45;&#45;size-16px"-->
+<!--                      (click)="clear(item)" aria-hidden="true"></button>-->
+<!--            </div>-->
+<!--          </span>-->
+<!--        </div>-->
+<!--        <div class="ng-value" *ngIf="items.length > 2">-->
+<!--          <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>-->
+<!--        </div>-->
+<!--        <ng-template ng-footer-tmp let-clear="clear">-->
+<!--          <button class="button button&#45;&#45;ghost button&#45;&#45;medium"-->
+<!--                  (click)="resetSelect('repeat', modelFilter)">-->
+<!--            unselect all ({{ items.length }})-->
+<!--          </button>-->
+<!--        </ng-template>-->
+<!--      </ng-template>-->
+<!--    </ng-select>-->
+    <div>
+      <button class="button button--medium button--ghost button--clear-filters"
+              (click)="clearFilters()"
+              [disabled]="activeFilters === 0">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+  <div class="row mx-0 mt--24" *ngIf="initialFiltersData?.description">
+    <div class="col-8 p-0">
+      <p class="epic-description">
+        {{ initialFiltersData?.description }}
+      </p>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,76 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "createdBy": {
+      "type": "object"
+    },
+    "estimatedCompletionDate": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "roles": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "repositoryUrl": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "number"
+    },
+    "createdAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "updatedAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "issueBoardEnabled": {
+      "type": "boolean"
+    },
+    "progress": {
+      "type": "object"
+    },
+    "isPlatformProject": {
+      "type": "boolean"
+    },
+    "workspaces": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "cover": {
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "required": [
+    "key",
+    "name"
+  ],
+  "description": "Project",
+  "title": "Project",
+  "$id": "5e8f610f5246280012166437"
+}

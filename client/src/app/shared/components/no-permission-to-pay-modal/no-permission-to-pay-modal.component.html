@@ -1,0 +1,17 @@
+<ng-template #ptpModal>
+  <div class="modal-body">
+    <span class="ptp-title">
+      No available seats for {{ ptpType | titlecase }}
+    </span>
+    <p class="ptp-msg">
+      You cannot create a new {{ ptpType | titlecase }} because you have no empty seats. Contact your organization admin for more seats.
+    </p>
+  </div>
+  <div class="modal-footer pt--8 pb--8 d-flex justify-content-end">
+    <button class="button button--medium button--contained my-0"
+            (click)="closePtpModal()"
+            type="button">
+      Got It
+    </button>
+  </div>
+</ng-template>

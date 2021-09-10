@@ -1,0 +1,118 @@
+<div class="station-card">
+    <div class="station-card__content" (click)="goToStation($event)">
+        <div class="station-card__image" [class.station-card__image--default]="!station?.coverImage?.signedUrl">
+            <img alt="Station image"
+                 [src]="station?.coverImage?.signedUrl ? station?.coverImage?.signedUrl : 'assets/icons/station-avatar.svg'">
+        </div>
+        <div class="station-card__meta">
+                <span class="station-card__meta-name ellipsis">
+                    {{ station?.name }}
+                </span>
+            <span class="station-card__meta-description mb--16 ellipsis">
+                #{{ station?._id.slice(-6) || '-' }}
+            </span>
+            <div class="station-card__data-section d-flex align-items-center justify-content-start mb--8">
+              <span class="station-card__meta-text mr--8">
+                  Work Floor:
+                  </span>
+                <span class="ellipsis d-flex">
+          <span class="floor-number">{{ getFloorNumber(floor?.number) }}</span>
+                    {{ floor?.name }}
+        </span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start mb--8">
+        <span class="station-card__meta-text mr--8">
+            Runtime Application:
+        </span>
+                <span class="ellipsis">
+          {{ application?.project?.runtime ? (application?.project?.runtime | replace : '_' : ' ' | titlecase) : '-' }}
+        </span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start mb--8 position-relative">
+              <span class="station-card__meta-text mr--8">
+                Application Name:
+              </span>
+                <span class="ellipsis">
+                {{ application?.project?.name ? application?.project?.name : '-' }}
+              </span>
+            </div>
+            <div class="d-flex align-items-center justify-content-start mb--8">
+                <span class="station-card__meta-text mr--8">
+                </span>
+            </div>
+        </div>
+        <div class="station-card__info">
+            <div class="station-card__info--top">
+                <div class="station-card__info-status ellipsis"
+                     *ngIf="status"
+                     [class.station-card__info-status--orange]="status === nodeStatus.PENDING"
+                     [class.station-card__info-status--green]="status === nodeStatus.RUNNING"
+                     [class.station-card__info-status--red]="status === nodeStatus.ERROR"
+                     [class.station-card__info-status--gray]="status === nodeStatus.TERMINATED || status === nodeStatus.SAVED">
+                    {{ status | titlecase }}
+                </div>
+
+                <button class="icon icon--more icon--dynamic ml--16"
+                        [class.icon--active-open]="isShowMoreMenuOpened"
+                        (click)="openShowMoreMenu($event)"
+                ></button>
+                <div class="station-card__more-list"
+                     *ngIf="isShowMoreMenuOpened"
+                     aiClickOutside
+                     (clickedOutside)="closeMoreMenu()">
+                        <span class="station-card__more-item"
+                              *ngIf="!application"
+                              (click)="onCreateApp($event)">
+                          Create Dashboard Application
+                        </span>
+                    <span class="station-card__more-item"
+                          *ngIf="application"
+                          (click)="onEditApp($event)">
+                          Edit Dashboard Application
+                        </span>
+                    <!--            <span class="node__more-hr"></span>-->
+                    <span class="station-card__more-item"
+                          *ngIf="application"
+                          (click)="onDeleteApp($event)">
+                          Remove Dashboard Application
+                    </span>
+                </div>
+            </div>
+
+            <button class="button button--ghost button--small"
+                    (click)="goToStation($event)">
+                Go to station
+            </button>
+        </div>
+    </div>
+    <div class="station-card__app-dashboard" *ngIf="!archivedInfrastructure">
+        <div class="separator"></div>
+
+        <ai-loading class="station-card__loading"
+                    *ngIf="isLoading; else applicationContent"></ai-loading>
+
+    </div>
+</div>
+
+<ai-loading class="loading-container"
+            *ngIf="isLoading"></ai-loading>
+
+<ng-template #applicationContent>
+    <ai-application-dashboard [isEmbedded]="true"
+                              *ngIf="application; else createDashboard"
+                              [allowCollapse]="true"
+                              [showStatusBar]="true"
+                              [application]="application"
+                              [graphURL]="graphURL"
+                              (applicationEdited)="onEditApp($event)"></ai-application-dashboard>
+</ng-template>
+
+<ng-template #createDashboard>
+    <div class="create-dashboard"
+         (click)="onCreateApp($event)">
+        <div class="create-dashboard__inner">
+            <div class="icon icon--gold icon--size-32px icon--plus mb--8"></div>
+            create dashboard app
+        </div>
+    </div>
+</ng-template>

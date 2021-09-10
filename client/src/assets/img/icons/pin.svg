@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="14px" viewBox="0 0 10 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="01-In-Progress" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-01-Dashboard-/-01_01_Dashboard" transform="translate(-540.000000, -606.000000)" fill="#7E7E7E">
+            <g id="Group" transform="translate(524.000000, 567.000000)">
+                <g id="pin" transform="translate(16.000000, 39.000000)">
+                    <path d="M5,0 C2.24305226,0 0,2.09351953 0,4.66667578 C0,5.43913672 0.206923424,6.20503516 0.600291796,6.88436328 L4.7265728,13.8496094 C4.78150433,13.9424687 4.88618186,14 5,14 C5.11381814,14 5.21849567,13.9424687 5.2734272,13.8496094 L9.40123164,6.88206641 C9.79307658,6.20503516 10,5.43910938 10,4.66664844 C10,2.09351953 7.75694774,0 5,0 Z M5,7 C3.89721444,7 3,6.10278556 3,5 C3,3.89721444 3.89721444,3 5,3 C6.10278556,3 7,3.89721444 7,5 C7,6.10278556 6.10278556,7 5,7 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

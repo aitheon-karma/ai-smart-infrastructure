@@ -1,0 +1,168 @@
+<ai-nav-menu [isInfrastructureMode]="false"></ai-nav-menu>
+<div class="container activity-dashboard">
+    <div class="activity-dashboard__header">
+        <div class="activity-dashboard__header-title">
+            Activity History
+        </div>
+        <div class="activity-dashboard__actions-section">
+            <div class="activity-dashboard__action activity-dashboard__action--today"
+                 (click)="changeActiveButton('TODAY')"
+                 [class.activity-dashboard__action--active]="activeButton === 'TODAY' && 
+                                                             dateForm.get('startDate').value === this.todayStartDay && 
+                                                             dateForm.get('endDate').value === this.todayEndDay">
+                Today
+            </div>
+            <div class="activity-dashboard__action activity-dashboard__action--yesterday"
+                 (click)="changeActiveButton('YESTERDAY')"
+                 [class.activity-dashboard__action--active]="activeButton === 'YESTERDAY' && 
+                                                             dateForm.get('startDate').value === this.yesterdayStartDay && 
+                                                             dateForm.get('endDate').value === this.yesterdayEndDay">
+                Yesterday
+            </div>
+            <div class="activity-dashboard__vr-divider"></div>
+            <form class="activity-dashboard__date-form" [formGroup]="dateForm">
+                <div  class="activity-dashboard__date input-wrap input-wrap--date-outlined">
+                    <input  type="text"
+                            class="input-wrap__input"
+                            placeholder="MM/DD/YYYY"
+                            bsDatepicker
+                            placement="bottom"
+                            formControlName="startDate"
+                            readonly
+                            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'MM/DD/YYYY - HH:mm:ss', customTodayClass: 'custom-today-class'}">
+                </div>
+                <div class="activity-dashboard__hr-divider"></div>
+                <div  class="activity-dashboard__date input-wrap input-wrap--date-outlined">
+                    <input  type="text"
+                            class="input-wrap__input"
+                            placeholder="MM/DD/YYYY "
+                            bsDatepicker
+                            formControlName="endDate"
+                            readonly
+                            placement="bottom"
+                            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'MM/DD/YYYY - HH:mm:ss', customTodayClass: 'custom-today-class'}">
+                </div>
+            </form>
+            <button class="button button--ghost button--medium ml-3">
+                Filters
+                <span class="icon icon--arrow-drop-down icon--gold"></span>
+            </button>
+        </div>
+    </div>
+    <div class="activity-dashboard__filters-container filters" *ngIf="showFilters" aiClickOutside (clickedOutside)="activeFilter = null">
+        <div class="filters__section">
+            <div class="filters__label">
+                Show activity from
+            </div>
+            <div class="filters__item" (click)="chooseFilter('INFRA')"
+                 [class.filters__item--active]="activeFilter === 'INFRA'">
+                <span class="icon icon--plus icon--size-16px icon--gold mr-1"></span>
+                Add Infrastructure
+            </div>
+            <div class="filters__context-menu filters__context-menu--infrastructures" *ngIf="activeFilter === 'INFRA'">
+                <ai-filters-menu [infrastructures]="infrastructures" [tasksAttributes]="tasksAttributes"
+                                 (infrastructuresFilter)="getFiltersData($event, 'INFRASTRUCTURES')"></ai-filters-menu>
+            </div>
+        </div>
+        <div class="filters__section">
+            <div class="filters__label">
+                about
+            </div>
+            <div class="filters__item" (click)="chooseFilter('SUBJECTS')"
+                 [class.filters__item--active]="activeFilter === 'SUBJECTS'">
+                <span class="icon icon--plus icon--size-16px mr-1 icon--gold"></span>
+                Add subject
+            </div>
+            <div class="filters__context-menu filters__context-menu--devices" *ngIf="activeFilter === 'SUBJECTS'">
+                <ai-filters-menu [subjects]="subjects" [tasksAttributes]="tasksAttributes"
+                                 (subjectsFilter)="getFiltersData($event, 'SUBJECTS')"></ai-filters-menu>
+            </div>
+        </div>
+        <div class="filters__section">
+            <div class="filters__label">
+                by
+            </div>
+            <div class="filters__item" (click)="chooseFilter('EVENTS')"
+                 [class.filters__item--active]="activeFilter === 'EVENTS'">
+                <span class="icon icon--plus icon--size-16px icon--gold mr-1"></span>
+                Option
+            </div>
+            <div class="filters__context-menu filters__context-menu--events" *ngIf="activeFilter === 'EVENTS'">
+                <ai-filters-menu [events]="events" [tasksAttributes]="tasksAttributes"
+                                 (eventsFilter)="getFiltersData($event, 'EVENTS')"></ai-filters-menu>
+            </div>
+        </div>
+        <div class="filters__buttons ml-auto">
+            <button class="button button--ghost button--medium mr-2"
+                    (click)="clearAllFilters()">Clear Filters
+            </button>
+            <button class="button button--contained button--medium"
+                    (click)="submitFilters('ON_SUBMIT')">
+                <span class="filters__submit-tooltip" *ngIf="showSubmitTooltip">Click to submit filters</span>
+                Submit Filters
+            </button>
+        </div>
+    </div>
+    <div class="activity-dashboard__filters-labels-container"
+         [class.activity-dashboard__filters-labels-container--opened]="showMoreButton && showAllFilters">
+        <div class="activity-dashboard__filters-labels" #filterChips>
+            <div class="filter-label chip chip--contained mr--8 mb--8 chip--icon-right" *ngFor="let filter of floorChips; let floorIndex = index">
+                {{ filter?.infrastructureName + ': ' + filter?.floorName }}
+                <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                        (click)="removeItem(filter, floorIndex, 'INFRASTRUCTURES')"></button>
+            </div>
+            <div class="filter-label chip chip--contained mr--8 mb--8 chip--icon-right" *ngFor="let filter of areasChips; let areaIndex = index">
+                {{ filter?.floorName + ': ' + filter?.areaName }}
+                <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                        (click)="removeItem(filter, areaIndex, 'AREAS')"></button>
+            </div>
+            <div class="filter-label chip chip--contained mr--8 mb--8 chip--icon-right" *ngFor="let filter of subjectChips; let subjectIndex = index">
+                {{ filter?.subjectName + ': ' + filter?.name }}
+                <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                        (click)="removeItem(filter, subjectIndex, 'SUBJECTS')"></button>
+            </div>
+            <div class="filter-label chip chip--contained mr--8 mb--8 chip--icon-right" *ngFor="let filter of eventChips; let eventIndex = index">
+                {{ filter?.eventName + ': ' + filter?.name }}
+                <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                        (click)="removeItem(filter, eventIndex, 'EVENTS')"></button>
+            </div>
+        </div>
+    </div>
+    <div class="activity-dashboard__show-more-filters" *ngIf="showMoreButton">
+        <button class="button button--ghost button--small"
+                *ngIf="showMoreButton && !showAllFilters"
+                (click)="toggleMoreFilters()">
+            <span class="icon icon--arrow-drop-down icon--gold mr--8"></span>
+            Show all
+        </button>
+        <button class="button button--ghost button--small mr--8"
+                *ngIf="showAllFilters"
+                (click)="toggleMoreFilters()">
+            <span class="icon icon--arrow-drop-up icon--gold"></span>
+            Show less
+        </button>
+    </div>
+    <div class="activity-dashboard__tasks-wrap" [class.activity-dashboard__tasks-wrap--opened-filters]="showFilters">
+        <div class="activity-dashboard__tasks-content container">
+    
+            <ng-container *ngIf="tasks?.length && !isLoading">
+                <div class="activity-dashboard__left-side col-4">
+                    <ai-tasks-list [tasks]="tasks"
+                                   [selectedTask]="selectedTask"
+                                   (taskSelected)="onSelectTask($event)"></ai-tasks-list>
+                </div>
+    
+                <ai-activity-map class="activity-dashboard__right-side"
+                                 *ngIf="selectedTask"
+                                 [task]="selectedTask"></ai-activity-map>
+            </ng-container>
+    
+            <div class="activity-dashboard__empty"
+                 *ngIf="!isLoading && !tasks?.length">
+                Choose or Create activity filter to view data
+            </div>
+        </div>
+    </div>
+</div>
+
+<ai-loading *ngIf="isLoading" class="loading-container"></ai-loading>

@@ -1,0 +1,78 @@
+<!-- <ai-search-nav-bar #searchBar (searchEvent)="triggerFacetSearch($event)" (onSaveItem)="onSaveItem($event)"></ai-search-nav-bar> -->
+<!-- (click)="searchNavBarComponent.hideDropDown()" -->
+<div class="imcont container">
+  <div class="row">
+    <div class="col-md-12 p-0">
+      <div class="row pb-4">
+        <div class="col-md-12">
+          <div class="row justify-content-between">
+            <div class="col-12">
+              <!-- d-flex align-items-center justify-content-end -->
+              <h2 class="title mb-4">Infrastructure Items</h2>
+              <!-- <a href="javascript:;" class="ascdes"
+                (click)="productSorting(sortingEvent || 'Aa-Zz')"> {{sortingEvent || 'Aa-Zz'}} </a> -->
+            </div>
+            <div class="col-md-3">
+              <div class="sort-items">
+                <!-- <div class="devices__search search-wrap search-wrap__outlined"
+                  [class.notEmptySearch]="search.value.length && searchFocused" [class.searchFocus]="searchFocus">
+                  <input #search type="search" placeholder="Search" class="search-wrap__input"
+                    (input)="searchItems($event.target.value)" (typeaheadOnSelect)="onSelect($event)"
+                    [typeaheadOptionsLimit]="10" typeaheadOptionField="name" (blur)="onBlur(); searchFocus=false"
+                    (typeaheadNoResults)="typeaheadNoResults($event)" [typeaheadMinLength]="0" [typeahead]="items"
+                    adaptivePosition="true" [(ngModel)]="searchValue" (click)="searchFocused = true"
+                    (focus)="searchFocus = true">
+                  <div class="search-wrap__button-clear" (click)="clearSearch($event, search)"></div>
+                </div> -->
+                <div *ngIf="noResult && items.length==0"> No items found! </div>
+                <!-- <ngx-select-dropdown tabindex="0" [multiple]="false" [config]="sortConfig" [options]="sortValues"
+                  (change)="sortingChange($event)">
+                </ngx-select-dropdown> -->
+
+                <!-- <select  class="form-control" id="sel1">
+                  <option value="">Select Filter</option>
+                  <option value="HIGHESTRATINGSFIRST">Ratings (High to Low)</option>
+                  <option value="LOWESTRATINGSFIRST">Ratings (Low to High)</option>
+                  <option value="LOWESTPRICEFIRST">Price (Lowest First)</option>
+                  <option value="HIGHESTPRICEFIRST">Price (Highest First)</option>
+                  <option value="PUBLISHED">Published Only</option>
+                  <option value="SALES">Sales</option>
+                </select> -->
+              </div>
+            </div>
+            <div class="col-md-3 ">
+              <div class="layoutoptions text-right">
+                <div class="btn btn-outline btn-medium btn--view-grid" [ngClass]="{active : listChange == 2}"
+                  (click)="listViewChange(2)"></div>
+                <div class="btn btn-outline btn-medium btn--view-list" [ngClass]="{active : listChange == 1}"
+                  (click)="listViewChange(1)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 thumhd" *ngIf="listChange === 1">
+          <div class="row">
+            <div class="col-md-4">NAME</div>
+            <div class="col-md-2">AVAILABLE</div>
+            <div class="col-md-3">CATEGORY</div>
+            <div class="col-md-3">SUPPLIER</div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="!loading">
+        <ai-items-card *ngFor="let item of items"
+          [ngClass]="{'col-md-4': listChange == 2, 'col-md-12': listChange == 1 }" class="col-md-4" [Item]="item"
+          [listChangeStat]="listChange"></ai-items-card>
+        <div class="col-12" *ngIf="loading">
+          <ai-loading class="center"></ai-loading>
+        </div>
+        <div class="empty d-flex align-items-center justify-content-center w-100" *ngIf="!items?.length">
+          No items yet
+        </div>
+      </div>
+      <ai-loading *ngIf="loading"></ai-loading>
+    </div>
+  </div>
+</div>

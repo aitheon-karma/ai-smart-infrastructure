@@ -1,0 +1,31 @@
+<div class="task-item"
+     [class.task-item--selected]="selectedTask?._id === task._id"
+     (click)="onSelectTask($event)">
+    <div class="task-item__header">
+        <div class="task-item__header-top">
+            <div class="task-item__task-date">{{ task?.orchestratorTask?.finishDate | date: 'MM/dd/yyyy - hh:mm a' }}</div>
+            <div class="task-item__type"
+                 *ngIf="taskStatus">
+                {{ task?.type.replace('_', ' ') | titlecase }}
+            </div>
+        </div>
+
+        <div class="task-item__header-bottom">
+            <div class="task-item__assignee-info">
+                <div class="icon icon--shapes icon--size-16px"></div>
+                <div class="task-item__assignee-name">
+                    {{ task?.orchestratorTask?.assignedToDevice?.name || '-' }}
+                </div>
+            </div>
+            <div class="task-item__infrastructure-info">
+                <span>{{ task.infrastructure?.name }} / {{ task?.floorName }}</span>
+                <span class="task-item__floor-number">{{ task.floorNumber }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="task-item__overlay"
+         *ngIf="task?.finalSnapshot">
+        <img alt="Area overlay" [src]="task.finalSnapshot.signedUrl">
+    </div>
+</div>

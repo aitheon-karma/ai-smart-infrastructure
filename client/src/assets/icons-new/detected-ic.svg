@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>detected-ic</title>
+    <defs>
+        <path d="M13.9513916,7.85754848 C12.3672389,5.79914924 10.2526278,4.66666667 7.9987987,4.66666667 C5.74496957,4.66666667 3.63276109,5.79914924 2.04860838,7.85754848 C1.98379721,7.94302953 1.98379721,8.06173791 2.04860838,8.14482799 C3.63276109,10.2008507 5.74737216,11.3333333 7.9987987,11.3333333 C10.2526278,11.3333333 12.3672389,10.2008508 13.9513916,8.14482799 C14.0162028,8.06173791 14.0162028,7.94302953 13.9513916,7.85754848 Z M8,10 C6.89781067,10 6,9.10218933 6,8 C6,6.89781067 6.89781067,6 8,6 C9.1046248,6 10,6.89781067 10,8 C10,9.10218933 9.1046248,10 8,10 Z" id="path-1"></path>
+    </defs>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-03-Sctructure-/-03_02_Active-View-Settings" transform="translate(-603.000000, -684.000000)">
+            <g id="Group-32" transform="translate(579.000000, 415.000000)">
+                <g id="Group-21" transform="translate(8.000000, 0.000000)">
+                    <g id="detected-ic" transform="translate(16.000000, 269.000000)">
+                        <circle id="Oval" fill="#454545" cx="12" cy="12" r="12"></circle>
+                        <g id="icon-/-24-cont-/-info-/-shapes-24" transform="translate(4.000000, 4.000000)">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Mask" fill="#7E7E7E" fill-rule="nonzero" xlink:href="#path-1"></use>
+                            <g id="Group" mask="url(#mask-2)" fill="#7E7E7E">
+                                <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray">
+                                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0" y="0" width="16" height="16"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

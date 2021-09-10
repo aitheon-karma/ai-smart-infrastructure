@@ -1,0 +1,4 @@
+<ai-nav-menu  *ngIf="!hideMenu"
+							[isInfrastructureMode]="true"
+							[archivedInfrastructure]="infrastructure?.status === 'ARCHIVED'"></ai-nav-menu>
+<router-outlet (activate)='onActivate($event)'></router-outlet>

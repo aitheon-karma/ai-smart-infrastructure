@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="155px" height="157px" viewBox="0 0 155 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 4</title>
+    <g id="Smart-Infrastructure" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="30-Smart-Infrastructure-/-08-Automation-/-09_02_Stations-List" transform="translate(-643.000000, -346.000000)">
+            <g id="Group-4" transform="translate(644.000000, 347.000000)">
+                <path d="M41.0771484,8 L152.767578,72.4912109 L111.791,96.064 L111.823975,96.0825195 L68.6542969,120.648437 L27.5771484,96.5839844 L69.548,72.163 L-5.68434189e-14,32.1699219 L41.0771484,8 Z" id="Combined-Shape" fill="#2B2B2B"></path>
+                <path d="M41.0771484,4.05009359e-13 L152.767578,64.4912109 L111.791,88.064 L111.823975,88.0825195 L68.6542969,112.648437 L27.5771484,88.5839844 L69.548,64.163 L8.52651283e-14,24.1699219 L41.0771484,4.05009359e-13 Z" id="Combined-Shape" stroke="#DCBC63"></path>
+                <polygon id="Path-23" stroke="#DCBC63" points="27.5771484 89 27.5771484 129.872416 69.7005615 154.464469 69.7005615 112.648438"></polygon>
+                <polygon id="Path-24" stroke="#DCBC63" points="69.7005615 154.464469 152.767578 106.870117 152.767578 64.4912109 69.7005615 112.648437"></polygon>
+                <polyline id="Path-25" stroke="#DCBC63" points="6.89183086e-13 25.9389648 2.40335529e-13 66.8676758 31.0878906 85.7382812"></polyline>
+                <path d="M41.0771484,0 L41.0771484,44.1298828 L4.54747351e-13,66.8676758" id="Path-22" stroke="#DCBC63" stroke-dasharray="3"></path>
+                <line x1="40.9228516" y1="43.8701172" x2="151.922852" y2="106.870117" id="Path-26" stroke="#DCBC63" stroke-dasharray="3"></line>
+                <line x1="76.3837891" y1="109.47784" x2="76.3837891" y2="150.811523" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="83" y1="105" x2="83" y2="146.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="90" y1="101" x2="90" y2="142.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="97" y1="97" x2="97" y2="138.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="104" y1="93" x2="104" y2="134.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="111" y1="89" x2="111" y2="130.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="118" y1="85" x2="118" y2="126.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="125" y1="81" x2="125" y2="122.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="132" y1="77" x2="132" y2="118.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="139" y1="73" x2="139" y2="114.333684" id="Path-27" stroke="#DCBC63"></line>
+                <line x1="146" y1="69" x2="146" y2="110.333684" id="Path-27" stroke="#DCBC63"></line>
+            </g>
+        </g>
+    </g>
+</svg>

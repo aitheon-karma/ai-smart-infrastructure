@@ -1,0 +1,34 @@
+{
+  "properties": {
+    "_id": {
+      "pattern": "^[0-9a-fA-F]{24}$",
+      "type": "string"
+    },
+    "project": {
+      "type": "object"
+    },
+    "name": {
+      "type": "string"
+    },
+    "color": {
+      "type": "string"
+    },
+    "createdAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    },
+    "updatedAt": {
+      "pattern": "d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+Z?",
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "required": [
+    "project",
+    "color",
+    "name"
+  ],
+  "description": "Label for task",
+  "title": "Label",
+  "$id": "5e9032b875ad3600121e31d0"
+}

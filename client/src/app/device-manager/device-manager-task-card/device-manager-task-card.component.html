@@ -1,0 +1,108 @@
+<div class="task-card"
+     (clickOutside)="showInfo = false">
+  <div class="__headertask-card">
+    <div class="d-flex mb--8 align-items-center">
+      <a href="javascript: void(0)" style="pointer-events: none">
+        #{{ task?.taskNumber || task?._id }}
+      </a>
+      <span class="pl--16 pr--16" style="color: rgb(126, 126, 126)"> | </span>
+      <div class="chip chip--outlined ellipsis mr--16">
+        <span>{{ task.type | replace : '_' : ' ' | titlecase }}</span>
+      </div>
+      <div class="status-label ml-auto" [ngClass]="statusTaskColor">
+        {{ (task.status.toString() === 'ERROR' ? 'Failed' : task.status.toString() === 'PENDING' ? 'in queue' : task.status) | replace : '_' : ' ' | titlecase }}
+      </div>
+      <div class="task-card__header__actions" *ngIf="actions !== false && task?.status !== 'IN_PROGRESS'">
+        <button class="icon icon--edit icon--dynamic mr--16 ml--16"
+                tooltip="Edit task" container="body"
+                placement="top"
+                (click)="editTask(task)">
+        </button>
+        <button class="icon icon--close icon--dynamic"
+                tooltip="Cancel task" container="body"
+                placement="top"
+                (click)="cancelTask($event, task._id)">
+        </button>
+      </div>
+    </div>
+    <span>{{ task.orchestratorTask.name }}</span>
+  </div>
+  <div class="task-card__body" (click)="showTaskInfo($event)">
+    <div class="divider mt--16 mb--16"></div>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+      <span class="detail-label">Work Floor:</span>
+      <span class="ellipsis">
+            <span *ngIf="task?.floor">
+              <span class="task-floor">
+                <span class="task-floor__number">{{ workFloor.number | number:'2.0-0' }}</span>
+                <span class="task-floor__name">{{ workFloor.name }}</span>
+              </span>
+            </span>
+          </span>
+    </div>
+    <div class="d-flex align-items-center justify-content-start mb--8" *ngIf="task.area?.name">
+      <span class="detail-label">Work Area:</span>
+      <span class="ellipsis">
+            {{ task.area?.name }}
+          </span>
+    </div>
+    <div class="d-flex align-items-center justify-content-start ellipsis mb--8">
+      <span class="detail-label">Creator:</span>
+      <div class="chip chip--icon-left chip--outlined">
+        <div class="chip__icon-wrap--left avatar avatar--16">
+          <ngx-avatar
+            name="{{ task?.orchestratorTask?.createdBy?.profile?.firstName }} {{ task?.orchestratorTask?.createdBy?.profile?.lastName }}"
+            size="16"
+            value="{{ task?.orchestratorTask?.createdBy?.profile?.firstName }} {{ task?.orchestratorTask?.createdBy?.profile?.lastName }}"
+            [src]="task?.orchestratorTask?.createdBy?.profile?.avatarUrl">
+          </ngx-avatar>
+        </div>
+        {{ task?.orchestratorTask?.createdBy?.profile?.firstName }} {{ task?.orchestratorTask?.createdBy?.profile?.lastName }}
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-start ellipsis mb--8" *ngIf="task.updatedAt">
+      <span class="detail-label">Start Time:</span>
+      <span class="ellipsis">{{ task.updatedAt | date:'shortTime' }}</span>
+    </div>
+    <div class="task-card__body__additional-info" *ngIf="showInfo">
+      <div class="flex-grow-1 ellipsis pr--8">
+        <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="detail-label">Work Floor:</span>
+          <span class="ellipsis">
+            <span *ngIf="task?.floor">
+              <span class="task-floor">
+                <span class="task-floor__number">{{ workFloor.number | number:'2.0-0' }}</span>
+                <span class="task-floor__name">{{ workFloor.name }}</span>
+              </span>
+            </span>
+          </span>
+        </div>
+        <div class="d-flex align-items-center justify-content-start mb--8" *ngIf="task.area?.name">
+          <span class="detail-label">Work Area:</span>
+          <span class="ellipsis">
+            {{ task.area?.name }}
+          </span>
+        </div>
+        <div class="d-flex align-items-center justify-content-start ellipsis mb--8">
+          <span class="detail-label">Creator:</span>
+          <div class="chip chip--icon-left chip--outlined">
+            <div class="chip__icon-wrap--left avatar avatar--16">
+              <ngx-avatar
+                name="{{ task?.orchestratorTask?.createdBy?.profile?.firstName }} {{ task?.orchestratorTask?.createdBy?.profile?.lastName }}"
+                size="16"
+                value="{{ task?.orchestratorTask?.createdBy?.profile?.firstName }} {{ task?.orchestratorTask?.createdBy?.profile?.lastName }}"
+                [src]="task?.orchestratorTask?.createdBy?.profile?.avatarUrl">
+              </ngx-avatar>
+            </div>
+            {{ task?.orchestratorTask?.createdBy?.profile?.firstName }} {{ task?.orchestratorTask?.createdBy?.profile?.lastName }}
+          </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-start ellipsis mb--8" *ngIf="task.updatedAt">
+          <span class="detail-label">Start Time:</span>
+          <span class="ellipsis">{{ task.updatedAt | date:'shortTime' }}</span>
+        </div>
+      </div>
+      <button class="icon--close icon icon--dynamic" (click)="closeTaskInfo($event)"></button>
+    </div>
+  </div>
+</div>

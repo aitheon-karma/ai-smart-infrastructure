@@ -1,0 +1,51 @@
+<div class="infrastructure-map__overflow-container"
+     #editorContainer
+     (mousedown)="onEditorDrag($event)"
+     (drop)="onEditorDrop()"
+     [ngStyle]="mapContainerStyles"
+     (wheel)="onScroll($event)">
+    <div class="infrastructure-map__map-editor"
+         [class.infrastructure-map__map-editor--crosshair-cursor]="mode && mode !== mapModes.WAYPOINT"
+         [class.infrastructure-map__map-editor--waypoint-cursor]="mode === mapModes.WAYPOINT"
+         [id]="mapId"
+         [ngStyle]="transformStyles"
+         (mousemove)="onEditorMouseMove($event)"
+         #editor>
+        <ai-route-point-control></ai-route-point-control>
+
+    </div>
+    <div class="infrastructure-map__hint"
+         [class.infrastructure-map__hint--visible]="(hintMessage$ | async)?.message">
+        {{ (hintMessage$ | async)?.message }}
+    </div>
+    <div class="infrastructure-map__zoom-buttons"
+         *ngIf="showZoomControls">
+    <span class="icon icon--minus icon--size-16px"
+          (click)="zoomByButtons($event, 'ZOOM_OUT')"></span>
+        <span class="infrastructure-map__scale"
+              (click)="fitMap()">
+      <span class="scale">{{ scale | number: '2.0-3' }}%</span>
+      <span class="fit">Fit</span>
+    </span>
+        <span class="icon icon--plus icon--size-16px"
+              (click)="zoomByButtons($event, 'ZOOM_IN')"></span>
+    </div>
+
+    <div class="infrastructure-map__add-task-button"
+         [ngStyle]="addTaskButtonStyles"
+         [class.infrastructure-map__add-task-button--bottom]="isAddTaskButtonToBottom"
+         *ngIf="selectedAreaId && !archivedInfrastructure && dashboardView">
+        <div class="infrastructure-map__add-task-button-wrap"
+             aiClickOutside
+             (click)="addTask()">
+            <div class="icon icon--plus icon--active icon--size-16px mr--8"></div>
+            <div class="infrastructure-map__add-task-button-text">add task</div>
+        </div>
+    </div>
+</div>
+
+<ai-shape-dropdown-menu #shapeOptionsDropdown
+                        *ngIf="isContainerElement"
+                        mode="DYNAMIC"
+                        [editorContainerBoundingRect]="editorContainerRect">
+</ai-shape-dropdown-menu>

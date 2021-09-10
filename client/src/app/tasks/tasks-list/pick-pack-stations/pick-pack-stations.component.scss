@@ -1,0 +1,48 @@
+.modal-dialog .m-top{
+  top: 20% !important;
+}
+
+.ptl{
+  margin: 10px 0 10px 0;
+}
+.busy-state{
+  background-color: #6b8e23;
+}
+.available-state{
+  background-color: #282828;
+}
+.hover{
+  cursor: pointer;
+}
+.w-100{
+  width: 100%;
+}
+.btn-text{
+  font-size: 12px !important;
+}
+label {
+  color: #7e7e7e;
+  font-size: 15px;
+ 
+}
+
+span {
+  &.busy{
+    padding: 4px 12px;
+    border-radius: 18px;
+    text-transform: capitalize;
+    font-size: 13px;
+    color: #fff;
+    background-color: #ED9438;
+  }
+  &.available{
+    background-color: #589be9;
+    padding: 4px 12px;
+    border-radius: 18px;
+    text-transform: capitalize;
+    font-size: 13px;
+    color: #fff;
+  }
+}
+
+

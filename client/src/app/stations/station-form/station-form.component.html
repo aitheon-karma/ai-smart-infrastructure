@@ -1,0 +1,292 @@
+<div class="container mb--48 p-0">
+  <form [formGroup]="stationForm" class="station-form" *ngIf="!loading; else loadingView" (ngSubmit)="onSubmit()">
+    <button type="button"
+            *ngIf="!station"
+            style="margin-left: -32px"
+            class="button button--ghost button--medium mt--16"
+            (click)="closeNewStationForm()">
+      <span class="icon icon--chevron-left icon--size-16px button__icon"></span>
+      Back to Stations
+		</button>
+    <div class="title mt--24 ellipsis">
+      <ng-container *ngIf="(infrastructure$ | async) as infraName$">
+        <span class="title__building-icon"></span>
+        {{ infraName$.name }}
+      </ng-container>
+    </div>
+		<div class="station-form__title mt--0 mb--24">
+			{{ station ? 'Edit' : 'New'}} Station
+		</div>
+    <div class="form-group">
+      <label class="form-label" [hidden]="!validationState?.name?.isValid">
+        Station name
+      </label>
+      <label  *ngIf="!validationState?.name?.isValid"
+              [class.text-error]="!validationState?.name?.isValid">
+        {{ validationState?.name?.message }}
+      </label>
+      <div class="input-wrap input-wrap--outlined input-wrap--small"
+           [class.input-wrap--error]="!validationState?.name?.isValid">
+        <input type="text"
+               class="input-wrap__input"
+               formControlName="name"
+               maxlength="30"
+               autocomplete="off" />
+        <span class="input-wrap__counter">
+          {{ stationForm.get('name').value.length }}/30
+        </span>
+      </div>
+		</div>
+		<div class="form-group form-group--small">
+      <label class="form-label" [hidden]="!validationState?.payRate?.isValid">
+        Pay rate
+      </label>
+      <label  *ngIf="!validationState?.payRate?.isValid"
+              [class.text-error]="!validationState?.payRate?.isValid">
+        {{ validationState?.payRate?.message }}
+      </label>
+      <div class="input-wrap input-wrap--outlined input-wrap--price input-wrap--small pr--16"
+           [class.input-wrap--error]="!validationState?.payRate?.isValid">
+        <input type="number"
+               class="input-wrap__input"
+               formControlName="payRate"
+               placeholder="0.00"
+							 autocomplete="off" />
+				<span class="currency-sign">$</span>
+      </div>
+		</div>
+		<div class="form-group">
+			<div class="station-form__section station-form__section--upload">
+				<div class="row m-0 app-store__upload-section upload-files">
+						<div class="upload-files__file-row" *ngIf="layoutImage">
+								<div class="upload-files__drop-image-container image-avatar-container">
+										<img src="{{ layoutImage?.signedUrl }}">
+										<span class="upload-files__file-name">{{ layoutImage?.name }}</span>
+										<button type="button"
+                            (click)="layoutImage = null; countChangedFields()"
+                            *ngIf="!station"
+														class="upload-files__remove">
+												<span class="icon icon--close icon--black"></span>
+										</button>
+								</div>
+						</div>
+						<div class="upload-files__upload-button-section" *ngIf="!layoutImage">
+								<div 	ng2FileDrop
+                      [uploader]="driveUploader?.uploader"
+											class="upload-files__drop-zone drop-zone-avatar"
+                      [class.upload-files__drop-zone--disabled]="station && station.floor && station.layoutImage">
+									<div class="upload-files__upload-button-wrapper">
+										<div class="fileContainer download-button upload-files__file-container file-avatar-container file-avatar-container">
+											<span class="icon icon--plus" *ngIf="!station && !station?.floor || !station.layoutImage"></span>
+                      <span class="icon icon--block" *ngIf="station && station?.floor && station.layoutImage"></span>
+											<input type="file"
+                             style="opacity: 0"
+                             [disabled]="station && station.floor && station.layoutImage"
+                             [accept]="allowedMimeType.toString()"
+                             ng2FileSelect
+                             [uploader]="driveUploader?.uploader"/>
+										</div>
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="station-form__upload-info">
+						<span class="station-form__image-label">Upload station layout</span>
+						<div class="d-flex align-items-center mb--16">
+							<span class="station-form__image-label--small">Only top view of the station</span>
+							<span class="vertical-divider"></span>
+							<span class="station-form__format">.png</span>
+						</div>
+
+						<button type="button"
+                    class="station-form__upload-button button button--ghost button--medium"
+                    [class.button--disabled]="station && station?.floor && station.layoutImage">
+							<input  type="file"
+                      style="opacity: 0"
+                      [disabled]="station && station.floor && station.layoutImage"
+											[accept]="allowedMimeType.toString()"
+											ng2FileSelect
+											[uploader]="driveUploader?.uploader"/>
+							Browse
+						</button>
+
+				</div>
+		</div>
+	</div>
+
+	<div class="form-group form-group--small mb--0">
+    <label class="form-label" [hidden]="!validationState?.pixelScale?.isValid">
+      Image scale
+    </label>
+    <label  *ngIf="!validationState?.pixelScale?.isValid"
+            [class.text-error]="!validationState?.pixelScale?.isValid">
+      {{ validationState?.pixelScale?.message }}
+    </label>
+		<div class="input-wrap input-wrap--outlined input-wrap--price input-wrap--small pr--16"
+         [class.input-wrap--error]="!validationState?.pixelScale?.isValid"
+         [class.input-wrap--disabled]="!layoutImage">
+			<input type="text"
+						 class="input-wrap__input"
+						 formControlName="pixelScale"
+						 placeholder="0"
+						 autocomplete="off" />
+
+			<div class="input-wrap__info-label">units / mm</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="station-form__title station-form__title--small">
+      Station cover image
+		</label>
+    <div class="station-form__divider mt--8 mb--16"></div>
+		<div class="station-form__section station-form__section--upload mb--0">
+			<div class="row m-0 app-store__upload-section upload-files">
+					<div class="upload-files__file-row" *ngIf="coverImage">
+							<div class="upload-files__drop-image-container upload-files__drop-image-container--small image-avatar-container">
+									<img src="{{ coverImage?.signedUrl }}">
+									<span class="upload-files__file-name">{{ coverImage?.name }}</span>
+									<button type="button"
+                          class="upload-files__remove"
+                          (click)="coverImage = null; countChangedFields()">
+											<span class="icon icon--close icon--black"></span>
+									</button>
+							</div>
+					</div>
+					<div class="upload-files__upload-button-section" *ngIf="!coverImage">
+							<div 	ng2FileDrop [uploader]="driveCoverUploader?.uploader"
+										class="upload-files__drop-zone drop-zone-avatar">
+								<div class="upload-files__upload-button-wrapper">
+									<div class="fileContainer fileContainer--small download-button upload-files__file-container file-avatar-container file-avatar-container">
+										<span class="icon icon--plus"></span>
+										<input type="file"
+                           style="opacity: 0"
+													[accept]="allowedCoverMimeType.toString()"
+													ng2FileSelect
+													[uploader]="driveCoverUploader?.uploader"/>
+									</div>
+							</div>
+						</div>
+				</div>
+			</div>
+				<div class="station-form__upload-info">
+					<div class="d-flex align-items-center mt--8 mb--8">
+						<span class="station-form__image-label--small mr--16">Available formats:</span>
+						<span class="station-form__format">.jpg</span>
+						<span class="station-form__format">.jpeg</span>
+						<span class="station-form__format">.png</span>
+						</div>
+
+						<button type="button" class="station-form__upload-button button button--ghost button--medium">
+							<input  type="file"
+                      style="opacity: 0"
+											[accept]="allowedCoverMimeType.toString()"
+											ng2FileSelect
+											[uploader]="driveCoverUploader?.uploader"/>
+							Browse
+						</button>
+					</div>
+			</div>
+		</div>
+
+		<div class="station-form__title station-form__title--small mb--0" *ngIf="!station">
+			Station Controller
+		</div>
+		<div class="station-form__divider mt--8 mb--16" *ngIf="!station"></div>
+
+		<div class="form-group mb--24" *ngIf="!station">
+			<label class="form-label">
+				Station Controller (Optional)
+			</label>
+			<div class="d-flex flex-nowrap">
+				<ng-select 	class="dropdown dropdown--outlined mr--16"
+										[multiple]="false"
+										placeholder="Select"
+										[items]="controllers"
+										bindLabel="name"
+										bindValue="_id"
+										[searchable]="false"
+										[closeOnSelect]="true"
+										[clearable]="false"
+										formControlName="controller">
+					<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+						<div class="ng-value" *ngFor="let item of items">
+							{{item?.name}}
+						</div>
+					</ng-template>
+				</ng-select>
+				<label class="mb-0 mr--16">or</label>
+				<button type="button"
+                class="button button--ghost button--medium whitespace-nowrap"
+								(click)="onAddNewStation($event)">
+					Add new controller
+				</button>
+			</div>
+		</div>
+
+		<div class="form-group" *ngIf="newStationMode">
+      <label class="form-label">
+        Controller name
+      </label>
+      <div class="input-wrap input-wrap--outlined input-wrap--small">
+        <input type="text"
+               class="input-wrap__input"
+               formControlName="controllerName"
+               placeholder="Enter name"
+               autocomplete="off" />
+      </div>
+		</div>
+		<div class="form-group mb--24" *ngIf="newStationMode">
+      <label class="form-label">
+        Serial number
+      </label>
+      <div class="input-wrap input-wrap--outlined input-wrap--small">
+        <input type="text"
+               class="input-wrap__input"
+               formControlName="controllerSerialNumber"
+               placeholder="Enter serial number"
+               autocomplete="off" />
+      </div>
+		</div>
+
+    <div class="form-group mb--24" *ngIf="userNeedToPay && !station">
+      <div class="station-form__divider mt--8 mb--16"></div>
+      <!-- billing-payment-section -->
+      <ai-billing-payment-section (paymentFormData)="validatePaymentFormData($event)"
+                                  [type]="'STATION'">
+      </ai-billing-payment-section>
+      <!-- /billing-payment-section -->
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end mb--24 bt pt--8">
+      <button type="button" class="button button--ghost mr--8 ml-auto button--medium"
+							(click)="closeNewStationForm()">
+        Cancel
+      </button>
+      <button class="button button--contained button--medium"
+              [disabled]="(userNeedToPay && !station) ?
+              (billingForm.invalid || (station && changedFields === 0)) :
+              (station && changedFields === 0)">
+        {{ station ? 'Update' : 'Create' }}
+      </button>
+    </div>
+  </form>
+</div>
+<ng-template #loadingView>
+  <div class="loading-container">
+    <ai-loading class="text-center"></ai-loading>
+  </div>
+</ng-template>
+
+<ai-drive-uploader 	[autoUpload]="true"
+										#driveUploader
+                    (afterAddingFile)="onAfterAddingFile($event, 'layout')"
+										(success)="onSuccessUpload($event)"
+										[oganizationId]="currentOrganization?._id"
+										[service]="serviceKey"></ai-drive-uploader>
+
+<ai-drive-uploader 	[autoUpload]="true"
+										#driveCoverUploader
+                    (afterAddingFile)="onAfterAddingFile($event, 'cover')"
+										(success)="onSuccessCoverUpload($event)"
+										[oganizationId]="currentOrganization?._id"
+										[service]="serviceKey"></ai-drive-uploader>

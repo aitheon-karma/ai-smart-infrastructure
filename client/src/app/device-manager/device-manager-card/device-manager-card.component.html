@@ -1,0 +1,135 @@
+<div class="device-card__container">
+  <div class="device-card" [class.device-card--surrounded]="showTaskCard" (click)="onCardClick(device)">
+    <div class="device-card__image" [class.device-card__image--no-image]="!device.image?.signedUrl">
+      <img [src]="device.image?.signedUrl" *ngIf="device.image?.signedUrl">
+    </div>
+    <div class="device-card__meta">
+    <span class="device-card__meta__name ellipsis">
+      {{ device.name }}
+    </span>
+    <div class="d-flex">
+      <span class="device-card__meta__controller-label mr--8" *ngIf="device?.isController">
+        {{ (device.type?.name | replace : '_' : ' ' | titlecase) || 'AOS Device'}}
+      </span>
+      <span class="device-card__meta__controller-label">
+        {{ device?.isController ? 'Controller' : device.type?.name | replace : '_' : ' ' | titlecase }}
+      </span>
+    </div>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+      <span class="device-card__meta__text mr--8">
+        Work Floor
+      </span>
+        <span class="floor-number" *ngIf="device.floor?.number">{{ device.floor?.number }}</span>
+        {{ device.floor?.name }}
+      </div>
+      <div class="d-flex align-items-center justify-content-start mb--8">
+      <span class="device-card__meta__text mr--8">
+        Work Area
+      </span>
+        <span class="ellipsis">
+        {{ device.area?.name || '-' }}
+      </span>
+      </div>
+      <div class="d-flex align-items-center justify-content-start mb--8 position-relative">
+      <span class="device-card__meta__text mr--8">
+        Current task
+      </span>
+        <a href="javascript: void(0)"
+           (click)="showTaskInfo($event)"
+           class="ellipsis current-task-link"
+           tooltip="#{{ device.currentTask?.taskNumber }} {{ device.currentTask?.orchestratorTask?.name }}"
+           *ngIf="device.currentTask">
+          #{{ device.currentTask?.taskNumber || device.currentTask?._id }} {{ device.currentTask?.orchestratorTask?.name }}
+        </a>
+      </div>
+      <div class="d-flex align-items-center justify-content-start mb--8">
+      <span class="device-card__meta__text mr--8">
+        Charge
+      </span>
+        <span class="ellipsis device-card__meta__charge" [ngClass]="chargeColor">
+        {{ device.batteryHealth || 75 }}%
+      </span>
+      </div>
+    </div>
+    <div class="device-card__info">
+      <div class="device-card__info__status ellipsis" [ngClass]="statusColor">
+        {{ device.status | replace : '_' : ' ' | titlecase }}
+      </div>
+      <button (click)="goToDetails(device)" class="button button--ghost button--small ">
+        Info
+      </button>
+    </div>
+  </div>
+
+  <div [hidden]="!showTaskCard"
+       #taskCard
+       class="task-info"
+       [ngClass]="taskCardPosition === 'top' ? 'task-info--top' : 'task-info--bottom'"
+       aiClickOutside
+       (clickedOutside)="showTaskCard = false">
+    <button type="button"
+            class="icon icon--close icon--dynamic"
+            (click)="showTaskCard = false">
+    </button>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="gray-label mr--8">
+            Task ID
+          </span>
+      <a href="javascript: void(0)" class="ellipsis">
+        #{{ device.currentTask?.taskNumber || device.currentTask?._id }}
+      </a>
+    </div>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="gray-label mr--8">
+            Task name:
+          </span>
+      <span class="ellipsis">
+            {{ device.currentTask?.orchestratorTask?.name }}
+          </span>
+    </div>
+    <hr>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="gray-label mr--8">
+            Type:
+          </span>
+      <span class="ellipsis">
+            {{ device.currentTask?.type }}
+          </span>
+    </div>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="gray-label mr--8">
+            Location:
+          </span>
+      <span class="ellipsis">
+            {{ device.taskFloor?.name }} {{ device.taskFloor?.number }} / {{ device.currentTask?.area?.name }}
+          </span>
+    </div>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="gray-label mr--8">
+            Creator:
+          </span>
+      <span class="ellipsis">
+            {{ device.currentTask?.orchestratorTask.createdBy.profile.firstName }} {{ device.currentTask?.orchestratorTask.createdBy.profile.lastName }}
+          </span>
+    </div>
+    <hr>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="gray-label mr--8">
+            Status:
+          </span>
+      <div class="device-card__info__status ellipsis position-static" [ngClass]="statusTaskColor">
+        {{ device.currentTask?.status | replace : '_' : ' ' | titlecase }}
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-start mb--8">
+          <span class="gray-label mr--8">
+            Start time:
+          </span>
+      <span class="ellipsis">
+            {{ device.currentTask?.updatedAt | date:'shortTime' }}
+          </span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="showTaskCard"></div>

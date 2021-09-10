@@ -1,0 +1,423 @@
+<div class="container station"
+     *ngIf="station && !editStationMode">
+    <div class="station__infrastructure-name ellipsis">
+        <span class="station__building-icon"></span>
+        {{ infrastructure?.name }}
+    </div>
+    <div class="station__head">
+        <h2 class="station__title">{{ station.name }}</h2>
+        <button class="button button--ghost button--medium button--core-container ml--24"
+                *ngIf="graphUrl"
+                (click)="openCore()">
+			<span class="button--core button--core--big">
+				<span class="icon service-icon system_graph"></span>
+				Open station core
+			</span>
+        </button>
+
+        <button class="button button--ghost button--medium ml-auto mr--16"
+                (click)="onAddDevice(false)"
+                [class.button--disabled]="infrastructure?.status === 'ARCHIVED'">
+            <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+            Add device
+        </button>
+
+        <button class="button button--outlined button--medium mr--16"
+                (click)="onAddDevice(true)"
+                [class.button--disabled]="infrastructure?.status === 'ARCHIVED'">
+            <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+            Add controller
+        </button>
+
+        <div class="station__more-section">
+            <button class="station__more button icon icon--dynamic icon--more"
+                    [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                    [class.icon--active-open]="isContextMenuVisible"
+                    (click)="toggleContextMenu($event)">
+            </button>
+            <div class="station__context-menu"
+                 aiClickOutside
+                 (clickedOutside)="isContextMenuVisible = false"
+                 *ngIf="isContextMenuVisible">
+                <div class="station__context-item"
+                     (click)="editStationMode = true">
+                    Edit
+                </div>
+                <div class="station__context-item station__context-item--disabled">
+                    Make as a template
+                </div>
+                <div class="station__context-item" (click)="deleteStation()">
+                    Delete
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="station__main">
+        <div class="station__info-container info">
+          <div class="info__image" [class.info__image--default]="!station?.layoutImage?.signedUrl">
+            <img alt="Station image"
+                 [src]="station?.layoutImage?.signedUrl ? station?.layoutImage?.signedUrl : 'assets/icons/station-avatar.svg'">
+          </div>
+
+            <div class="info__section">
+                <label class="info__label">Station ID:</label>
+                <div class="info__data">#{{ station?._id.slice(-6) || '-' }}</div>
+            </div>
+            <div class="info__section">
+                <label class="info__label">Status:</label>
+                <div class="info__data"
+                     [class.info__data--green]="status === 'RUNNING'"
+                     [class.info__data--orange]="status === 'PENDING'"
+                     [class.info__data--red]="status === 'ERROR'"
+                     [class.info__data--gray]="status === 'SAVED' || status === 'TERMINATED'">
+                    {{ status === 'TERMINATED' ? 'Offline' : status || '-' | titlecase }}
+                </div>
+            </div>
+            <div class="info__section">
+                <label class="info__label">Pay rate:</label>
+                <div class="info__data">$ {{ station?.payRate || '-' }}</div>
+            </div>
+            <div class="info__section">
+                <label class="info__label">Work floor:</label>
+                <div class="info__data info__data--gold"
+                     *ngIf="station?.floor">
+                    <span>{{ getFloorNumber(station?.floor?.number) }}</span>
+                    <span class="info__data-divider"></span>
+                    <span>{{ station?.floor?.name || '-'}}</span>
+                </div>
+                <div class="info__data" *ngIf="!station?.floor">-</div>
+            </div>
+            <div class="info__section">
+                <label class="info__label">Image scale:</label>
+                <div class="info__data">{{ '1 : ' + station?.pixelScale || '-' }}</div>
+            </div>
+            <div class="info__divider"></div>
+            <div class="info__section info__section--column" *ngIf="station?.coverImage">
+                <label class="info__label mb--8">Station cover:</label>
+                <div class="info__data--cover">
+                    <img src="assets/img/station-cover.png" alt="Station Cover" *ngIf="!station?.coverImage?.signedUrl">
+                    <img [src]="station?.coverImage?.signedUrl" alt="Station Image"
+                         *ngIf="station?.coverImage?.signedUrl">
+                </div>
+            </div>
+        </div>
+        <div class="station__equipment-container">
+            <div class="station__cloud-applications cloud-applications">
+                <div class="cloud-applications__top">
+                    <div class="cloud-applications__title">Cloud Applications</div>
+                    <button class="button button--ghost button--medium"
+                            (click)="createApp()"
+                            [class.button--disabled]="infrastructure?.status === 'ARCHIVED'">
+                        <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+                        Add application
+                    </button>
+                </div>
+                <div class="cloud-applications__list">
+                    <div class="cloud-applications__list--empty" *ngIf="!cloudApplications?.length">
+                        No added applications
+                    </div>
+                    <ng-container *ngFor="let app of cloudApplications">
+                        <ng-container *ngTemplateOutlet="appView; context: {
+                                        app: app,
+                                        cloud: true,
+                                        controller: null
+                                        }"></ng-container>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="station__controller controller" *ngFor="let controller of controllers">
+                <div class="controller__top">
+                    <div class="controller__title d-flex justify-content-between w-100">
+                        <span>Controller</span>
+                        <div class="online-status ml-auto mr--16"
+                             [ngClass]="controller.online ? 'online-status--base-green' : 'online-status--base-red'">
+                          {{ controller.online ? 'Online' : 'Offline' }}
+                        </div>
+                        <button class="icon icon--more icon--dynamic"
+                                [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                                [class.icon--active-open]="activeController === controller._id"
+                                (click)="openControllerMenu($event, controller._id)">
+                        </button>
+                        <div class="controller__menu" *ngIf="activeController === controller._id"
+                             aiClickOutside (clickedOutside)="activeController = null">
+                            <div class="controller__menu-item"
+                                 (click)="onUnlinkController($event, controller)">
+                                Unlink from the station
+                            </div>
+                            <div class="controller__menu-item"
+                                 (click)="onRemoveController($event, controller)">
+                                Delete
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="controller__item mb--2 justify-content-start device w-100"
+                         (click)="goToDevice($event, controller._id)">
+                        <div class="device__image">
+                            <span class="icon icon--image icon--size-16px" *ngIf="!controller?.image?.signedUrl"></span>
+                            <img class="device__image-img" *ngIf="controller?.image?.signedUrl"
+                                 [src]="controller?.image?.signedUrl">
+                        </div>
+                        <div class="device__center">
+                            <div class="device__info">
+                                <div class="device__name">{{ controller?.name || 'Controller Name' }}</div>
+                                <div class="device__version mb--8">v 1.01</div>
+                                <div class="device__type">Controller</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="controller__item driver w-100">
+                        <div class="driver__title mr--8">Driver:</div>
+                        <button class="button button--ghost button--small"
+                                [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                                *ngIf="!controller.driver"
+                                (click)="openDiverFlowModal(controller)">
+                            <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+                            add driver
+                        </button>
+                        <div class="driver__name" *ngIf="controller.driver">{{ controller.driver?.name }}</div>
+                        <span class="icon icon--delete icon--dynamic ml-2"
+                              [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                              (click)="deleteDriver(controller, $event)" *ngIf="controller.driver"></span>
+                    </div>
+                </div>
+                <div class="controller__bottom">
+                    <div class="station__applications-container applications">
+                        <div class="applications__top">
+                            <div class="applications__title applications__title--small">
+                                Applications
+                            </div>
+                            <button class="button button--ghost button--medium"
+                                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                                    (click)="createApp(controller)">
+                                <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+                                Add application
+                            </button>
+                        </div>
+                        <div class="applications__list-container">
+                            <div class="applications__list" *ngIf="station">
+                                <label class="applications__empty" *ngIf="!controller.applications?.length">
+                                    No controller applications
+                                </label>
+                                <span class="applications__list__title"
+                                      *ngIf="controller?.robotApplications?.length">
+                                  Robot Application
+                                </span>
+                                <ng-container *ngFor="let app of controller?.robotApplications">
+                                  <ng-container *ngTemplateOutlet="appView; context: {
+                                          app: app,
+                                          cloud: false,
+                                          controller: controller
+                                          }"></ng-container>
+                                </ng-container>
+                                <span class="applications__list__title"
+                                      *ngIf="controller?.uiApplications?.length">
+                                  UI Application
+                                </span>
+                                <ng-container *ngFor="let app of controller?.uiApplications">
+                                    <ng-container *ngTemplateOutlet="appView; context: {
+                                        app: app,
+                                        cloud: false,
+                                        controller: controller
+                                        }"></ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="station__devices-container devices">
+                        <div class="devices__top">
+                            <div class="devices__title devices__title--small">
+                                Devices
+                            </div>
+                            <button class="button button--ghost button--medium"
+                                    [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                                    (click)="onAddDevice(false, controller)">
+                                <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+                                Add device
+                            </button>
+                        </div>
+                        <div class="devices__list-container">
+                            <div class="devices__list" *ngIf="controller.devices?.length">
+                                <div class="devices__item device"
+                                     [class.device--bridge]="device?.bridgeMode"
+                                     *ngFor="let device of controller.devices"
+                                     (click)="goToDevice($event, device._id)">
+                                    <div class="device__image">
+                                        <span class="icon icon--image icon--size-16px"
+                                              *ngIf="!device?.image?.signedUrl"></span>
+                                        <img class="device__image-img" *ngIf="device?.image?.signedUrl"
+                                             [src]="device?.image?.signedUrl">
+                                    </div>
+                                    <div class="device__center">
+                                        <div class="device__info">
+                                            <div class="device__name" aiTool aiTooltip="{{device.name}}">{{device.name}}</div>
+                                            <div class="device__version mb--8">v 1.01</div>
+                                            <div class="device__type">{{device.type?.name | titlecase}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="device__right ml-auto">
+                                        <div class="online-status"
+                                             [ngClass]="device.online ? 'online-status--base-green' : 'online-status--base-red'">
+                                            {{ device.online ? 'Online' : 'Offline' }}
+                                        </div>
+                                        <button class="icon icon--delete icon--dynamic"
+                                                [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                                                (click)="onRemoveDevice($event, device._id, controller)"></button>
+                                    </div>
+                                    <span class="device__bridge" *ngIf="device.bridgeMode">
+                                      Using as a Bridge
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="devices__empty" *ngIf="!station.devices?.length">No devices</label>
+                        </div>
+                    </div>
+                    <div class="station__applications-container applications">
+                    <div class="applications__top">
+                      <div class="applications__title applications__title--small">
+                        AOS nodes
+                      </div>
+                      <button class="button button--ghost button--medium"
+                              [class.button--disabled]="infrastructure?.status === 'ARCHIVED'"
+                              (click)="addNode(controller)">
+                        <span class="icon icon--plus icon--size-16px icon--gold mr--8"></span>
+                        Add node
+                      </button>
+                    </div>
+                    <div class="applications__list-container">
+                      <div class="applications__list" *ngIf="station">
+                        <label class="applications__empty"
+                               *ngIf="!controller?.computeNodeApplications?.length">
+                          No added Nodes
+                        </label>
+                        <ng-container *ngFor="let app of controller?.computeNodeApplications">
+                          <ng-container *ngTemplateOutlet="appView; context: {
+                                          app: app,
+                                          cloud: false,
+                                          controller: controller
+                                          }"></ng-container>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="devices__item device"
+                 [class.device--bridge]="device?.bridgeMode"
+                 *ngFor="let device of devicesWithoutController"
+                 (click)="goToDevice($event, device._id)">
+                <div class="device__image">
+                    <span class="icon icon--image icon--size-16px"></span>
+                </div>
+                <div class="device__center">
+                    <div class="device__info">
+                        <div class="device__name" aiTooltip="{{device.name}}">{{ device?.name }}</div>
+                        <div class="device__version mb--8">v 1.01</div>
+                        <div class="device__type">{{ device?.type?.name | titlecase }}</div>
+                    </div>
+                </div>
+                <div class="device__right ml-auto">
+                    <div class="online-status"
+                         [ngClass]="device?.online ? 'online-status--base-green' : 'online-status--base-red'">
+                        {{ device?.online ? 'Online' : 'Offline' }}
+                    </div>
+                    <button class="icon icon--delete icon--dynamic"
+                            [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                            (click)="onRemoveDevice($event, device._id)"></button>
+                </div>
+                <span class="device__bridge" *ngIf="device.bridgeMode">Using as a Bridge</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ai-station-form *ngIf="editStationMode"
+                 [infrastructure]='infrastructure'
+                 [station]="station"
+                 (stationUpdated)="updateStation($event)"
+                 (closeNewSectionForm)="closeEditSectionForm()"></ai-station-form>
+
+<ai-loading *ngIf="isLoading" class="loading-container"></ai-loading>
+
+<ai-core-automate-modal></ai-core-automate-modal>
+
+<ai-core-create-node-modal (createdNode)="onCreateNode($event)"></ai-core-create-node-modal>
+
+<ai-add-application-modal (applicationsAdded)="fetchApplications()"
+                          (driverAdded)="onAddDriver($event)"></ai-add-application-modal>
+
+<ai-add-device-modal (deviceAdded)="loadData()"></ai-add-device-modal>
+
+<ai-request-modal></ai-request-modal>
+
+<ai-build-status></ai-build-status>
+
+<ng-template #appView
+             let-app="app"
+             let-cloud="cloud"
+             let-controller="controller">
+    <div class="application mt-2"
+         [class.cloud-applications__item]="cloud"
+         [class.applications__item]="!cloud">
+        <div class="application__top">
+            <div class="application__info">
+                <div class="application__name">{{ app?.project?.name }}</div>
+                <div class="application__version">v {{ app?.version }}</div>
+            </div>
+            <div class="online-status"
+                 [class.online-status--base-red]="app?.status !== 'RUNNING' && app?.status !== 'PENDING' && app?.status !== 'RUNNING_ANOTHER_RELEASE'"
+                 [class.online-status--base-green]="app?.status === 'RUNNING' || app?.status === 'PENDING' || app?.status === 'RUNNING_ANOTHER_RELEASE'">
+                {{ app?.status !== 'RUNNING' && app?.status !== 'PENDING' && app?.status !== 'RUNNING_ANOTHER_RELEASE' ? 'Stopped' : 'Running' }}
+            </div>
+        </div>
+        <div class="application__divider"></div>
+        <div class="d-flex flex-column w-100">
+            <div class="application__bottom">
+                <div class="application__control">
+                    <span class="icon icon--pause icon--red icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          *ngIf="(app?.status === 'RUNNING' || app?.status === 'PENDING' || app?.status === 'RUNNING_ANOTHER_RELEASE'); else deployButton"
+                          tooltip="Stop application"
+                          (click)="deployApplication(app, false)"
+                          container="body"></span>
+                    <ng-template #deployButton>
+                        <span class="icon icon--play icon--green icon--dynamic"
+                              [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                              [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                              (click)="deployApplication(app, true)"
+                              tooltip="Run application"
+                              container="body"></span>
+                    </ng-template>
+                </div>
+                <div class="application__actions">
+                    <span class="icon icon--show icon--dynamic icon--disabled mr--16"
+                          [class.icon--disabled]="(app?.status !== 'RUNNING' && app?.status !== 'PENDING' && app?.status !== 'RUNNING_ANOTHER_RELEASE' || infrastructure?.status === 'ARCHIVED')"
+                          tooltip="View application"
+                          (click)="goToApplication(app)"
+                          container="body"></span>
+                    <span class="icon icon--edit icon--dynamic mr--16"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="editApplication(app?.project)"></span>
+                    <span class="icon icon--delete icon--dynamic"
+                          [class.icon--disabled]="infrastructure?.status === 'ARCHIVED'"
+                          (click)="deleteApplication(app?.graphNodeId, controller)"></span>
+                </div>
+            </div>
+            <div class="application__new-version"
+                 *ngIf="!app?.isLatest">
+                <div class="application__new-version-info">
+                    <div class="application__new-version-text">
+                        New version is ready! Let’s update
+                    </div>
+                    <button class="button button--ghost button--small"
+                            (click)="updateAppToLatest(app)">
+                        <span class="icon icon--update icon--active mr--4"></span>
+                        update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

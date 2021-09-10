@@ -1,0 +1,35 @@
+@import '../../../../../../client/node_modules/@aitheon/core-client/styles/core/_variables';
+
+.battery-health {
+  display: flex;
+  align-items: center;
+
+  &--reversed {
+    flex-direction: row-reverse;
+  }
+
+  &__percents {
+    padding-left: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.35px;
+    cursor: default;
+
+    &--reversed {
+      padding-left: 0;
+      padding-right: 8px;
+    }
+
+    &--low {
+      color: $base-red;
+    }
+
+    &--medium {
+      color: $base-yellow;
+    }
+
+    &--full {
+      color: $base-green;
+    }
+  }
+}
